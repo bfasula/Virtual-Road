@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    
+  <title>VRoad Help</title>
+    
+</head>
+<body>
+   
+    	 <P>Virtual Road is an indoor cycling simulator that will simulate cycling on a road using real life videos. It requires a bicycle smart trainer or power meter, or for running a run pod. The app will play a video that will simulate cycling or running at the speed you are cycling or running.  It will ontrol your bicycle resistance of your trainer, using the BLE FTMS protocol, to simulate riding uphill or downhill. If you only have a power meter you can connect it instead of a trainer and you can connect a run pod for running on a treadmill but you won't feel any resistance changes. It will display current speed, distance, watts and elapsed time as well as averages as it plays the video at the speed that you are riding. The app converts watts to speed based on the road gradient. The app will also connect to a BLE enabled Heart Rate Monitor and display current and average heart rate and a Cadence sensor to disiplay current and average cadence. VRoad has been tested on the Chrome web browser.
+             <P>In order to use the app you will need both a GPX file and synchronized Video of the same route. You can create your own or download some from the internet. If you create your own the GPX file needs to begin and end at the same point as the video. If you need to edit the GPX file you can use GPXMagic or GPXStudio. Some routes ready to use  can be found at https://cycling.vangestel.online/indoor/videos/. You can also find some videos with GPX files on youtube. The GPX file needs to be editted before use to remove all the statements before the trkseg statement. The MP4 file needs be named the same as the GPX file only replacing the extension of .GPX with .MP4. The GPX  and MP4 files need to be placed in the folder (webserver)/cyclecomputer/Videos. 
+             
+		<P> To do a ride first select the video you want to use by clicking on the <b>Video</b> button. You can also edit the vroadWO.html file to add files to the <b>Select Video</b> dropdown list for convenience. You can start anywhere on the route by entering the distance in miles in the text area next to the Start button. You must enter the starting location before connecting the trainer. Then select the type of device to connect from the <b>Connect Device</b> drop down list, and then click on it to connect to the device. A smart trainer , heart rate monitor and cadence sensor or run pod can be used.  
+		  Once your devices are connected begin pedalling and then press the <b>Start</b> button to begin. The video will pause when the speed goes below the Pause speed parameter which defaults to 1 mph.
+		When you are finished press the stop button and then click on <b>Save GPS</b> to save a GPX file to a folder that you select. Also click on <b>Save Data</b> to save the data to a file in a folder that you select. 
+			
+		You can  upload your ride to STRAVA by sending an email  to stravaupload@gotoes.org after setting up your email at  https://gotoes.org/strava/index.php. Click on the Email to Strava button on the main page and attach the GPX file from the folder you previously saved it to. You can always upload the file manually using the Strava website.
+		<!--P>The app requires a GPX file with accurate elevation. I recommend a GPX file from Strava which has been tested and formats may not work. The GPX file needs to be editted to remove statements before the trkseg.
+		The GPX file should be placed in the folder (webserver)/cyclecomputer/videos. 
+		
+		The app also requires an MP4 video file which is synchronized with the GPX file and placed in the same folder at your GPX file. The video will speed up and slow down to match the speed you are riding.
+		The MP4 file should be named the same as the GPX file only replacing the .GPX with .MP4.</P-->
+		
+		
+		
+
+            <P>Workouts using the zwo format and extension can be placed in the folder (webserver)/cyclecomputer/Workouts. You can select the workout using the <b>Workout</b> button. You can also edit the vroadWO.html file to add workouts to the <b>Select Workout</b> dropdown list.</P>
+    <P>When using Simulation mode (non Workout) you can change Trainer Difficulty using the up and down arrow keys. The Virtual gear can be change by using the - and + keys. Workouts default to ERG mode which can be unselected using the "E" key. For more information view the shortcuts page.</P>
+    <P>VRoad has been tested on both a PC and Chromebook using the Simple  Webserver, which is free to use (https://simplewebserver.org/). Unzip the zipfile into the root directory of the webserver. Select the option to automatically show the index.html file.   Start the Simple Webserver and click on the URL and it will display the main page. </P>
+       </body>

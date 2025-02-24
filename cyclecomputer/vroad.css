@@ -1,0 +1,118 @@
+video {
+  width: 100dvw;
+  min-height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+.header-text {
+  position: absolute;
+  color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transform: translateY(-5rem);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#outer{
+    width:100%;
+	display:block;
+	text-align:center;
+	position:relative;
+	overflow: hidden;
+    min-height:300px
+}
+	#home-top-video{
+		left:0%;
+        top:0%;
+		height:100%;
+		width:100%;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+	}
+    #home-text{
+		left:0%;
+        top:0;
+		height:100%;
+		width:100%;
+        padding-top:10%;
+		overflow: hidden;
+		position: absolute;
+		z-index: 0;
+        color:red
+    }
+ div.absolutetop1 {
+  position: absolute;
+  top: 0px;
+  left: 80px;
+  width: 800px;
+  height: 100px;
+     
+   
+  
+}
+div.absolutetop {
+  position: absolute;
+  top: 0px;
+ 
+  width: 800px;
+  height: 100px;
+     margin-right: auto;
+  margin-left: auto;
+  left: 80px;
+  right:80px;
+   
+  
+}
+div.absolutetopchart {
+  position: absolute;
+  top: 0px;
+ 
+  width: 825px;
+  height: 100px;
+     margin-right: auto;
+  margin-left: auto;
+  left: 80px;
+  right:80px;
+   
+  
+}
+div.toprcorner {
+  position:absolute;
+  top:0;
+  right:0;
+  }
+div.absolutebottom {
+position: absolute;
+  bottom: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  left: 0px;
+  right: 0px;
+    }
+div.relative {
+  position: relative;
+  width: 1200px;
+  height: 200px;
+  
+} 
+  .progress-bar {
+            width: 100%;
+            background-color: #f0f0f0;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: grey;
+            transition: width 0.3s ease;
+        }
