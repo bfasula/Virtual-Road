@@ -6,9 +6,16 @@
   <title>Cyclecomputer</title>
 </head>
 <body>
+    
     <table id="table1" border="1" style="width: 1200px; margin-left: auto; margin-right: auto;">
    
 <tbody>
+     <tr>
+    <td>
+        <label>
+        <input type="checkbox" id="saveUseMetric"><b> Use Metric</b>
+    </label>
+        </td></tr>
     <tr>
     <td><h2 class="userWeight">Name:</h2></td>
         <td><input type="text" class="weight" placeholder="Enter weight here"/>
@@ -70,7 +77,15 @@
     </tbody>
         </table>
       <script>
-          
+           const checkbox = document.getElementById('saveUseMetric');
+
+        // Load saved state on page load
+        checkbox.checked = localStorage.getItem('checkboxState') === 'true';
+
+        // Save state when checkbox is clicked
+        checkbox.addEventListener('change', () => {
+            localStorage.setItem('checkboxState', checkbox.checked);
+        });
 const userWeightText = document.querySelector('.userWeight');
 const userAgeText = document.querySelector('.userAge');
 const userTrainerDifficultyText = document.querySelector('.userTrainerDifficulty');

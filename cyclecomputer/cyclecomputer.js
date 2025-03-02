@@ -270,7 +270,8 @@ let intervalWatts=0;
 let intervalCount=0;
 let totalWorkoutTime=0;
 let markerFrequency=5; // update gpx map every 5 gps points
-export let bMetric=false;
+//export let bMetric=false;
+export var bMetric=false;
 export let initialDistance = 0; //miles
 
 
@@ -363,7 +364,14 @@ let maxHR=170;
 let minHR=50;
 export let powerFTP=180;
     */
-
+console.clear();
+ bMetric = localStorage.getItem('checkboxState')
+ console.log("Use Metric " +bMetric);
+ if (bMetric) {
+             document.getElementById('speedl').innerHTML =  "<b>KPH</b>";
+                 document.getElementById('avespeedl').innerHTML =  "<b>Ave KPH</b>";
+                 document.getElementById('distancel').innerHTML =  "<b>Kilometers</b>";
+        }
 riderAge = localStorage.getItem(".age");
 riderWeight = localStorage.getItem(".weight");
 trainerDifficulty = Number(localStorage.getItem(".trainerDifficulty"));
@@ -436,10 +444,11 @@ if (!coefficientWR) {
     coefficientWR=.50;
       localStorage.setItem('.coefficientWR', coefficientWR);
 }
-
+ 
+ 
 document.getElementById('trdiff').innerHTML = trainerDifficulty;
 document.getElementById('vgear').innerHTML = vgear;
-console.clear();
+
 console.log("age " + riderAge);
 console.log("weight " + riderWeight);
 console.log("trainer difficulty " + trainerDifficulty);
@@ -1031,11 +1040,7 @@ export async function processPower(power) {
       
         
         
-        if (bMetric) {
-             document.getElementById('speedl').innerHTML =  "<b>KPH</b>";
-                 document.getElementById('avespeedl').innerHTML =  "<b>Ave KPH</b>";
-                 document.getElementById('distancel').innerHTML =  "<b>Kilometers</b>";
-        }
+       
         /*
         if (initialDistance > 0) {
             let i=0;
