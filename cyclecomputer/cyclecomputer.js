@@ -41,7 +41,7 @@ document.addEventListener('keydown', function(event) {
             let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
             document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
             document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-            document.getElementById('twatts').style.opacity=0.5;
+            //document.getElementById('twatts').style.opacity=0.5;
             } else {
        trainerDifficulty+=10;
         if (trainerDifficulty > 100) {trainerDifficulty=100;} // up arrow
@@ -56,7 +56,7 @@ document.addEventListener('keydown', function(event) {
              let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
             document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
             document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-           document.getElementById('twatts').style.opacity=0.5;
+           //document.getElementById('twatts').style.opacity=0.5;
             } else {
         trainerDifficulty-=10;
         if (trainerDifficulty < 0) {trainerDifficulty=0;} // down arrow
@@ -180,7 +180,7 @@ function hideShowERG() {
           ERGMode=false;
              document.getElementById('twattsl').innerHTML = "<b>Target</b>";
            document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-          document.getElementById('twatts').style.opacity=0.5;
+          //document.getElementById('twatts').style.opacity=0.5;
           showVGear();
           if (!bWorkout) {
               hideWorkoutCells();
@@ -202,7 +202,7 @@ function hideShowERG() {
                 }
           document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
            document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-          document.getElementById('twatts').style.opacity=0.5;
+          //document.getElementById('twatts').style.opacity=0.5;
             hideVGear();
           if (!bWorkout) {
               showWorkoutCells();
@@ -261,7 +261,7 @@ let ftms=false;
 let lastGPSTime="";
 let vgear=0;
 export var bWorkout=false;
-let workoutIndex=0;
+let workoutIndex=-1;
 let workoutTime=0;
 let totalRPM=0;
 let totalRPMPts=0;
@@ -327,7 +327,7 @@ selWorkout.onchange = function(){
 export async function sWorkout(value) {
      //await parseZWO(value);
     bWorkout=true;
-    workoutIndex=0;
+    workoutIndex=-1;
     totalWorkoutTime=0;
     console.log("workout index "+workoutIndex);
         document.getElementById("table1").rows[0].cells[4].style.display = "table-cell";
@@ -339,17 +339,18 @@ export async function sWorkout(value) {
      if (bWorkout) {
             hideShowERG();
             console.log("zwoArray len "+zwoArray.length);
-         //document.getElementById('timeleft').innerHTML = zwoArray[workoutIndex].duration;
-              document.getElementById('tleftl').innerHTML="<b>Time Left("+(workoutIndex)+")</b>";
+         //document.getElementById('timeleft').innerHTML = zwoArray[0].duration;
+              document.getElementById('tleftl').innerHTML="<b>Time Left("+(0)+")</b>";
         workoutTime=Number(zwoArray[0].duration*1000);
             setTimeLeft();
-             let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
+             let tpower=Number(zwoArray[0].power)*powerFTP;
         document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
              document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-         document.getElementById('twatts').style.opacity=0.5;
+         //document.getElementById('twatts').style.opacity=0.5;
+ 	
             console.log("Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
             }
-          
+         
 }
 
 /* no default
@@ -365,6 +366,7 @@ let minHR=50;
 export let powerFTP=180;
     */
 console.clear();
+/*
  bMetric = localStorage.getItem('checkboxState')
  console.log("Use Metric " +bMetric);
  if (bMetric) {
@@ -372,6 +374,7 @@ console.clear();
                  document.getElementById('avespeedl').innerHTML =  "<b>Ave KPH</b>";
                  document.getElementById('distancel').innerHTML =  "<b>Kilometers</b>";
         }
+*/
 riderAge = localStorage.getItem(".age");
 riderWeight = localStorage.getItem(".weight");
 trainerDifficulty = Number(localStorage.getItem(".trainerDifficulty"));
@@ -398,9 +401,7 @@ if (!trainerDifficulty) {
 if (!riderWeight) {
      console.log("Default weight");
     riderWeight = 150.0;
-    if (bMetric) {
-        riderWeight = 150.0/lbs2kg;
-    }
+    
     
     localStorage.setItem('.weight', riderWeight);
 }
@@ -971,26 +972,26 @@ function printHeartRate(event) {
 function hrColor(heartRate) {
     if (heartRate >= (maxHR*.90)) {
              document.getElementById('hr').style.backgroundColor = 'red';
-            document.getElementById('hr').style.opacity=0.5;
+            //document.getElementById('hr').style.opacity=0.5;
             } else
         if (heartRate >= (maxHR*.80)) {
              document.getElementById('hr').style.backgroundColor = 'orange';
-             document.getElementById('hr').style.opacity=0.5;
+            // document.getElementById('hr').style.opacity=0.5;
             } else
          if (heartRate >= (maxHR*.70)) {
              document.getElementById('hr').style.backgroundColor = 'yellow';
-              document.getElementById('hr').style.opacity=0.5;
+             // document.getElementById('hr').style.opacity=0.5;
             } else
         if (heartRate >= (maxHR*.60)) {
              document.getElementById('hr').style.backgroundColor = 'green';
-             document.getElementById('hr').style.opacity=0.5;
+          //   document.getElementById('hr').style.opacity=0.5;
             } else 
             if (heartRate >= (maxHR*.50)) {
              document.getElementById('hr').style.backgroundColor = 'blue';
-                 document.getElementById('hr').style.opacity=0.5;
+            //     document.getElementById('hr').style.opacity=0.5;
             } else {
              document.getElementById('hr').style.backgroundColor = 'white';
-                 document.getElementById('hr').style.opacity=0.5;
+            //     document.getElementById('hr').style.opacity=0.5;
             }
 }
 export function initializeRoute(){
@@ -1075,7 +1076,7 @@ export async function processPower(power) {
 
     document.getElementById('watts').innerHTML = power;
      document.getElementById('watts').style.backgroundColor=powerColor(power);
-     document.getElementById('twatts').style.opacity=0.5;
+     //document.getElementById('twatts').style.opacity=0.5;
     document.getElementById('vgear').innerHTML = vgear;
     // console.log(power);
    
@@ -1136,7 +1137,7 @@ export async function processPower(power) {
                 elevation = gpxArray[i].ele;
                 if (bMetric) {
                      mph = gpxArray[i].mps * mps2kph;
-                } else {
+               } else {
                     mph = gpxArray[i].mps * mps2mph;
                 }
                 const currentDate = new Date();
@@ -1162,8 +1163,8 @@ export async function processPower(power) {
         
         let weight = riderWeight / lbs2kg;
         if (bMetric) {
-            weight = riderWeight;
-        }
+           weight = riderWeight;
+       }
         let velocity = speedFromPower(power, (grade * 100.0), elevation, weight) ; // mps
        
         if (bMetric) {
@@ -1227,7 +1228,7 @@ export async function processPower(power) {
                  i = findGPX(initialDistance );
                 
             } else {
-                 i = findGPX(initialDistance * miles2meters);
+                i = findGPX(initialDistance * miles2meters);
                 }
             let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds;
             seekVideo(gpxSeconds, syncSeconds);
@@ -1390,12 +1391,12 @@ function skipWorkoutInterval() {
                         setTimeLeft();
                         document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
                          document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-                        document.getElementById('twatts').style.opacity=0.5;
+                        //document.getElementById('twatts').style.opacity=0.5;
                         console.log("Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
                          document.getElementById('alrt').innerHTML='<b>Decrease Power to </b>'+                     document.getElementById('twatts').textContent
                              //+" for "  +zwoArray[workoutIndex].duration + " seconds";
                              +" for " + formatTime(zwoArray[workoutIndex].duration);
-                        if (tpower > Number(zwoArray[workoutIndex-1].power)*powerFTP) {
+                        if (workoutIndex > 0 && tpower > Number(zwoArray[workoutIndex-1].power)*powerFTP) {
                             document.getElementById('alrt').innerHTML='<b>Increase Power to </b>'+      document.getElementById('twatts').textContent
                               //   +" for " + zwoArray[workoutIndex].duration + " seconds";
                                +" for " + formatTime(zwoArray[workoutIndex].duration);
@@ -1504,11 +1505,12 @@ export function formatTime(timeleft) {
     }
     function sendMail(message)
 {
-   
+    if (emailAddress.includes('@')) {
     var subject = "vRoad Data";
     document.location.href = "mailto:"+emailAddress+"?subject="
         + encodeURIComponent(subject)
         + "&body=" + encodeURIComponent(message);
+        }
 }
 
     async function wait(ms) {
