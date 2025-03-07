@@ -10,14 +10,14 @@
     <table id="table1" border="1" style="width: 1200px; margin-left: auto; margin-right: auto;">
    
 <tbody>
-     <!--tr>
-    <td>
+     <tr>
+    <!--td>
         <label>
         <input type="checkbox" id="saveUseMetric"><b> Use Metric</b>
     </label>
         </td></tr-->
     <tr>
-    <td><h2 class="userWeight">Name:</h2></td>
+    <td><h2 class="userWeight">Weight:</h2></td>
         <td><input type="text" class="weight" placeholder="Enter weight here"/>
   <button style="background-color: blue; color: white;" class="saveWeightBtn">Save Weight</button></td>
         
@@ -61,23 +61,23 @@
                  <td>           <input type="text" class="emailAddress" placeholder="Enter Email Address here"/>
   <button style="background-color: blue; color: white;" class="saveEmailAddressBtn">Save Email Address</button></td>
                                     
-                                      <tr>
-                                           <td> <h2 class="userCoefficientRR">emailAddress:</h2></td>
+                                      <!--tr>
+                                           <td> <h2 class="userCoefficientRR">coefficientRR:</h2></td>
                   <td>           <input type="text" class="coefficientRR" placeholder="Enter coefficientRR here"/>
   <button style="background-color: blue; color: white;" class="savecoefficientRRBtn">Save coefficientRR</button></td>
                                           
                                       <tr>
-                                           <td> <h2 class="userCoefficientWR">emailAddress:</h2></td>
+                                           <td> <h2 class="userCoefficientWR">coefficientWR:</h2></td>
                     <td>           <input type="text" class="coefficientWR" placeholder="Enter coefficientWR here"/>
   <button style="background-color: blue; color: white;" class="savecoefficientWRBtn">Save coefficientWR</button></td>
            
 
-</tr>
+</tr-->
     
     </tbody>
         </table>
       <script>
-          /*
+/*
            const checkbox = document.getElementById('saveUseMetric');
 
         // Load saved state on page load
@@ -87,7 +87,7 @@
         checkbox.addEventListener('change', () => {
             localStorage.setItem('checkboxState', checkbox.checked);
         });
-        */
+*/
 const userWeightText = document.querySelector('.userWeight');
 const userAgeText = document.querySelector('.userAge');
 const userTrainerDifficultyText = document.querySelector('.userTrainerDifficulty');
@@ -166,6 +166,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   userEmailAddressText.textContent = "Email Address: "+emailAddress;
   localStorage.setItem('.emailAddress', emailAddress);
 });
+/*
                                  saveCoefficientRRButton.addEventListener('click', () => {
   const coefficientRR = document.querySelector('.coefficientRR').value;
   userCoefficientRRText.textContent = "coefficientRR: "+coefficientRR;
@@ -176,7 +177,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   userCoefficientWRText.textContent = "coefficientWR: "+coefficientWR;
   localStorage.setItem('.coefficientWR', coefficientWR);
 });
-          
+          */
           
            function displayUserWeight() {
   const weightFromLocalStorage = localStorage.getItem('.weight');
@@ -265,7 +266,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
     userEmailAddressText.textContent = 'No email address data in local storage';
   }
 }
-
+/*
               function displayCoefficientRR() {
   const coefficientRRFromLocalStorage = localStorage.getItem('.coefficientRR');
 
@@ -286,7 +287,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
 }
 
           
-          
+          */
           displayUserWeight();
           displayUserAge();
           displayTD();
@@ -296,8 +297,8 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
            displaymaxHR();
            displaypowerFTP();
           displayEmailAddress();
-          displayCoefficientRR();
-           displayCoefficientWR();
+          //displayCoefficientRR();
+         //  displayCoefficientWR();
 </script>
   
     <br><br>
