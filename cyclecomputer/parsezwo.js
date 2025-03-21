@@ -38,7 +38,7 @@ file.type // file type ex. 'application/pdf'
     console.log("File selected " + file); 
       ///sWorkout(workoutDirectory+file.name);
       parseZWO(file);
-        sWorkout(file.name);
+        //sWorkout(file.name);
 }
     input.click();
 
@@ -75,6 +75,7 @@ export async function  parseZWO(filename) {
               console.log("response ");
      console.log(response);
              processZWO(response);
+             sWorkout(filename.name);
                 }
          await  fr.readAsText(filename);
          /*****

@@ -12,7 +12,8 @@ import { TrainerControl , TrainerData} from "./TrainerControl.js";
 import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
 import {updateMarkerOL} from './minimap.js';
-
+export function modifyTrainerConnected( value ) { trainerConnected = value; }
+export function modifyCadenceConnected( value ) { cadenceConnected = value; }
 window.onload = function(){
    hideWorkoutCells();
       
@@ -22,26 +23,44 @@ window.onbeforeunload = function () {
     //saveGPS();
     return "Do you really want to close?";
 };
+let tpower=Number(100);
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 109) { // minus
+        if (bUseVirtualWatts) {
+            if (virtualPower > 10.0) {virtualPower=Number(virtualPower)-10.0;}
+            } else {
         vgear--;
         if (vgear < -10) {vgear=-10;}
          document.getElementById('vgear').innerHTML = vgear;
+            }
     }
     else if(event.keyCode == 107) { // plus
+        if (bUseVirtualWatts) {
+             virtualPower=Number(virtualPower)+10.0;
+            } else {
        vgear++;
         if (vgear > 10) {vgear=10;}
          document.getElementById('vgear').innerHTML = vgear;
+            }
     } 
     else if(event.keyCode == 38) { // up arrow
-        if (ERGMode) {
+        if (ERGMode ) {
+            if (bWorkout) {
             powerFTP=Number(powerFTP)+10;
             console.log("New ftp "+powerFTP);
             //alert("Temporary ftp "+powerFTP);
-            let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
+            tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
             document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
             document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
             //document.getElementById('twatts').style.opacity=0.5;
+                } else {
+                 tpower=Number(tpower)+10;
+                 document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
+                 document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
+                    if (smartTrainerConnected) {
+                        trainerCommands.sendTargetPower(tpower);
+                    }
+                }
             } else {
        trainerDifficulty+=10;
         if (trainerDifficulty > 100) {trainerDifficulty=100;} // up arrow
@@ -50,13 +69,22 @@ document.addEventListener('keydown', function(event) {
     }
     else if(event.keyCode == 40) { // down arrow
         if (ERGMode) {
+            if (bWorkout) {
            powerFTP=Number(powerFTP)-10;
              console.log("New ftp "+powerFTP);
             //alert("Temporary ftp "+powerFTP);
-             let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
+             tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
             document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
             document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
            //document.getElementById('twatts').style.opacity=0.5;
+                } else {
+                 tpower=Number(tpower)-10;
+                 document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
+                 document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
+                if (smartTrainerConnected) {
+                        trainerCommands.sendTargetPower(tpower);
+                    }
+                }
             } else {
         trainerDifficulty-=10;
         if (trainerDifficulty < 0) {trainerDifficulty=0;} // down arrow
@@ -101,6 +129,9 @@ document.addEventListener('keydown', function(event) {
     }
     else if(event.keyCode == 77) { // letter m
         hideMap();
+    }
+    else if(event.keyCode == 65) { // letter a toggle autoshift 
+        toggleAutoShift();
     }
     else {
         
@@ -170,9 +201,17 @@ function showWorkoutCells() {
                         //document.getElementById("barChart").style.display = "none";
                         ctx.canvas.hidden = true;
 }
-
+function toggleAutoShift() {
+    if (bUseAutoShift) {
+        bUseAutoShift=false;
+         document.getElementById('vgearl').innerHTML = "<b>VGear</b>";
+        } else {
+         bUseAutoShift=true;
+          document.getElementById('vgearl').innerHTML = "<b>VGear(A)</b>";
+        }
+}
 function hideShowERG() {
-     let tpower=Number(130);
+  
      if (bWorkout ) {
          tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
         }
@@ -253,10 +292,14 @@ var minHR;
 export var powerFTP;
 let emailAddress="";
 var windSpeed;
-var coefficientRR // rolling resistance
-var coefficientWR  // wind resistance
+var coefficientRR=0.005 // rolling resistance
+var coefficientWR=0.50;  // wind resistance
 
-
+let activeRpm=50;
+let currentRpm=0;
+let maxrpm=90;
+let minrpm=80;
+let bUseAutoShift=false;
 let ftms=false;
 let lastGPSTime="";
 let vgear=0;
@@ -266,6 +309,8 @@ let workoutTime=0;
 let totalRPM=0;
 let totalRPMPts=0;
 let ERGMode=false;
+let bUseVirtualWatts=false;
+let virtualPower=100.0;
 let intervalWatts=0;
 let intervalCount=0;
 let totalWorkoutTime=0;
@@ -301,6 +346,9 @@ var sel = document.getElementById('connectDevice');
     case 'RUN':  
               connectRSC();           
    break;
+        case 'Virtual':  
+              virtualWatts();           
+   break;
   
     }
   };
@@ -327,7 +375,7 @@ selWorkout.onchange = function(){
 export async function sWorkout(value) {
      //await parseZWO(value);
     bWorkout=true;
-    workoutIndex=-1;
+    workoutIndex=0;
     totalWorkoutTime=0;
     console.log("workout index "+workoutIndex);
         document.getElementById("table1").rows[0].cells[4].style.display = "table-cell";
@@ -350,6 +398,7 @@ export async function sWorkout(value) {
  	
             console.log("Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
             }
+   // workoutIndex=-1;
          
 }
 
@@ -366,27 +415,40 @@ let minHR=50;
 export let powerFTP=180;
     */
 console.clear();
-/*
- bMetric = localStorage.getItem('checkboxState')
- console.log("Use Metric " +bMetric);
+
+
+ let bUseMetric = localStorage.getItem('checkboxState')
+ console.log("Use Metric " +bUseMetric);
+
+if (bUseMetric === "false") {
+    console.log("bUseMetric1=false"); //correct
+    bMetric=false;
+    }
+if (bUseMetric === "true") {
+    console.log("bUseMetric2=true");
+    bMetric=true;
+    }
+
  if (bMetric) {
              document.getElementById('speedl').innerHTML =  "<b>KPH</b>";
                  document.getElementById('avespeedl').innerHTML =  "<b>Ave KPH</b>";
                  document.getElementById('distancel').innerHTML =  "<b>Kilometers</b>";
         }
-*/
-riderAge = localStorage.getItem(".age");
-riderWeight = localStorage.getItem(".weight");
+
+riderAge =  Number(localStorage.getItem(".age"));
+riderWeight =  Number(localStorage.getItem(".weight"));
 trainerDifficulty = Number(localStorage.getItem(".trainerDifficulty"));
-syncSeconds = localStorage.getItem(".syncSeconds");
-pauseSpeed = localStorage.getItem(".pauseSpeed");
-maxHR = localStorage.getItem(".maxHR");
-minHR = localStorage.getItem(".minHR");
-powerFTP = localStorage.getItem(".powerFTP");
+syncSeconds =  Number(localStorage.getItem(".syncSeconds"));
+pauseSpeed =  Number(localStorage.getItem(".pauseSpeed"));
+maxHR =  Number(localStorage.getItem(".maxHR"));
+minHR =  Number(localStorage.getItem(".minHR"));
+powerFTP = Number(localStorage.getItem(".powerFTP"));
 emailAddress = localStorage.getItem(".emailAddress");
-windSpeed = localStorage.getItem(".windSpeed");
-coefficientRR = localStorage.getItem(".coefficientRR");
-coefficientWR = localStorage.getItem(".coefficientWR");
+windSpeed =  Number(localStorage.getItem(".windSpeed"));
+//coefficientRR =  Number(localStorage.getItem(".coefficientRR"));
+//coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
+minrpm =  Number(localStorage.getItem(".minRPM"));
+maxrpm =  Number(localStorage.getItem(".maxRPM"));
 
 if (!riderAge) {
     console.log("Default age");
@@ -435,6 +497,7 @@ if (!windSpeed) {
     windSpeed=0;
       localStorage.setItem('.windSpeed', windSpeed);
 }
+/*
 if (!coefficientRR) {
      console.log("Default coefficientRR");
     coefficientRR=.006;
@@ -446,7 +509,17 @@ if (!coefficientWR) {
       localStorage.setItem('.coefficientWR', coefficientWR);
 }
  
- 
+ */
+if (!minrpm) {
+     console.log("Default minrpm");
+    minrpm=80;
+      localStorage.setItem('.minRPM', minrpm);
+}
+if (!maxrpm) {
+     console.log("Default maxrpm");
+    maxrpm=90;
+      localStorage.setItem('.maxRPM', maxrpm);
+}
 document.getElementById('trdiff').innerHTML = trainerDifficulty;
 document.getElementById('vgear').innerHTML = vgear;
 
@@ -462,6 +535,8 @@ console.log("emailAddress " + emailAddress);
 console.log("windSpeed " + windSpeed);
 console.log("coefficientRR " + coefficientRR);
 console.log("coefficientWR " + coefficientWR);
+console.log("AutoShift maxRPM " + maxrpm);
+console.log("AutoShift minRPM " + minrpm);
 
 
     let grade = 0.0
@@ -484,8 +559,9 @@ var cpCharacteristic;
 var ftmsService;
 var ftmsDevice;
 var ftmsServer;
-export var trainerConnected = false;
+export let trainerConnected = false;
 export var smartTrainerConnected = false;
+var cadenceConnected=false;
 //let trainerConnected = false
 //let smartTrainerConnected = false
 export var runPod = false;
@@ -520,6 +596,7 @@ window.startTimer = startTimer;
 //window.sendSimulation = sendSimulation;
 window.saveGPS = saveGPS;
 window.saveData = saveData;
+//window.virtualWatts = virtualWatts;
 
 /*
 Make sure you are wearing the hr monitor, as it typically
@@ -607,7 +684,15 @@ let csc_measurement = [
         [ble_uint16, 'last_crank_event_time']
     ]]
 ];
-
+function virtualWatts() {
+    if (bUseVirtualWatts) {
+        bUseVirtualWatts=false;
+         trainerConnected = false;
+        } else {
+         bUseVirtualWatts=true;
+         trainerConnected = true;
+        }
+    }
 async function connectFTMS() {
 
     await trainerControl.connect();
@@ -616,6 +701,7 @@ async function connectFTMS() {
     console.log("Device name " + trainerControl.device.name);
     trainerConnected = true
     	smartTrainerConnected = true
+     bUseVirtualWatts=false;
 }
 
 
@@ -864,6 +950,7 @@ async function connectRSC1(props) {
     char.oncharacteristicvaluechanged = props.onChange
     char.startNotifications()
     trainerConnected = true
+     bUseVirtualWatts=false;
     runPod = true;
 
     return char
@@ -889,6 +976,7 @@ async function connectPM1(props) {
     char.oncharacteristicvaluechanged = props.onChange
     char.startNotifications()
     trainerConnected = true
+     bUseVirtualWatts=false;
     hideVGear();
     return char
 }
@@ -1016,13 +1104,14 @@ export function initializeRoute(){
 
     }
 export async function processRPM(rpm) {
+    currentRpm=rpm;
     document.getElementById('rpm').innerHTML = rpm.toFixed(0);
             if (appStart) {
                 totalRPM+= rpm;
                 totalRPMPts++;
                 
-                let arpm = (totalRPM/totalRPMPts)
-                document.getElementById('averpm').innerHTML = arpm.toFixed(0) 
+                let averpm = (totalRPM/totalRPMPts)
+                document.getElementById('averpm').innerHTML = averpm.toFixed(0) 
                 //console.log("ave rpm "+arpm + " " + appStart);
             }
     }
@@ -1165,8 +1254,9 @@ export async function processPower(power) {
         if (bMetric) {
            weight = riderWeight;
        }
-        let velocity = speedFromPower(power, (grade * 100.0), elevation, weight) ; // mps
        
+        let velocity = speedFromPower(power, (grade * 100.0), elevation, weight) ; // mps
+     
         if (bMetric) {
             velocity = velocity * mps2kph;
         } else {
@@ -1211,6 +1301,21 @@ export async function processPower(power) {
             changeVideoSpeed(ratio, gpxSeconds, totalSeconds)
 
             if (smartTrainerConnected && !ERGMode && (i % sendSimInterval === 0)) {
+                if (bUseAutoShift && cadenceConnected && currentRpm > activeRpm) {
+                    if (currentRpm > maxrpm) {
+                        if (vgear < 10) {
+                        vgear++;
+                            }
+                        
+                        document.getElementById('vgear').innerHTML = vgear;
+                    } 
+                    else if (currentRpm < minrpm) {
+                        if (vgear > -10) {
+                        vgear--;
+                        }
+                        document.getElementById('vgear').innerHTML = vgear;
+                    }
+                 }
                  trainerCommands.sendSimulation(((grade * 100.0) * (trainerDifficulty / 100.0))+vgear,
                                                    windSpeed, coefficientRR, coefficientWR);
             }
@@ -1265,7 +1370,7 @@ export async function processPower(power) {
     export
 
     function startTimer() {
-        try {
+        //try {
             console.log('start timer...' + appStart);
 
 
@@ -1296,9 +1401,11 @@ export async function processPower(power) {
                 document.getElementById('timer').innerHTML = "Start"
                  document.getElementById('timer').className = "fa fa-play";
             }
+        /*
         } catch (err) {
             console.error('error occured: ', err.message)
         }
+        */
     }
 
 
@@ -1322,6 +1429,7 @@ export async function processPower(power) {
            
            
          processWorkout(millis);
+         processVirtualWatts();
             
         try {
             //   console.log('print time ' + millis);
@@ -1356,6 +1464,11 @@ export async function processPower(power) {
             }
            
         }
+function processVirtualWatts() {
+    if (bUseVirtualWatts) {
+        processPower(virtualPower);
+        }
+    }
 function skipWorkoutInterval() {
     workoutIndex++;
                     if (workoutIndex == zwoArray.length) {
@@ -1539,7 +1652,18 @@ export function formatTime(timeleft) {
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
+       // sendGPS("Mail to strava");
     }
+    function sendGPS(message)
+{
+    var mailAddress="stravaupload@gotoes.org";
+    if (mailAddress.includes('@')) {
+    var subject = "Virtual Bike Ride";
+    document.location.href = "mailto:"+mailAddress+"?subject="
+        + encodeURIComponent(subject)
+        + "&body=" + encodeURIComponent(message);
+        }
+}
     function getGPS() {
         let activity = "VirtualRide";
         if (runPod) {

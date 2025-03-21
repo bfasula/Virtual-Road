@@ -1,49 +1,26 @@
-import {processRPM,processPower} from './cyclecomputer.js';
+import {processRPM,processPower, modifyTrainerConnected, modifyCadenceConnected} from './cyclecomputer.js';
 
 let lastCrankTime=0;
 let lastCrankRevolutions = 0;
 let rpm = 0;
-
+let lastWheelTime=0;
+let lastWheelTimeInSeconds=0;
+let lastWheelRevolutions = 0;
+let wheelSize = 2096.0;
+let lWheelTime = 0;
+let lastDistance = 0;
+ let i=0;
 export function printCSC(event) {
    
-      let i=0;
+       i=0;
         const bits1 = event.target.value.getUint8(i++,true)
         
         let hasWheelData = (bits1 & 0x01) > 0;
         let hasCrankData = (bits1 & 0x02) > 0;
-     /*
-      if (hasWheelData) {
-                long newTotalWheelRevolutions =0;
-            
-                long wheelTime = 0;
-
-                //format = BluetoothGattCharacteristic.FORMAT_UINT32;
-                //newTotalWheelRevolutions = characteristic.getIntValue(format, i);
-                const wheelRevolutions = event.target.value.getUint32(i)
-                i+=4;
-                //format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                //wheelTime = characteristic.getIntValue(format, i);
-                const wheelTime = = event.target.value.getUint16(i)
-                i+=2;
-          }
-            if (hasCrankData) {
-
-                //format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                //newTotalCrankRevolutions = characteristic.getIntValue(format, i);
-                  const crankRevolutions  = event.target.value.getUint16(i)
-                i+=2;
-                //crankTime = characteristic.getIntValue(format, i);
-                   const crankTime = = event.target.value.getUint16(i)
-            }
-   
-        let data = this.parser.getData(event.target.value);
-        let crankRevolutions = data['cumulative_crank_revolutions'];
-        let crankTime = data['last_crank_event_time'];
-        let wheelRevolutions = data['cumulative_wheel_revolutions'];
-        let wheelTime = data['last_wheel_event_time'];
-*/
+    wheelData(hasWheelData);
+     
        if (hasCrankData) {
-
+    modifyCadenceConnected(true);
                 //format = BluetoothGattCharacteristic.FORMAT_UINT16;
                 //newTotalCrankRevolutions = characteristic.getIntValue(format, i);
                   const crankRevolutions  = event.target.value.getUint16(i,true)
@@ -71,8 +48,11 @@ export function printCSC(event) {
             console.log("rpm "+rpm)
            processRPM(rpm);
         }
-
+}
+function wheelData(hasWheelData) {
         if (hasWheelData) {
+          modifyTrainerConnected(true);
+           // console.log("\nhasWheelData");
                 //long newTotalWheelRevolutions =0;
             
                 //long wheelTime = 0;
@@ -80,15 +60,18 @@ export function printCSC(event) {
                 //format = BluetoothGattCharacteristic.FORMAT_UINT32;
                 //newTotalWheelRevolutions = characteristic.getIntValue(format, i);
                 const wheelRevolutions = event.target.value.getUint32(i,true)
+            //console.log("wheelRevolutions "+wheelRevolutions);
                 i+=4;
                 //format = BluetoothGattCharacteristic.FORMAT_UINT16;
                 //wheelTime = characteristic.getIntValue(format, i);
                 const wheelTime  = event.target.value.getUint16(i,true)
+             //console.log("wheelTime "+wheelTime + " lastWheelTime "+lastWheelTime);
                 i+=2;
             // Circumference = 2 * pi * radius, or just pi * diameter
                 // However, our wheel diameter is in mm, whereas we want distance in m
                 if (lastWheelTime == wheelTime) {
-                    console.log("Dup wheel record");
+                   // console.log("Dup wheel record");
+                    return;
                 }
             if(lastWheelTime > wheelTime) {
                 lastWheelTime = lastWheelTime - 65536;
@@ -98,43 +81,37 @@ export function printCSC(event) {
             }
             let netWheelTime=0.0;
             let wheelTimeInSeconds =  wheelTime / 1024.0;
+           // console.log("wheelTimeInSeconds "+wheelTimeInSeconds + " lastWheelTimeInSeconds " + lastWheelTimeInSeconds);
             if (wheelTime != 0 && lastWheelTime > 0
                             && lastWheelRevolutions > 0)  {
                         //wheelTimeInSeconds = (double) wheelTime / 1024.0;
-                        if (wheelTimeInSeconds > lastWheelTime) {
-                            netWheelTime = wheelTimeInSeconds - lastWheelTime;
+                        if (wheelTimeInSeconds > lastWheelTimeInSeconds) {
+                            netWheelTime = wheelTimeInSeconds - lastWheelTimeInSeconds;
                         } else {
-                            netWheelTime = (64 - lastWheelTime) +  wheelTimeInSeconds;
+                            netWheelTime = (64 - lastWheelTimeInSeconds) +  wheelTimeInSeconds;
                         }
+             //   console.log("netWheelTime "+netWheelTime);
                         let netdistance =0.0; // miles
 
-                        netdistance = ((newTotalWheelRevolutions - lastWheelRevolutions)
+                        netdistance = ((wheelRevolutions - lastWheelRevolutions)
                                 * wheelSize /25.4/12.0)/5280.0;
                         // current speed mph
                         if (Math.abs(netWheelTime) > 0) {
-                            speed = netdistance / (Math.abs(netWheelTime)/3600.0);
+                            let speed = netdistance / (Math.abs(netWheelTime)/3600.0);
                             //txtSpeed.setText(String.format(Locale.US,"%.1f",cscdata.speed));
-                            if (!MainActivity.powerConnected) {
-                                watts = computeWatts(speed);
-                                processPower(watts);
+                            //if (!MainActivity.powerConnected) {
+                               // console.log("speed mph "+speed);
+                                let watts = computeWatts(speed);
+                              //  console.log("watts "+watts);
+                                processPower(Number(watts));
                                 //powerZone = cscdata.computePowerZone(cscdata.watts);
                                 //npCalculator.addValue( cscdata.watts);
-                            }
-                            //txtData.setText("speed " + cscdata.speed + " watts " + cscdata.watts);
+                            //}
+                          //  console.log("speed " + speed + " watts " + watts);
                             //txtWatts.setText(String.format("%.0f",cscdata.watts)+"/"+cscdata.powerZone);
-                            console.log("netdist " + netdistance + " netwheeltime " + netWheelTime);
+                          //  console.log("netdist " + netdistance + " netwheeltime " + netWheelTime);
                         }
-                    if (appStart ) {
-                            totalWheelRevolutions += (newTotalWheelRevolutions - lastWheelRevolutions);
-                         
-                            if (cscdata.lastWheelTimeInSeconds > 0.0) {                       
-                                cscdata.aspeed = (cscdata.distance / (cscdata.totalWheelTimeInSeconds / 3600.00)) ;
-                            }
-
-                            // total distance miles
-                            distance =(totalWheelRevolutions
-                                    * cscdata.wheelSize /25.4/12.0)/5280.0;     
-                    }
+               
             }
             
             let wheelRevs = wheelRevolutions - lastWheelRevolutions;
@@ -146,14 +123,15 @@ export function printCSC(event) {
     
             lastWheelRevolutions = wheelRevolutions;
             lastWheelTime = wheelTime;
-                lastWheelRevolutions= newTotalWheelRevolutions;
-                lastWheelTime = wheelTimeInSeconds;
-                lWheelTime = wheelTime;
+                lastWheelRevolutions= wheelRevolutions;
+                lastWheelTimeInSeconds = wheelTimeInSeconds;
+                //lWheelTime = wheelTime;
                 lastDistance = distance;
             //this.dispatch('wheelrpm', wheelRpm
             // calculate speed
             //  processPower(power);
         }
+}
     function computeWatts(mph) {
         try {
         /*
@@ -165,11 +143,10 @@ export function printCSC(event) {
            /// P = (6.481090 * mph) + (0.020106 * (mph*mph*mph)); /////////wind trainer
             P = (5.244820 * mph) + (.019168 * (mph*mph*mph)); // formula from kinetic
         
-        console.log("Speed "+mph +"  ,Watts "+P);
-        return P;
+        //console.log("Speed "+mph +"  ,Watts "+P);
+        return P.toFixed(0);
           } catch (err) {
         console.error('error occured: ', err.message)
          }
     }
         
-}

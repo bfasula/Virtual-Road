@@ -162,8 +162,8 @@ var response;
           let fr = new FileReader();
          fr.onload = function () {
                     response = fr.result;
-              console.log("response ");
-     console.log(response);
+      //        console.log("response ");
+     //console.log(response);
              processXML(response,filename);
                 }
          await  fr.readAsText(filename);
@@ -305,13 +305,13 @@ var xmlString = s1.slice(start,end+"<trkseg>".length) ;
     console.log("total points "+ gpxIndex);
     console.log("gpxArray size " +gpxArray.length);
         
-        for(var i =0; i< gpxArray.length; i++) {
-           printGPX(i);
-          }
+       // for(var i =0; i< gpxArray.length; i++) {
+      //     printGPX(i);
+      //    }
           //  updateMap(gpxArray[0].lat,gpxArray[0].lon,filename);
      updateMapOL(s1);
         console.log("i = "+findGPX(100.0));
-     if (bMetric) {
+     if (bMetric === 'true') {
           document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1000).toFixed(1) + " KM ";
     } else {
          document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles ";
