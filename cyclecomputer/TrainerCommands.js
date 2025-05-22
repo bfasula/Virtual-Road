@@ -61,7 +61,7 @@ export class TrainerCommands {
     }
     
 async  sendSimulation(gradient, windSpeed, coefficientRR, coefficientWR) {
-    console.log("TrainerCommands:sendSimulation grade="+ gradient);
+    //console.log("TrainerCommands:sendSimulation grade="+ gradient);
     /*
     if (!this.treadmillControl.smartTrainerConnected) {
         alert("Connect a trainer or power meter")
@@ -105,7 +105,7 @@ async  sendSimulation(gradient, windSpeed, coefficientRR, coefficientWR) {
     const grade2 = view.getInt16(3, true);
     const crr = view.getUint8(5, true);
     const windResistance = view.getUint8(6, true);
-    console.log("TrainerCommands:sendSimulation "+ opCode2 + "," + windSpeed2 + "," + grade2 + "," + crr + "," + windResistance);
+    //console.log("TrainerCommands:sendSimulation "+ opCode2 + "," + windSpeed2 + "," + grade2 + "," + crr + "," + windResistance);
     //let result = await writeWithRetry(view);
     //     console.log('send Command',result);
 

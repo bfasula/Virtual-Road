@@ -1,4 +1,4 @@
-import {sWorkout,formatTime} from './cyclecomputer.js';
+import {sWorkout,formatTime, powerFTP} from './cyclecomputer.js';
 import {NormalizedPower} from './NormalizedPower.js';
 window.selectWorkout=selectWorkout
 
@@ -17,7 +17,7 @@ const data = [];
 let xscale=1.0;
 let yscale=1.0;
 let maxPower=0;
-let powerFTP = localStorage.getItem(".powerFTP");
+
   let totalSecs=0;
 let normalizedPower = new NormalizedPower(powerFTP);
 

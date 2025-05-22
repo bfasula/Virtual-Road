@@ -44,8 +44,7 @@ export function printCSC(event) {
             lastCrankRevolutions = crankRevolutions;
             lastCrankTime = crankTime;
 
-            //this.dispatch('cadence', rpm);
-            console.log("rpm "+rpm)
+            //console.log("rpm "+rpm)
            processRPM(rpm);
         }
 }

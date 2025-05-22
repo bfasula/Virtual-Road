@@ -23,14 +23,18 @@ window.onbeforeunload = function () {
     //saveGPS();
     return "Do you really want to close?";
 };
-let tpower=Number(100);
+export var powerFTP = Number(localStorage.getItem(".powerFTP"));
+let tpower=Number(powerFTP*0.65); // zone2
+document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
+document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
+
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 109) { // minus
         if (bUseVirtualWatts) {
             if (virtualPower > 10.0) {virtualPower=Number(virtualPower)-10.0;}
             } else {
         vgear--;
-        if (vgear < -10) {vgear=-10;}
+        if (vgear < minimumIncline) {vgear=minimumIncline;}
          document.getElementById('vgear').innerHTML = vgear;
             }
     }
@@ -39,7 +43,7 @@ document.addEventListener('keydown', function(event) {
              virtualPower=Number(virtualPower)+10.0;
             } else {
        vgear++;
-        if (vgear > 10) {vgear=10;}
+        if (vgear > maximumIncline) {vgear=maximumIncline}
          document.getElementById('vgear').innerHTML = vgear;
             }
     } 
@@ -202,13 +206,27 @@ function showWorkoutCells() {
                         ctx.canvas.hidden = true;
 }
 function toggleAutoShift() {
-    if (bUseAutoShift) {
-        bUseAutoShift=false;
-         document.getElementById('vgearl').innerHTML = "<b>VGear</b>";
-        } else {
+    if (!bUseAutoShift) {
          bUseAutoShift=true;
-          document.getElementById('vgearl').innerHTML = "<b>VGear(A)</b>";
+         bUseAutoShiftRPM=true;
+         bUseAutoShiftGrade=false;
+         document.getElementById('vgearl').innerHTML = "<b>VGear(AR)</b>";
         }
+    else if (bUseAutoShiftRPM) { 
+         bUseAutoShift=true;
+         bUseAutoShiftRPM=false;
+         bUseAutoShiftGrade=true;
+         baseVgear=vgear; // Make base vgear the current vgear
+         document.getElementById('vgearl').innerHTML = "<b>VGear(AG)</b>";
+        }
+    else if (bUseAutoShiftGrade) {
+         bUseAutoShift=false;
+         bUseAutoShiftRPM=false;
+         bUseAutoShiftGrade=false;
+         document.getElementById('vgearl').innerHTML = "<b>VGear</b>";
+        }
+     
+   
 }
 function hideShowERG() {
   
@@ -280,16 +298,17 @@ function beep2() {
 let trainerControl = new TrainerControl();
 let trainerCommands = new TrainerCommands(trainerControl);
 const delay = ms => new Promise(res => setTimeout(res, ms));
-let sendSimInterval = 2;
+//let sendSimInterval = 1;
 
 var riderWeight ;
 var riderAge;
 var trainerDifficulty ;
+let lastTrainerDifficulty=0;
 var syncSeconds;
 var pauseSpeed;
 var maxHR;
 var minHR;
-export var powerFTP;
+
 let emailAddress="";
 var windSpeed;
 var coefficientRR=0.005 // rolling resistance
@@ -300,9 +319,12 @@ let currentRpm=0;
 let maxrpm=90;
 let minrpm=80;
 let bUseAutoShift=false;
+let bUseAutoShiftRPM=false;
+let bUseAutoShiftGrade=false;
 let ftms=false;
 let lastGPSTime="";
 let vgear=0;
+let lastVgear=0;
 export var bWorkout=false;
 let workoutIndex=-1;
 let workoutTime=0;
@@ -314,12 +336,14 @@ let virtualPower=100.0;
 let intervalWatts=0;
 let intervalCount=0;
 let totalWorkoutTime=0;
-let markerFrequency=5; // update gpx map every 5 gps points
+let markerFrequency=1; // update gpx map every 5 gps points
 //export let bMetric=false;
 export var bMetric=false;
 export let initialDistance = 0; //miles
-
-
+export var minimumIncline=-15.0;
+export var maximumIncline=15.0;
+let lastEffectiveGrade=0.0;
+let baseVgear=0.0;
 
 var sel = document.getElementById('connectDevice');
  
@@ -568,7 +592,8 @@ export var runPod = false;
 var success = false;
 var videoStarted = false;
 let gpsIndex=0;
- let i = 0;
+let gradeIndex = 0;
+let lastGradeIndex = 0;
 let mph = 0;
 //let nGradients=5;
 //var lastgradients = Array(0,0,0,0,0);
@@ -596,6 +621,7 @@ window.startTimer = startTimer;
 //window.sendSimulation = sendSimulation;
 window.saveGPS = saveGPS;
 window.saveData = saveData;
+
 //window.virtualWatts = virtualWatts;
 
 /*
@@ -891,6 +917,7 @@ async function connectHRM1(props) {
         acceptAllDevices: false,
     })
     device .addEventListener('gattserverdisconnected', HRMonDisconnected);
+  
     console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     const service = await server.getPrimaryService('heart_rate')
@@ -902,9 +929,12 @@ async function connectHRM1(props) {
     return char
 }
  async function HRMonDisconnected() {
+     const device = event.target;
+    console.log(`Device ${device.name} is Connected.`);
         console.log('>HRM Bluetooth Device disconnected');
          alert('> HRM Bluetooth Device disconnected');
      }
+ 
 async function connectRPM1(props) {
     const device = await navigator.bluetooth.requestDevice({
         filters: [{
@@ -930,9 +960,12 @@ async function connectRPM1(props) {
     return char
 }
  async function  RPMonDisconnected() {
+      const device = event.target;
+    console.log(`Device ${device.name} is disonnected.`);
         console.log('>RPM Bluetooth Device disconnected');
          alert('> RPM Bluetooth Device disconnected');
      }
+
 async function connectRSC1(props) {
     const device = await navigator.bluetooth.requestDevice({
         filters: [{
@@ -967,6 +1000,7 @@ async function connectPM1(props) {
         acceptAllDevices: false,
     })
      device .addEventListener('gattserverdisconnected', PMonDisconnected);
+     
     console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     //const service = await server.getPrimaryService('heart_rate')
@@ -984,6 +1018,7 @@ async function connectPM1(props) {
         console.log('>PM Bluetooth Device disconnected');
          alert('> PM Bluetooth Device disconnected');
      }
+
 
 // Basic example that prints a live updating chart of the heart rate history.
 // Note: This should only be used as a quick/hacky test, it's not optimized.
@@ -1119,31 +1154,14 @@ export async function processPower(power) {
 
 
     let distancem = 0
-  
+    let nextGrade = 0.0;
     //let workoutIndex=0;
     // gpsTimeArray = Array(gpxArray.length);
     if (gpsArray === undefined) {
         console.log("gpsArray undefined");
         //gpsIndex=0;
         gpsArray = Array(gpxArray.length*10); // for upto 10 laps
-        
       
-        
-        
-       
-        /*
-        if (initialDistance > 0) {
-            let i=0;
-            if (bMetric) {
-                 i = findGPX(initialDistance );
-                
-            } else {
-                 i = findGPX(initialDistance * miles2meters);
-                }
-            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds;
-            seekVideo(gpxSeconds, syncSeconds);
-        }
-        */
         initStartLoc();
         /*
         if (bWorkout) {
@@ -1185,14 +1203,19 @@ export async function processPower(power) {
              distancem = (totalDistance+initialDistance-lastRouteDistance)  * miles2meters ; 
         }
        
-            i = findGPX(distancem);
-             
+            gradeIndex = findGPX(distancem);
+          
             updateProgress(distancem ,gpxArray[gpxArray.length - 1].distance);
          
-            if (i < gpxArray.length - 1 && i >= 0) {
+            if (gradeIndex < gpxArray.length - 1 && gradeIndex >= 0) {
                
-                grade = gpxArray[i + 1].smoothGrade;
-
+                grade = gpxArray[gradeIndex + 1].smoothGrade;
+                if (gradeIndex < gpxArray.length - 2 && gradeIndex >= 0) {
+                    nextGrade = gpxArray[gradeIndex + 2].smoothGrade;
+                }
+                //if (gradeIndex < gpxArray.length - 3 && gradeIndex >= 0) {
+                //    nextGrade = gpxArray[gradeIndex + 3].smoothGrade;
+                 //}
 
             } else {
                 
@@ -1201,7 +1224,7 @@ export async function processPower(power) {
                     console.log("lap " + lapCounter);
                     
                     seekVideo(0, syncSeconds);
-                    i=0;
+                    gradeIndex=0;
                 
                  let p1 = new GPXPoint(100.0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0);
                   console.log("route ended");
@@ -1212,30 +1235,47 @@ export async function processPower(power) {
                 lastRouteDistance=totalDistance;
                 initialDistance=0;
                 if (!loopRoute) {
-                
-                    saveGPS();
-                    saveData();
+                    if (confirm("Route Ended, Save Data?") == true) {
+                        saveGPS();
+                         gpsIndex=0;
+                        saveData();
+                    } else {
+  
+                    }
+                    //alert("Route Ended");
+                    //saveGPS();
+                   // saveData();
+                    /*
+                    let person = prompt("Please enter your name", "Harry Potter");
+
+                    if (person != null) {
+                    document.getElementById("demo").innerHTML =
+                    "Hello " + person + "! How are you today?";
+                    }
+                    */
                    
-                }
-                 gpsIndex=0;
+                } else {
+                
                  startTimer();
+                 }
+               
                     return;
             }
-            if (i < gpxArray.length - 1 && i >= 0) {
+            if (gradeIndex < gpxArray.length - 1 && gradeIndex >= 0) {
                 /////////////console.log("i="+i);
-                elevation = gpxArray[i].ele;
+                elevation = gpxArray[gradeIndex].ele;
                 if (bMetric) {
-                     mph = gpxArray[i].mps * mps2kph;
+                     mph = gpxArray[gradeIndex].mps * mps2kph;
                } else {
-                    mph = gpxArray[i].mps * mps2mph;
+                    mph = gpxArray[gradeIndex].mps * mps2mph;
                 }
                 const currentDate = new Date();
                 const gpsTime = currentDate.toISOString().slice(0,19); //"2011-10-05T14:48:00.000Z"
                
                 if (gpsTime !== lastGPSTime) {
-                    let p1 = new GPXPoint(gpxArray[i].lat, gpxArray[i].lon, gpxArray[i].ele, gpxArray[i].smoothEle, gpxArray[i].secs, gpxArray[i].grade, gpxArray[i].smoothGrade, gpxArray[i].totaldistancem, gpxArray[i].mps, gpsTime, heartRate, power);
-                    if ((i % markerFrequency) == 0) {         
-                            updateMarkerOL(gpxArray[i].lat,gpxArray[i].lon);
+                    let p1 = new GPXPoint(gpxArray[gradeIndex].lat, gpxArray[gradeIndex].lon, gpxArray[gradeIndex].ele, gpxArray[gradeIndex].smoothEle, gpxArray[gradeIndex].secs, gpxArray[gradeIndex].grade, gpxArray[gradeIndex].smoothGrade, gpxArray[gradeIndex].totaldistancem, gpxArray[gradeIndex].mps, gpsTime, heartRate, power);
+                    if ((gradeIndex % markerFrequency) == 0) {         
+                            updateMarkerOL(gpxArray[gradeIndex].lat,gpxArray[gradeIndex].lon);
                     }   
                     gpsArray[gpsIndex++] = p1;
                 }
@@ -1290,7 +1330,7 @@ export async function processPower(power) {
             totalDistance = (totalSpeed / totalSpeedPts) * (totalSeconds / 3600);
             document.getElementById('distance').innerHTML = totalDistance.toFixed(2);
            
-            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds;
+            let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds;
             seekVideo(gpxSeconds, syncSeconds);
             let ratio = velocity / 15.0;
           
@@ -1300,29 +1340,85 @@ export async function processPower(power) {
         
             changeVideoSpeed(ratio, gpxSeconds, totalSeconds)
 
-            if (smartTrainerConnected && !ERGMode && (i % sendSimInterval === 0)) {
-                if (bUseAutoShift && cadenceConnected && currentRpm > activeRpm) {
+            if (smartTrainerConnected && !ERGMode) {
+               
+                 rpmAutoShift(currentRpm, activeRpm);
+                 gradeAutoShift(nextGrade);
+               
+                 let effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
+                 console.log("effect grade "+effectiveGrade+ " grade "+(grade*100.0).toFixed(2) + " diff% " +trainerDifficulty+ " vgear "+vgear);
+                 if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
+                    trainerCommands.sendSimulation(effectiveGrade,windSpeed, coefficientRR, coefficientWR);
+                }
+                 lastEffectiveGrade = effectiveGrade;
+            } // if smarttrainerconnected
+            lastGradeIndex = gradeIndex;
+           
+            
+        } // if appstart
+    }
+ function rpmAutoShift(currentRpm, activeRpm) {
+     if (bUseAutoShiftRPM && cadenceConnected && currentRpm > activeRpm) {
                     if (currentRpm > maxrpm) {
-                        if (vgear < 10) {
+                        if (vgear < maximumIncline) {
                         vgear++;
                             }
                         
                         document.getElementById('vgear').innerHTML = vgear;
                     } 
                     else if (currentRpm < minrpm) {
-                        if (vgear > -10) {
+                        if (vgear > minimumIncline) {
                         vgear--;
                         }
                         document.getElementById('vgear').innerHTML = vgear;
                     }
                  }
-                 trainerCommands.sendSimulation(((grade * 100.0) * (trainerDifficulty / 100.0))+vgear,
-                                                   windSpeed, coefficientRR, coefficientWR);
-            }
-
-        }
-    }
-
+     }
+ function gradeAutoShift(nextGrade) {
+      if (bUseAutoShiftGrade && gradeIndex != lastGradeIndex) {
+                 let currentGrade = grade*100.0 ;
+                 nextGrade = nextGrade*100.0 
+                
+                 
+                 console.log("Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1));
+                vgear = -Math.round(nextGrade * (trainerDifficulty / 100.0)) + baseVgear;
+                 console.log("***Shift  "+Math.round( nextGrade - currentGrade) + " vgear "+vgear);
+                    if (vgear < minimumIncline + baseVgear) {
+                        vgear = minimumIncline + baseVgear;
+                        }
+                    
+                
+                        if (vgear > maximumIncline + baseVgear) {
+                        vgear = maximumIncline + baseVgear;
+                            }
+                      console.log("***Shift  "+Math.round( nextGrade - currentGrade) + " vgear "+vgear);
+                }
+     }
+ function gradeAutoShift2(nextGrade) {
+      if (bUseAutoShift && gradeIndex != lastGradeIndex) {
+                 let currentGrade = grade*100.0 ;
+                 nextGrade = nextGrade*100.0 
+                 let diff =( nextGrade - currentGrade) * (trainerDifficulty / 100.0);
+                 console.log("Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1)+ " diff "+diff);
+                if (nextGrade > currentGrade &&  (diff > 1.0)) { // uphill
+                     console.log("***Shift down "+Math.round( nextGrade - currentGrade) + " vgear "+vgear);
+                    vgear -= Math.round( nextGrade - currentGrade);
+                     console.log("***Shift down "+Math.round( nextGrade - currentGrade) + " vgear "+vgear);
+                    if (vgear < minimumIncline) {
+                        vgear = minimumIncline;
+                        }
+                      console.log("***Shift down "+Math.round( nextGrade - currentGrade) + " vgear "+vgear);
+                } else if (currentGrade > nextGrade && (diff < -1.0)) { // downhill
+                     console.log("***Shift up "+Math.round( currentGrade - nextGrade)+" vgear "+vgear);
+                       vgear += Math.round( currentGrade - nextGrade);
+                      console.log("***Shift up "+Math.round( currentGrade - nextGrade)+" vgear "+vgear);
+                        if (vgear > maximumIncline) {
+                        vgear = maximumIncline;
+                            }
+                     console.log("***Shift up "+Math.round( currentGrade - nextGrade)+" vgear "+vgear);
+                    }
+                }
+     }
  function initStartLoc() {
      initialDistance = Number(document.getElementById('initialdistance').value)
     console.log("initialDistance " + document.getElementById('initialdistance').value);
@@ -1614,7 +1710,7 @@ export function formatTime(timeleft) {
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        sendMail(text);
+        //sendMail(text);
     }
     function sendMail(message)
 {
@@ -1625,10 +1721,19 @@ export function formatTime(timeleft) {
         + "&body=" + encodeURIComponent(message);
         }
 }
-
-    async function wait(ms) {
-        return await new Promise(res => setTimeout(res, ms));
+function sendGPS() {
+   
+    let text = getGPS();
+  
+    var subject = "Virtual_Road Bike Ride";
+    document.location.href = "mailto:stravaupload@gotoes.org?subject="
+        + encodeURIComponent(subject)
+        + "&body=" + encodeURIComponent(text);
+       
     }
+async function wait(ms) {
+        return await new Promise(res => setTimeout(res, ms));
+}
 
    
  function saveGPS() {
@@ -1652,18 +1757,10 @@ export function formatTime(timeleft) {
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
+       //sendGPS();
        // sendGPS("Mail to strava");
     }
-    function sendGPS(message)
-{
-    var mailAddress="stravaupload@gotoes.org";
-    if (mailAddress.includes('@')) {
-    var subject = "Virtual Bike Ride";
-    document.location.href = "mailto:"+mailAddress+"?subject="
-        + encodeURIComponent(subject)
-        + "&body=" + encodeURIComponent(message);
-        }
-}
+   
     function getGPS() {
         let activity = "VirtualRide";
         if (runPod) {

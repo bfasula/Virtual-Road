@@ -1,4 +1,4 @@
-import {runPod,initializeRoute,bMetric} from './cyclecomputer.js';
+import {runPod,initializeRoute,bMetric,maximumIncline, minimumIncline} from './cyclecomputer.js';
 import {updateMapOL} from './minimap.js';
 import {videoDirectory} from './playvideo.js';
 window.selectGPX=selectGPX
@@ -7,8 +7,8 @@ var lastElevations = Array(0,0,0,0,0,0,0,0,0,0);
 let nMps=5;
 var lastMps = Array(0,0,0,0,0,0,0,0,0,0);
 let gpxIndex=0;
-let maxInclination=10/100;
-let minInclination=-10/100;
+let maxInclination=maximumIncline/100;
+let minInclination=minimumIncline/100;
 export var gpxFilename="";
 export var loopRoute=false;
 
