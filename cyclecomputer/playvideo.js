@@ -86,8 +86,8 @@ export function openFullscreen() {
   }
 }
 export function playVideo() { 
-     //myVideo.innerHTML = "TBLoop.MP4"
-     logger("***Starting video");
+    logger("***Starting video");
+    myVideo.muted=true;
     myVideo.play(); 
 } 
 export function pauseVideo() { 
