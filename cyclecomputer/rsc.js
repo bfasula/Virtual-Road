@@ -1,6 +1,7 @@
-import {appStart,totalSeconds,addGPSPoint,startTimer} from './cyclecomputer.js';
+import {appStart,totalSeconds,addGPSPoint,startTimer,updateProgress} from './cyclecomputer.js';
 import {gpxArray,findGPX,printGPX,GPXPoint} from './parsegpx.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess} from './playvideo.js';
+import {updateMarkerOL} from './minimap.js';
 var totalSpeed=0;
 var totalSpeedValues=0;
 var totalRPM=0;
@@ -45,7 +46,8 @@ export function printRSC(event) {
         
         i+=2;
       
-        let rpm = event.target.value.getUint8(i,true)
+        let rpm = event.target.value.getUint8(i,true);
+        document.getElementById('rpm').innerHTML = rpm.toFixed(0);
         //txtRPM.setText(String.format(Locale.US, "%d", cscdata.rpm));
         console.log( "RCS cadence " + rpm);
        
@@ -54,6 +56,7 @@ export function printRSC(event) {
             totalRPMValues++;
             let arpm = totalRPM / totalRPMValues;
             console.log( "RCS ave cadence " + arpm);
+             document.getElementById('averpm').innerHTML = arpm.toFixed(0);
             //txtARPM.setText(String.format(Locale.US,"%.1f",cscdata.arpm));
         }
         i+=1;
@@ -137,7 +140,8 @@ gpxArray[index].smoothEle, gpxArray[index].secs, gpxArray[index].grade,gpxArray[
  gpxArray[index].secs, gpxArray[index].grade,
  gpxArray[index].totaldistancem, gpxArray[index].mps, gpsTime);
                          //console.log("Lat "+p1.lat + " " + gpsArray[gpsIndex-1].lat);
-                     
+                     updateMarkerOL(gpxArray[index].lat,gpxArray[index].lon);
+                         updateProgress(gpxArray[index].totaldistancem ,gpxArray[gpxArray.length - 1].distance);
                     } 
            
         document.getElementById('speed').innerHTML = speed.toFixed(1);

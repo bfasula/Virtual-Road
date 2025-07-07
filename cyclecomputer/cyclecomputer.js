@@ -1450,7 +1450,7 @@ export async function processPower(power) {
         gpsArray[gpsIndex++] = p1;
 
     }
-    function updateProgress(distance,totalDistance) {
+   export function updateProgress(distance,totalDistance) {
          let currentProgress = distance*100/totalDistance;
         //console.log("**********Dist "+ distance + " total "+totalDistance);
         const progressBar = document
