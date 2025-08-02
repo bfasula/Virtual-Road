@@ -144,7 +144,9 @@ gpxArray[index].smoothEle, gpxArray[index].secs, gpxArray[index].grade,gpxArray[
                          updateProgress(gpxArray[index].totaldistancem ,gpxArray[gpxArray.length - 1].distance);
                     } 
            
-        document.getElementById('speed').innerHTML = speed.toFixed(1);
+        //document.getElementById('speed').innerHTML = speed.toFixed(1); 
+      document.getElementById('speed').innerHTML =  mph2minpermile(speed); 
+   
      if (speed >= 1.0) {
             if (appPaused == 1 ) { 
                 appPaused=0;
@@ -175,12 +177,21 @@ gpxArray[index].smoothEle, gpxArray[index].secs, gpxArray[index].grade,gpxArray[
            let aspeed = totalSpeed / totalSpeedValues;
             //txtASpeed.setText(String.format(Locale.US,"%.1f",cscdata.aspeed));
             console.log("RCS ASpeed " + aspeed);
-             document.getElementById('avespeed').innerHTML = aspeed.toFixed(1);
+             //document.getElementById('avespeed').innerHTML = aspeed.toFixed(1);
+            document.getElementById('avespeed').innerHTML = mph2minpermile(aspeed);
         }
             i+=4;
             //let walk= event.target.value.getUint16(i,true);
            // console.log( " walk/run " + walk);
     }
+    function mph2minpermile(mph) {
+         const minutesPerMile = 60 / mph;
+        const minutes = Math.floor(minutesPerMile);
+        const seconds = Math.round((minutesPerMile - minutes) * 60);
+
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+ //return `${minutes}:${seconds.toString().padStart(2, '0')} min/mile`;
+        }
         
 /*
 void processRCSData(BluetoothGattCharacteristic characteristic) {
