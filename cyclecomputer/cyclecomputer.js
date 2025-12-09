@@ -1212,6 +1212,12 @@ export async function processPower(power) {
             if (gradeIndex < gpxArray.length - 1 && gradeIndex >= 0) {
                
                 grade = gpxArray[gradeIndex + 1].smoothGrade;
+                if (grade > maximumIncline) {
+                    grade = maximumIncline;
+                    }
+                else if (grade < minimumIncline) {
+                    grade = minimumIncline;
+                    }
                 if (gradeIndex < gpxArray.length - 2 && gradeIndex >= 0) {
                     nextGrade = gpxArray[gradeIndex + 2].smoothGrade;
                 }
