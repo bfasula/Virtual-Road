@@ -46,7 +46,7 @@
         <td>                  <input type="text" class="maxHR" placeholder="Enter Max HR here"/>
   <button style="background-color: blue; color: white;" class="saveMaxHRBtn">Save Max HR</button></td>
                         
-                        <tr>
+                        <!--tr-->
     <td> <h2 class="userminHR">minHR:</h2></td>
               <td>                <input type="text" class="minHR" placeholder="Enter Min HR here"/>
   <button style="background-color: blue; color: white;" class="saveMinHRBtn">Save Min HR</button></td>
@@ -75,10 +75,20 @@
          <td> <h2 class="userMaxRpm">AutoShift Max RPM:</h2></td>
                   <td>           <input type="text" class="maxRPM" placeholder="Enter Max RPM here"/>
   <button style="background-color: blue; color: white;" class="saveMaxRPMBtn">Save Max RPM</button></td>                                        
-                                      <tr>
+                                      <!--tr-->
         <td> <h2 class="userMinRpm">AutoShift Min RPM:</h2></td>
                   <td>           <input type="text" class="minRPM" placeholder="Enter Min RPM here"/>
-  <button style="background-color: blue; color: white;" class="saveMinRPMBtn">Save Min RPM</button></td>                                           
+  <button style="background-color: blue; color: white;" class="saveMinRPMBtn">Save Min RPM</button></td>     
+                                       </tr>
+                                           <tr>   
+            <td> <h2 class="userMaxGrade">Max Grade:</h2></td>
+                                        
+                  <td>           <input type="text" class="maxGrade" placeholder="Enter Max Grade here"/>
+  <button style="background-color: blue; color: white;" class="saveMaxGradeBtn">Save Max Grade</button></td>                                        
+                                    
+        <td> <h2 class="userMinGrade">Min Grade:</h2></td>
+                  <td>           <input type="text" class="minGrade" placeholder="Enter Min Grade here"/>
+  <button style="background-color: blue; color: white;" class="saveMinGradeBtn">Save Min Grade</button></td>               
 </tr>
     
     </tbody>
@@ -108,6 +118,8 @@ const userSyncSecondsText = document.querySelector('.usersyncSeconds');
            const userCoefficientWRText = document.querySelector('.userCoefficientWR');
            const userMaxRPMText = document.querySelector('.userMaxRPM');
            const userMinRPMText = document.querySelector('.userMinRPM');
+            const userMaxGradeText = document.querySelector('.userMaxGrade');
+           const userMinGradeText = document.querySelector('.userMinGrade');
           
 const saveAgeButton = document.querySelector('.saveAgeBtn');
 const saveWeightButton = document.querySelector('.saveWeightBtn');
@@ -122,6 +134,8 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
           const saveCoefficientWRButton = document.querySelector('.saveCoefficientWRBtn');
            const saveMaxRPMButton = document.querySelector('.saveMaxRPMBtn');
           const saveMinRPMButton = document.querySelector('.saveMinRPMBtn');
+             const saveMaxGradeButton = document.querySelector('.saveMaxGradeBtn');
+          const saveMinGradeButton = document.querySelector('.saveMinGradeBtn');
 
 
           
@@ -200,6 +214,19 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   const minRPM = document.querySelector('.minRPM').value;
   userMinRPMText.textContent = "Min RPM: "+minRPM;
   localStorage.setItem('.minRPM', minRPM);
+});
+
+                   
+    saveMaxGradeButton.addEventListener('click', () => {
+  const maxGrade = document.querySelector('.maxGrade').value;
+  userMaxGradeText.textContent = "Max Grade: "+maxGrade;
+  localStorage.setItem('.maxGrade', maxGrade);
+});
+
+             saveMinGradeButton.addEventListener('click', () => {
+  const minGrade = document.querySelector('.minGrade').value;
+  userMinGradeText.textContent = "Min Grade: "+minGrade;
+  localStorage.setItem('.minGrade', minGrade);
 });
        
           
@@ -330,6 +357,27 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
     userMinRPMText.textContent = 'No Min RPM data in local storage';
   }
 }
+
+             function displayMaxGrade() {
+  const maxGradeFromLocalStorage = localStorage.getItem('.maxGrade');
+
+  if (maxGradeFromLocalStorage) {
+    userMaxGradeText.textContent = "Max Grade: "+maxGradeFromLocalStorage;
+  } else {
+    userMaxGradeText.textContent = 'No Max Grade data in local storage';
+  }
+}
+          
+            function displayMinGrade() {
+  const minGradeFromLocalStorage = localStorage.getItem('.minGrade');
+
+  if (minGradeFromLocalStorage) {
+    userMinGradeText.textContent = "Min Grade: "+minGradeFromLocalStorage;
+  } else {
+    userMinGradeText.textContent = 'No Min Grade data in local storage';
+  }
+}
+
           displayUserWeight();
           displayUserAge();
           displayTD();
@@ -343,6 +391,8 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
          //  displayCoefficientWR();
           displayMaxRPM();
           displayMinRPM();
+          displayMaxGrade();
+         displayMinGrade();
 </script>
   
     <br><br>

@@ -473,6 +473,8 @@ windSpeed =  Number(localStorage.getItem(".windSpeed"));
 //coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
 minrpm =  Number(localStorage.getItem(".minRPM"));
 maxrpm =  Number(localStorage.getItem(".maxRPM"));
+minimumIncline =  Number(localStorage.getItem(".minGrade"));
+maximumIncline =  Number(localStorage.getItem(".maxGrade"));
 
 if (!riderAge) {
     console.log("Default age");

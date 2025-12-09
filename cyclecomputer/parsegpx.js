@@ -7,8 +7,7 @@ var lastElevations = Array(0,0,0,0,0,0,0,0,0,0);
 let nMps=5;
 var lastMps = Array(0,0,0,0,0,0,0,0,0,0);
 let gpxIndex=0;
-let maxInclination=maximumIncline/100;
-let minInclination=minimumIncline/100;
+
 export var gpxFilename="";
 export var loopRoute=false;
 
@@ -192,8 +191,10 @@ let s1=   response;
 let start = s1.indexOf("<trkseg>");
 let end = s1.indexOf("</trkseg>");
 var xmlString = s1.slice(start,end+"<trkseg>".length) ;
-
-
+    let maxInclination=Number(maximumIncline)/100.0;
+let minInclination=Number(minimumIncline)/100.0;
+console.log("max grade " + maximumIncline + " min grade " + minimumIncline);
+console.log("max grade " + maxInclination + " min grade " + minInclination);
      
     //console.log(s2);
     var doc = new DOMParser().parseFromString(xmlString, "text/xml");
@@ -272,6 +273,7 @@ var xmlString = s1.slice(start,end+"<trkseg>".length) ;
                 if (smoothGrade < minInclination) {
                     smoothGrade = minInclination;
                 }
+               //console.log("grade " + grade + " smooth " + smoothGrade);
                mps=distancem/(secs-lastsecs);
                mps=smoothMps(mps,i);
                //console.log("mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
