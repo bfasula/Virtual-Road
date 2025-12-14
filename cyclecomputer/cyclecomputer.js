@@ -672,6 +672,7 @@ window.startTimer = startTimer;
 //window.sendSimulation = sendSimulation;
 window.saveGPS = saveGPS;
 window.saveData = saveData;
+window.initStartLoc = initStartLoc;
 
 //window.virtualWatts = virtualWatts;
 
