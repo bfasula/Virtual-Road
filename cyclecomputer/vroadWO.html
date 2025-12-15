@@ -129,8 +129,9 @@ margin: 0 0 0 -25%"-->
     <p id="btns"style="font-size:xx-small;text-align: center; ">
          
        <button style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()" id="timer" for="timer" <i class="fa fa-play"</i>Start</button>
-   <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="initialdistance" class="initialdistance" value="0" placeholder="Start" title="Distance to begin or teleport(miles)" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
-         <button style="background: rgba(0,0,255, 0.5); color: white;"  onclick="initStartLoc()" id="teleport" for="teleport">Teleport</button>
+         <label id="beginlbl" for="beginlbl"><strong>Loc</strong></label>
+   <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="initialdistance" class="initialdistance" value="0" placeholder="Start" title="Distance to begin (miles)" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
+         <!--button style="background: rgba(0,0,255, 0.5); color: white;"  onclick="initStartLoc()" id="teleport" for="teleport">BeginLoc</button-->
      <button style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveData()" id="data" for="data">Save Data</button>
      <button style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveGPS()" id="gps" for="gps">Save GPS</button>
       
@@ -152,6 +153,9 @@ margin: 0 0 0 -25%"-->
   <option value="Virtual">Virtual Power</option>
 </select>
 &nbsp;
+        
+      
+
         
     <label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
        <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
@@ -177,7 +181,9 @@ margin: 0 0 0 -25%"-->
             <option value="9">9</option>
             <option value="10">10</option>
 </select>
-       
+&nbsp;
+         <label id="synclbl" for="synclbl"><strong>Sync</strong></label>
+         <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="secs2add" class="secs2add" value="0" placeholder="secs2add" title="Add secs to video" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
   </p>    
   
 

@@ -347,6 +347,7 @@ let totalWorkoutTime=0;
 let markerFrequency=1; // update gpx map every 5 gps points
 //export let bMetric=false;
 export var bMetric=false;
+export var seconds2add=0;
 export let initialDistance = 0; //miles
 export var minimumIncline=-15.0;
 export var maximumIncline=15.0;
@@ -1247,7 +1248,10 @@ export async function processPower(power) {
         document.getElementById('avewatts').innerHTML = aWatts.toFixed(0);
         let pcalories = ((aWatts * totalSeconds) / 4.18) / 0.24 / 1000.0;
         document.getElementById('pcal').innerHTML = pcalories.toFixed(0)
-       
+      
+     seconds2add = Number(document.getElementById('secs2add').value)
+    console.log("seconds2add " + seconds2add);
+     
         let distancem = 0;
         if (bMetric) {
               distancem = (totalDistance+initialDistance-lastRouteDistance) * 1000;  // km2meters
@@ -1388,7 +1392,7 @@ export async function processPower(power) {
             totalDistance = (totalSpeed / totalSpeedPts) * (totalSeconds / 3600);
             document.getElementById('distance').innerHTML = totalDistance.toFixed(2);
            
-            let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds;
+            let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds+seconds2add;
             seekVideo(gpxSeconds, syncSeconds);
             let ratio = velocity / 15.0;
           
@@ -1489,10 +1493,11 @@ export async function processPower(power) {
             } else {
                 i = findGPX(initialDistance * miles2meters);
                 }
-            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds;
+            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds+seconds2add;
             seekVideo(gpxSeconds, syncSeconds);
         }
      }
+ 
 
     export function addGPSPoint(len, lat, lon, ele, secs, grade, distance, mps, gpsTime1) {
         if (gpsArray === undefined) {
