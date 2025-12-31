@@ -329,6 +329,8 @@ let minrpm=80;
 let bUseAutoShift=false;
 let bUseAutoShiftRPM=false;
 let bUseAutoShiftGrade=false;
+let bUseAveVelocity=false;
+//let bUseSmoothGrade=false;
 let ftms=false;
 let lastGPSTime="";
 let vgear=0;
@@ -347,7 +349,7 @@ let totalWorkoutTime=0;
 let markerFrequency=1; // update gpx map every 5 gps points
 //export let bMetric=false;
 export var bMetric=false;
-export var seconds2add=0;
+export var videoSeconds2add=0;
 export let initialDistance = 0; //miles
 export var minimumIncline=-15.0;
 export var maximumIncline=15.0;
@@ -483,6 +485,8 @@ console.clear();
 
  let bUseMetric = localStorage.getItem('checkboxState')
  console.log("Use Metric " +bUseMetric);
+ let bUseSmoothGrade = localStorage.getItem('checkboxSmoothGrade')
+ console.log("Use Smooth Grade " +bUseSmoothGrade);
 
 if (bUseMetric === "false") {
     console.log("bUseMetric1=false"); //correct
@@ -627,6 +631,10 @@ let totalPMWatts = 0
 let totalPMWattsPts = 0
 let totalSpeed = 0
 let totalSpeedPts = 0
+let totalMphPts = 0
+let totalMph = 0
+let totalVelocityPts = 0
+let totalVelocity = 0
 let totalDistance = 0
 let lastRouteDistance = 0;
 let lastRouteSeconds = 0;
@@ -1249,8 +1257,8 @@ export async function processPower(power) {
         let pcalories = ((aWatts * totalSeconds) / 4.18) / 0.24 / 1000.0;
         document.getElementById('pcal').innerHTML = pcalories.toFixed(0)
       
-     seconds2add = Number(document.getElementById('secs2add').value)
-    console.log("seconds2add " + seconds2add);
+     videoSeconds2add = Number(document.getElementById('secs2add').value)
+    //console.log("seconds2add " + seconds2add);
      
         let distancem = 0;
         if (bMetric) {
@@ -1264,16 +1272,26 @@ export async function processPower(power) {
             updateProgress(distancem ,gpxArray[gpxArray.length - 1].distance);
          
             if (gradeIndex < gpxArray.length - 1 && gradeIndex >= 0) {
-               
+               if (bUseSmoothGrade) {
                 grade = gpxArray[gradeIndex + 1].smoothGrade;
+                   } else {
+                    grade = gpxArray[gradeIndex + 1].grade;
+                   }
+                /*
                 if (grade > maximumIncline) {
                     grade = maximumIncline;
                     }
                 else if (grade < minimumIncline) {
                     grade = minimumIncline;
                     }
+                    */
                 if (gradeIndex < gpxArray.length - 2 && gradeIndex >= 0) {
-                    nextGrade = gpxArray[gradeIndex + 2].smoothGrade;
+                     if (bUseSmoothGrade) {
+                        nextGrade = gpxArray[gradeIndex + 2].smoothGrade;
+                   } else {
+                        grade = gpxArray[gradeIndex + 2].grade;
+                   }
+                   
                 }
                 //if (gradeIndex < gpxArray.length - 3 && gradeIndex >= 0) {
                 //    nextGrade = gpxArray[gradeIndex + 3].smoothGrade;
@@ -1388,20 +1406,44 @@ export async function processPower(power) {
             
             totalSpeed += velocity;
             totalSpeedPts++;
+            totalVelocity += velocity;
+            totalVelocityPts++;
+            totalMph += mph;
+            totalMphPts++;
+            
             document.getElementById('avespeed').innerHTML = (totalSpeed / totalSpeedPts).toFixed(1);
             totalDistance = (totalSpeed / totalSpeedPts) * (totalSeconds / 3600);
             document.getElementById('distance').innerHTML = totalDistance.toFixed(2);
            
-            let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds+seconds2add;
+            let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds+videoSeconds2add;
             seekVideo(gpxSeconds, syncSeconds);
             let ratio = velocity / 15.0;
-          
-            if (mph > 0) {
-                  ratio = (velocity / mph);
+            if (bUseAveVelocity) {
+                if (totalVelocityPts == 5) {
+                let aVelo = (totalVelocity / totalVelocityPts);
+                let aMph = (totalMph / totalMphPts);
+                ratio = aVelo / aMph;
+                totalVelocity = 0;
+                totalVelocityPts = 0;
+                totalMph = 0;
+                totalMphPts = 0;
+                 console.log("ratio " + ratio.toFixed(1) + " aVelo " +aVelo.toFixed(1) + " aMph " +aMph.toFixed(1));
             }
-        
-            changeVideoSpeed(ratio, gpxSeconds, totalSeconds)
+                if (totalVelocityPts == 0) {
+                changeVideoSpeed(ratio, gpxSeconds, totalSeconds)
+                }
+            } else {
 
+            
+                if (mph > 0) {
+                      ratio = (velocity / mph);
+                }
+             
+                console.log("ratio " + ratio.toFixed(1) +"orig mph "+ mph.toFixed(1) + " calc mph " + velocity.toFixed(1));
+                changeVideoSpeed(ratio, gpxSeconds, totalSeconds)
+            
+            }
+           
             if (smartTrainerConnected && !ERGMode) {
                
                  rpmAutoShift(currentRpm, activeRpm);
@@ -1493,7 +1535,7 @@ export async function processPower(power) {
             } else {
                 i = findGPX(initialDistance * miles2meters);
                 }
-            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds+seconds2add;
+            let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds+videoSeconds2add;
             seekVideo(gpxSeconds, syncSeconds);
         }
      }

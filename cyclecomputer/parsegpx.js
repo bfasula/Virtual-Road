@@ -5,6 +5,7 @@ window.selectGPX=selectGPX
 let nElevations=5;
 var lastElevations = Array(0,0,0,0,0,0,0,0,0,0);
 let nMps=5;
+let mps2mph = 2.236936;
 var lastMps = Array(0,0,0,0,0,0,0,0,0,0);
 let gpxIndex=0;
 
@@ -187,6 +188,21 @@ var response;
 function processXML(response,file) {
 let filename=file.name;
 let s1=   response;
+let str1 = s1.indexOf("<name>");
+let end1 = s1.indexOf("</name>");
+var nameString = s1.slice(str1+"<name>".length,end1) ;    
+console.log("Xml name="+nameString);
+const nArray= nameString.split(":");
+
+var length =nArray.length;
+console.log(length);
+let videoSyncSeconds=0;
+if (length > 1) {
+    videoSyncSeconds=nArray[1];
+    console.log("video sync seconds "+videoSyncSeconds);
+     document.getElementById('secs2add').value = videoSyncSeconds;
+}
+
     
 let start = s1.indexOf("<trkseg>");
 let end = s1.indexOf("</trkseg>");
@@ -254,12 +270,14 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
                if (distancem > 0.1) {
                grade=(ele-lastele)/distancem;
                     } else {grade=0;}
+               /*
                if (grade > maxInclination) {
                     grade = maxInclination;
                 }
                 if (grade < minInclination) {
                     grade = minInclination;
                 }
+                */
                 //smoothGrade=(smoothEle-lastSmoothEle)/distancem;
                //let origmps=distancem/(secs-lastsecs);
               // mps=smoothMps(origmps,i);
@@ -273,9 +291,9 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
                 if (smoothGrade < minInclination) {
                     smoothGrade = minInclination;
                 }
-               //console.log("grade " + grade + " smooth " + smoothGrade);
+              // console.log("meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
                mps=distancem/(secs-lastsecs);
-               mps=smoothMps(mps,i);
+               ///////////////////////////////mps=smoothMps(mps,i); 12/25/25
                //console.log("mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
                //constructor(lat, lon, ele,seconds, grade, distance, mps) {
               
@@ -284,16 +302,19 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
            
              let p1 = new GPXPoint(lat, lon, ele,smoothEle, secs, grade, smoothGrade, totaldistancem, mps,"");
                 gpxArray[gpxIndex++]=p1;
-           /*
+           
             console.log(i+ " time " +mytime + " secs "+secs
-            +",mps "+mps 
+            +",mps "+mps.toFixed(2)  + ",mph " +( mps  * mps2mph).toFixed(2)
             +",meters "+distancem.toFixed(2)
-              +",totalm "+totaldistancem.toFixed(2)           
-           +",lat "+lat
-           +",lon "+lon
+              +",totalm "+totaldistancem.toFixed(2)     
+                        /*
+           +",lat "+lat.toFixed(2)
+           +",lon "+lon.toFixed(2)
+           */
            +",elevation " +ele
-                       +",grade " + grade.toFixed(2));
-                      */ 
+                 +",smgrade " + (smoothGrade*100.0).toFixed(2)
+                       +",grade " + (grade*100.0).toFixed(2));
+                      
            lastSmoothEle=smoothEle;
            lastele=ele;
            lastlon=lon;

@@ -15,6 +15,9 @@
         <label>
         <input type="checkbox" id="saveUseMetric"><b> Use Metric</b>
     </label>
+         <label>
+        <input type="checkbox" id="saveUseSmoothGrade"><b> Use Smooth Grade</b>
+    </label>
         </td></tr>
     <tr>
     <td><h2 class="userWeight">Weight:</h2></td>
@@ -103,6 +106,15 @@
         // Save state when checkbox is clicked
         checkbox.addEventListener('change', () => {
             localStorage.setItem('checkboxState', checkbox.checked);
+        });
+           const checkbox2 = document.getElementById('saveUseSmoothGrade');
+
+        // Load saved state on page load
+        checkbox2.checked = localStorage.getItem('checkboxSmoothGrade') === 'true';
+
+        // Save state when checkbox is clicked
+        checkbox2.addEventListener('change', () => {
+            localStorage.setItem('checkboxSmoothGrade', checkbox2.checked);
         });
 
 const userWeightText = document.querySelector('.userWeight');
