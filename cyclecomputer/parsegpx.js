@@ -1,6 +1,6 @@
-import {runPod,initializeRoute,bMetric,maximumIncline, minimumIncline} from './cyclecomputer.js';
+import {runPod,initializeRoute,bMetric,maximumIncline, minimumIncline, setWindResistance, setRollingResistance} from './cyclecomputer.js';
 import {updateMapOL} from './minimap.js';
-import {videoDirectory} from './playvideo.js';
+import {videoDirectory,youtubeSetVideoId,onYouTubeIframeAPIReady2} from './playvideo.js';
 window.selectGPX=selectGPX
 let nElevations=5;
 var lastElevations = Array(0,0,0,0,0,0,0,0,0,0);
@@ -11,8 +11,11 @@ let gpxIndex=0;
 
 export var gpxFilename="";
 export var loopRoute=false;
+export var youtubeVideoId=null;
 
-
+export function resetYoutubeVideoId() {
+    youtubeVideoId=null;
+    }
 export  function selectGPX() {
     var input = document.createElement('input');
     input.type = 'file';
@@ -188,6 +191,7 @@ var response;
 function processXML(response,file) {
 let filename=file.name;
 let s1=   response;
+    
 let str1 = s1.indexOf("<name>");
 let end1 = s1.indexOf("</name>");
 var nameString = s1.slice(str1+"<name>".length,end1) ;    
@@ -201,6 +205,25 @@ if (length > 1) {
     videoSyncSeconds=nArray[1];
     console.log("video sync seconds "+videoSyncSeconds);
      document.getElementById('secs2add').value = videoSyncSeconds;
+}
+if (length > 2) {
+       
+    youtubeVideoId=nArray[2];
+    onYouTubeIframeAPIReady2(youtubeVideoId);
+    console.log("youtube videoid "+youtubeVideoId);
+    //youtubeSetVideoId(youtubeVideoId);
+}
+if (length > 3) {
+       
+    setRollingResistance(nArray[3]);
+    console.log("rolling resistance "+nArray[3]);
+   
+}
+if (length > 4) {
+       
+    setWindResistance(nArray[4]);
+    console.log("wind resistance "+nArray[4]);
+   
 }
 
     
@@ -302,18 +325,19 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
            
              let p1 = new GPXPoint(lat, lon, ele,smoothEle, secs, grade, smoothGrade, totaldistancem, mps,"");
                 gpxArray[gpxIndex++]=p1;
-           
+           /*
             console.log(i+ " time " +mytime + " secs "+secs
             +",mps "+mps.toFixed(2)  + ",mph " +( mps  * mps2mph).toFixed(2)
             +",meters "+distancem.toFixed(2)
               +",totalm "+totaldistancem.toFixed(2)     
-                        /*
+                     
            +",lat "+lat.toFixed(2)
            +",lon "+lon.toFixed(2)
-           */
+           
            +",elevation " +ele
                  +",smgrade " + (smoothGrade*100.0).toFixed(2)
                        +",grade " + (grade*100.0).toFixed(2));
+           */
                       
            lastSmoothEle=smoothEle;
            lastele=ele;

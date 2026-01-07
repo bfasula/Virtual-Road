@@ -5,7 +5,7 @@ import {dec2bin} from './util.js';
 import {CalculateVelocity} from './power_v_speed.js';
 import {speedFromPower} from './power_v_speed.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess,openFullscreen} from './playvideo.js';
-import {parseXML,gpxArray,findGPX,printGPX,GPXPoint,loopRoute,gpxFilename} from './parsegpx.js';
+import {parseXML,gpxArray,findGPX,printGPX,GPXPoint,loopRoute,gpxFilename,} from './parsegpx.js';
 import {parseZWO,zwoArray,zwoPoint,powerColor,drawTimeCompleted} from './parsezwo.js';
 import {speedFromWatts} from './speedFromWatts.js';
 import { TrainerControl , TrainerData} from "./TrainerControl.js";
@@ -539,7 +539,7 @@ if (!riderWeight) {
 }
 if (!syncSeconds) {
      console.log("Default sync Seconds");
-    syncSeconds = 3;
+    syncSeconds = 5;
     localStorage.setItem('.syncSeconds', syncSeconds);
 }
 if (!pauseSpeed) {
@@ -771,6 +771,17 @@ let csc_measurement = [
         [ble_uint16, 'last_crank_event_time']
     ]]
 ];
+
+export function setWindResistance(wr) {
+   
+ coefficientWR=wr  // wind resistance
+    }
+
+export function setRollingResistance(rr) {
+   
+ coefficientRR=rr  //rolling resistance
+    }
+
 function virtualWatts() {
     if (bUseVirtualWatts) {
         bUseVirtualWatts=false;
@@ -1303,7 +1314,7 @@ export async function processPower(power) {
                      // window.alert("lap ended");
                     console.log("lap " + lapCounter);
                     
-                    seekVideo(0, syncSeconds);
+                    seekVideo(0, syncSeconds);   // total length);
                     gradeIndex=0;
                 
                  let p1 = new GPXPoint(100.0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0);
