@@ -1,4 +1,5 @@
 import {parseXML,gpxArray,youtubeVideoId,resetYoutubeVideoId} from './parsegpx.js';
+import {nearlyEqual} from './utils.js';
 window.playVideo=playVideo
 window.pauseVideo=pauseVideo
 window.slowVideo=slowVideo
@@ -116,8 +117,11 @@ export function speedVideo() {
 function logger(text) {
     console.log("playvideo:"+text);
     }
+
+
 export function changeVideoSpeed(rate,gpxseconds, currentSeconds) {
      console.log("seekVideo:playbackrate "+rate);
+                                     
     let diff;
      if (youtubeVideoId == null) {
           diff=myVideo.currentTime-gpxseconds;
@@ -186,6 +190,7 @@ export    function onYouTubeIframeAPIReady2(id) {
         videoId: id,
         playerVars: {
           controls: 0,
+          mute: 1,
           modestbranding: 1,
           rel: 0
         },
@@ -196,9 +201,38 @@ export    function onYouTubeIframeAPIReady2(id) {
       });
     
     }
+function resizePlayer() {
+  const width = window.innerWidth;
+  const height = width * 9 / 16;
+
+  youtubePlayer.setSize(width, height);
+}
+
+window.addEventListener('resize', resizePlayer);
+
+function fitToScreen() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const aspect = 16 / 9;
+
+  let width, height;
+
+  if (w / h > aspect) {
+    height = h;
+    width = h * aspect;
+  } else {
+    width = w;
+    height = w / aspect;
+  }
+
+  youtubePlayer.setSize(width, height);
+}
+
 
 function onPlayerReady(event) {
     //event.target.playVideo();
+    //fitToScreen();
+    resizePlayer();
     console.log("Youtube player ready");
   }
 
@@ -217,13 +251,15 @@ export    function youtubePause() {
       youtubePlayer.pauseVideo();
     }
 
-export    function youtubeSetSpeed(speed) {
-    
+   
+ export    function youtubeSetSpeed(speed) {
+     
      console.log("Using speed " +speed);
       //youtubePlayer.setPlaybackRate(getClosestPlaybackRate(Number(speed)));
     setNearestPlaybackRate(Number(speed));
     }
 
+ let lastSpeed=0.0;
 function setNearestPlaybackRate(rate) {
   if (!youtubePlayer || !youtubePlayer.getAvailablePlaybackRates) return;
 
@@ -233,22 +269,48 @@ function setNearestPlaybackRate(rate) {
   const nearest = rates.reduce((a, b) =>
     Math.abs(b - rate) < Math.abs(a - rate) ? b : a
   );
-console.log("Using rate " +nearest);
-  youtubePlayer.setPlaybackRate(nearest);
+   console.log("Using rate " +nearest);
+  //youtubePlayer.setPlaybackRate(nearest);
+    if (nearlyEqual(nearest, lastSpeed) == true) {
+        console.log("Ignore same speed change");
+        return;
+        };
+     lastSpeed = nearest;   
+    safeSetRate(nearest);
 }
 
+let lastSetRate = 0;
+
+function safeSetRate(rate) {
+  const now = Date.now();
+  if (now - lastSetRate > 1000) { // 1 second
+    youtubePlayer.setPlaybackRate(rate);
+    lastSetRate = now;
+  }
+}
 
 
 
 export    function youtubeSetVideoId(id) {
     console.log("Video id "+id);
-    youtubePlayer.loadVideoById(id);
-       // youtubePlayer.cueVideoById(id);
+    //youtubePlayer.loadVideoById(id);
+       youtubePlayer.cueVideoById(id);
         };
 
 export function youtubeSeekVideo(seconds) {
-    youtubePlayer.seekTo(seconds, true);
+    //youtubePlayer.seekTo(seconds, true);
+    safeSeek(seconds);
     }
+let lastSeek = 0;
+
+function safeSeek(seconds) {
+  const now = Date.now();
+  if (now - lastSeek > 1000) { // 1 second
+     youtubePlayer.seekTo(seconds, true);
+    lastSeek = now;
+  }
+}
+
 
 export    function youtubeExtractVideoId(url) {
     const match = url.match(
