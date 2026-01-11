@@ -6,8 +6,9 @@ window.slowVideo=slowVideo
 window.speedVideo=speedVideo
 window.selectVideo=selectVideo
 window.openFullscreen=openFullscreen
-    var myVideo = document.getElementById("myVid");
- var youtubePlayer = document.getElementById("youtubePlayer");
+ var myVideo = document.getElementById("myVid");
+ //var youtubePlayer = document.getElementById("youtubePlayer");
+ var youtubePlayer = null;
 export var gpxfile;
 export let syncsGreater=0;
 export let syncsLess=0;
@@ -31,7 +32,7 @@ file.type // file type ex. 'application/pdf'
                 const videoPlayer = document.getElementById('myVid');
                 videoPlayer.src = videoURL; // Set the video source
                 //videoPlayer.play(); // Auto-play the video
-                resetYoutubeVideoId();
+                //resetYoutubeVideoId();
             }
 
       
@@ -71,7 +72,7 @@ file.type // file type ex. 'application/pdf'
        // parseXML(newfile)
     logger("gpxArray " + gpxArray);   
     //openFullScreen();
-      resetYoutubeVideoId();
+      //resetYoutubeVideoId();
     
 }
 
@@ -120,7 +121,7 @@ function logger(text) {
 
 
 export function changeVideoSpeed(rate,gpxseconds, currentSeconds) {
-     console.log("seekVideo:playbackrate "+rate);
+     console.log("changeVideoSpeed:playbackrate "+rate);
                                      
     let diff;
      if (youtubeVideoId == null) {
@@ -140,7 +141,7 @@ export function changeVideoSpeed(rate,gpxseconds, currentSeconds) {
     if (rate > 2.0) {
         rate = 2.0;
         }
-    console.log("seekVideo:playbackrate "+rate);
+    console.log("changeVideoSpeed:playbackrate "+rate);
     if (youtubeVideoId == null) {
     myVideo.playbackRate =  rate
         } else {
@@ -163,8 +164,8 @@ export function seekVideo(gpxseconds, syncSeconds) {
         syncsGreater++;
         }
     diff=Math.abs(diff);
-   // logger("seekVideo:gpxsec " + gpxseconds + " video time " + myVideo.currentTime + " diff " + diff
-    //           +"syncs< "+syncsLess + " syncs> "+syncsGreater);
+   logger("**********seekVideo:gpxsec " + gpxseconds + " video time " + myVideo.currentTime + "youtube time "+youtubePlayer.getCurrentTime()+ " diff " + diff
+              +"syncs< "+syncsLess + " syncs> "+syncsGreater);
      if (diff > syncSeconds) {
           if (youtubeVideoId == null) {
             myVideo.currentTime = gpxseconds;
@@ -184,6 +185,12 @@ export function fastSeekVideo(gpxseconds) {
 
 
 export    function onYouTubeIframeAPIReady2(id) {
+   if (youtubePlayer) {
+       youtubePlayer.cueVideoById({
+     videoId: id,
+    });
+       return; // already created
+       }
       youtubePlayer = new YT.Player('youtubePlayer', {
         height: '800',
         width: '1600',
@@ -199,6 +206,7 @@ export    function onYouTubeIframeAPIReady2(id) {
         onStateChange: onPlayerStateChange
       }
       });
+       
     
     }
 function resizePlayer() {
@@ -306,6 +314,7 @@ let lastSeek = 0;
 function safeSeek(seconds) {
   const now = Date.now();
   if (now - lastSeek > 1000) { // 1 second
+      logger("safeSeek " + seconds);
      youtubePlayer.seekTo(seconds, true);
     lastSeek = now;
   }
