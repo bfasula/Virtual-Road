@@ -331,8 +331,8 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
             +",meters "+distancem.toFixed(2)
               +",totalm "+totaldistancem.toFixed(2)     
                      
-           +",lat "+lat.toFixed(2)
-           +",lon "+lon.toFixed(2)
+           +",lat "+lat
+           +",lon "+lon
            
            +",elevation " +ele
                  +",smgrade " + (smoothGrade*100.0).toFixed(2)
