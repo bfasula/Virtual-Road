@@ -164,8 +164,8 @@ export function seekVideo(gpxseconds, syncSeconds) {
         syncsGreater++;
         }
     diff=Math.abs(diff);
-   logger("**********seekVideo:gpxsec " + gpxseconds + " video time " + myVideo.currentTime + "youtube time "+youtubePlayer.getCurrentTime()+ " diff " + diff
-              +"syncs< "+syncsLess + " syncs> "+syncsGreater);
+  // logger("**********seekVideo:gpxsec " + gpxseconds + " video time " + myVideo.currentTime + "youtube time "+youtubePlayer.getCurrentTime()+ " diff " + diff
+   //           +"syncs< "+syncsLess + " syncs> "+syncsGreater);
      if (diff > syncSeconds) {
           if (youtubeVideoId == null) {
             myVideo.currentTime = gpxseconds;
