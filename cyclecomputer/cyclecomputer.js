@@ -435,11 +435,9 @@ function generateData(event) {
       vgear=Number(value);
    
     /*
-        if (vgear < minimumIncline) {vgear=minimumIncline;}
-      if (vgear > maximumIncline) {vgear=maximumIncline;}
-      */
      if (vgear < -15) {vgear=-15;}
      if (vgear > 15) {vgear=15;}
+     */
    
          document.getElementById('vgear').innerHTML = vgear;
   
