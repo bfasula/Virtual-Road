@@ -431,13 +431,16 @@ menu.addEventListener("change", generateData);
 function generateData(event) {
      let value=menu.value;
     //alert(value);
+   
       vgear=Number(value);
+   
     /*
         if (vgear < minimumIncline) {vgear=minimumIncline;}
       if (vgear > maximumIncline) {vgear=maximumIncline;}
       */
-     if (vgear < 15) {vgear=-15;}
+     if (vgear < -15) {vgear=-15;}
      if (vgear > 15) {vgear=15;}
+   
          document.getElementById('vgear').innerHTML = vgear;
   
 }
@@ -1283,6 +1286,7 @@ export async function processPower(power) {
         }
        
             gradeIndex = findGPX(distancem);
+           console.log("distancem " + distancem + " index " + gradeIndex);
           
             updateProgress(distancem ,gpxArray[gpxArray.length - 1].distance);
          
@@ -1429,7 +1433,9 @@ export async function processPower(power) {
             document.getElementById('avespeed').innerHTML = (totalSpeed / totalSpeedPts).toFixed(1);
             totalDistance = (totalSpeed / totalSpeedPts) * (totalSeconds / 3600);
             document.getElementById('distance').innerHTML = totalDistance.toFixed(2);
-           
+            
+            console.log("videoSeconds2add " + videoSeconds2add);
+            
             let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds+videoSeconds2add;
             seekVideo(gpxSeconds, syncSeconds);
             let ratio = velocity / 15.0;
