@@ -1,0 +1,16 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>HYROX Speed Builder</name>
+      <description>This speed building workout enhances your pace, boosting cardiovascular strength with short, high-intensity intervals.</description>
+      <sportType>run</sportType>
+      <tags><tag name="speed"/><tag name="hyrox"/><tag name="intervals"/></tags>
+      <workout>
+        <Warmup Duration="180" PowerLow="0.5" PowerHigh="0.7"/>
+<IntervalsT Repeat="8" OnDuration="60" OffDuration="120" OnPower="1.2" OffPower="0.6"/>
+<Cooldown Duration="180" PowerLow="0.7" PowerHigh="0.5"/>
+
+      </workout>
+    </workout_file>
+  

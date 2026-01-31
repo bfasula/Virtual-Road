@@ -1,0 +1,16 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Sweet Spot Intro</name>
+      <description>An introduction to sweet spot training, designed to be manageable but will definitely get you sweating.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="easy"/><tag name="sweet-spot"/><tag name="short"/><tag name="sweaty"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.7"/>
+<IntervalsT Repeat="2" OnDuration="480" OffDuration="120" OnPower="0.88" OffPower="0.5"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.3"/>
+
+      </workout>
+    </workout_file>
+  

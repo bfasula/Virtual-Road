@@ -1,0 +1,19 @@
+
+ 
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Flat Route Endurance</name>
+      <description>This workout is designed to build endurance and maintain a steady pace for a 25-mile flat route. It will help you improve your aerobic capacity and overall cycling performance.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="endurance"/><tag name="flat-route"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.6"/>
+<SteadyState Duration="900" Power="0.65"/>
+<SteadyState Duration="900" Power="0.7"/>
+<SteadyState Duration="900" Power="0.75"/>
+<SteadyState Duration="900" Power="0.8"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  

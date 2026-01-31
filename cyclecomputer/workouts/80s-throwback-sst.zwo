@@ -1,0 +1,18 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>80s Throwback SST</name>
+      <description>This wild 80s Themed Sweet Spot Training workout is set to beat your FTP records, like a big-haired drum solo in a rock anthem. Follow the rhythm of the workout, just like you would do on an 80s dance floor and watch your FTP skyrocket!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="80s-theme"/><tag name="sweet-spot"/><tag name="ftp"/></tags>
+      <workout>
+        <Warmup Duration="900" PowerLow="0.5" PowerHigh="0.7" Cadence="80"/>
+<IntervalsT Cadence="90" Repeat="4" OnDuration="240" OffDuration="180" OnPower="0.9" OffPower="0.75"/>
+<SteadyState Duration="600" Power="0.85" Cadence="85"/>
+<IntervalsT Cadence="95" Repeat="4" OnDuration="120" OffDuration="120" OnPower="0.95" OffPower="0.75"/>
+<Cooldown Duration="600" PowerLow="0.65" PowerHigh="0.45" Cadence="80"/>
+
+      </workout>
+    </workout_file>
+  

@@ -1,0 +1,39 @@
+<workout_file>
+	<author>Jakub Novak (via TrainingPeaks)</author>
+	<name>Hills VO2 30s</name>
+	<description>FOCUS
+
+FTP: ✭✭✭✭✭
+STRENGTH : ✭✭✩✩✩
+ENDURANCE: ✭✩✩✩✩
+SPRINTS: ✭✭✭✩✩
+
+VO2 climbs, intense day
+
+Our goal today is to spend some time at and over the threshold point to improve your FTP. More intense training today, but will pay off
+
+- 15-30 min easier pace
+• warm up 2 x 8 min tempo on flat + 95 rpm, ~290w
+
+• 2# series in climb of 4 x 30s at your near maximum 98%, last one all in, recovery 1-2min between, recovery 15-20 min between series
+
+- rest of the ride your own tempo, last 15 min cool down easier pace</description>
+	<sportType>bike</sportType>
+	<tags/>
+	<workout>
+		<Warmup Duration="600" PowerHigh="0.7" PowerLow="0.5">
+		</Warmup>
+		<SteadyState Duration="480" Power="0.88">
+		</SteadyState>
+		<SteadyState Duration="120" Power="0.45">
+		</SteadyState>
+		<SteadyState Duration="480" Power="0.88">
+		</SteadyState>
+		<SteadyState Duration="600" Power="0.6">
+		</SteadyState>
+		<IntervalsT Repeat="4" OnDuration="30" OnPower="1.75" OffDuration="180" OffPower="0.35">
+		</IntervalsT>
+		<SteadyState Duration="600" Power="0.53">
+		</SteadyState>
+	</workout>
+</workout_file>

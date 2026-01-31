@@ -1,0 +1,39 @@
+<workout_file>
+  <author>What's on Zwift</author>
+  <name>AmityHill</name>
+  <description>This workout was created on whatsonzwift.com based on AmityHill. Please note that although the workout represents the course for the entered rider and bike characteristics, in Zwift the speed and distance will not match due to course differences.
+
+Course details: 6.6 mi, 636 ft elevation
+Time to complete: 37m 16s (10.6 mph avg.)
+Workout details: 155.4 W avg. (2.45 W/kg), NP=162 W, IF=0.9, VI=1.04
+</description>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <SteadyState Duration="35" Power="0.65328450561286" pace="0"/>
+    <SteadyState Duration="235" Power="0.82203279766157" pace="0"/>
+    <SteadyState Duration="45" Power="0.6516187750665199" pace="0"/>
+    <SteadyState Duration="45" Power="0.85127340301443" pace="0"/>
+    <SteadyState Duration="67" Power="0.89444336227736" pace="0"/>
+    <SteadyState Duration="110" Power="0.6994065963089" pace="0"/>
+    <SteadyState Duration="21" Power="0.76012552457563" pace="0"/>
+    <SteadyState Duration="35" Power="0.82489476206401" pace="0"/>
+    <SteadyState Duration="106" Power="0.97217428625254" pace="0"/>
+    <SteadyState Duration="35" Power="0.64995577295825" pace="0"/>
+    <SteadyState Duration="285" Power="0.94830304644694" pace="0"/>
+    <SteadyState Duration="140" Power="0.64990014460688" pace="0"/>
+    <SteadyState Duration="209" Power="0.96875486262692" pace="0"/>
+    <SteadyState Duration="70" Power="0.7434432832935901" pace="0"/>
+    <SteadyState Duration="92" Power="0.85313478431795" pace="0"/>
+    <SteadyState Duration="105" Power="0.95412636582617" pace="0"/>
+    <SteadyState Duration="115" Power="0.75528491716387" pace="0"/>
+    <SteadyState Duration="58" Power="0.80502306326544" pace="0"/>
+    <SteadyState Duration="25" Power="0.78917093135992" pace="0"/>
+    <SteadyState Duration="39" Power="0.75274001040925" pace="0"/>
+    <SteadyState Duration="70" Power="0.87324425010372" pace="0"/>
+    <SteadyState Duration="100" Power="0.9227013747657501" pace="0"/>
+    <SteadyState Duration="145" Power="0.98901573604972" pace="0"/>
+    <SteadyState Duration="25" Power="0.6613000716420899" pace="0"/>
+  </workout>
+</workout_file>

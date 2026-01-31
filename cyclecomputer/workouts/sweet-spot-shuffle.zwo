@@ -1,0 +1,18 @@
+
+  
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Sweet Spot Shuffle</name>
+      <description>Get ready to dance on your pedals with the Sweet Spot Shuffle! This exhilarating Sweet Spot Training (SST) workout will have you grooving to the rhythm of increased power and improved FTP. Experience the perfect balance of challenge and enjoyment as you shuffle through intervals and steady states. Let's hit the road and shuffle our way to cyclist greatness!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="sweet-spot"/><tag name="ftp"/><tag name="groove"/><tag name="power"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65" Cadence="90"/>
+<IntervalsT Cadence="95" CadenceResting="75" Repeat="3" OnDuration="240" OffDuration="30" OnPower="0.95" OffPower="0.7"/>
+<SteadyState Duration="360" Power="0.8" Cadence="85"/>
+<IntervalsT Cadence="95" CadenceResting="75" Repeat="3" OnDuration="240" OffDuration="30" OnPower="0.95" OffPower="0.7"/>
+<Cooldown Duration="600" PowerLow="0.65" PowerHigh="0.4" Cadence="90"/>
+
+      </workout>
+    </workout_file>
+  

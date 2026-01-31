@@ -1,0 +1,19 @@
+
+  
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Power Surge</name>
+      <description>A mix of power surges and high cadence work, interspersed with recovery intervals to build your cardiovascular fitness.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="power-endurance"/><tag name="cardiovascular-improvement"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65" Cadence="105"/>
+<IntervalsT CadenceHigh="105" Repeat="4" OnDuration="20" OffDuration="300" OnPower="0.9" OffPower="0.7"/>
+<IntervalsT CadenceHigh="105" Repeat="10" OnDuration="30" OffDuration="30" OnPower="1" OffPower="0.6"/>
+<SteadyState Duration="180" Power="0.4" Cadence="85"/>
+<IntervalsT CadenceLow="60" CadenceHigh="70" Repeat="4" OnDuration="120" OffDuration="30" OnPower="0.75" OffPower="0.6"/>
+<Cooldown Duration="300" PowerLow="0.4" PowerHigh="0.3" Cadence="85"/>
+
+      </workout>
+    </workout_file>
+  

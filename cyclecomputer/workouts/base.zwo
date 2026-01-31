@@ -1,0 +1,16 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Base</name>
+      <description>Build your FTP with this base workout. Enhance your endurance and power with a steady-state ride. Don't forget to warm up and cool down!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="ftp"/><tag name="base"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.42" PowerHigh="0.61"/>
+<SteadyState Duration="3600" Power="0.61"/>
+<Cooldown Duration="1200" PowerLow="0.61" PowerHigh="0.42"/>
+
+      </workout>
+    </workout_file>
+  

@@ -1,0 +1,19 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Alpe du Zwift Climb Prep</name>
+      <description>This climbing-focused workout incorporates bursts of high power followed by steady state efforts. The bursts help to develop power output needed for the steeper parts of the climb, while the steady state efforts imitate the longer, consistent effort needed throughout the climb.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="climbing-prep"/><tag name="advanced"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.5" PowerHigh="0.7" Cadence="85"/>
+<IntervalsT Cadence="95" CadenceResting="85" Repeat="6" OnDuration="30" OffDuration="270" OnPower="1.1" OffPower="0.7"/>
+<SteadyState Duration="1200" Power="0.8" Cadence="80"/>
+<IntervalsT Cadence="95" CadenceResting="85" Repeat="6" OnDuration="30" OffDuration="270" OnPower="1.15" OffPower="0.7"/>
+<SteadyState Duration="1200" Power="0.8" Cadence="80"/>
+<Cooldown Duration="600" PowerLow="0.7" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  

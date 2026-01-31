@@ -1,0 +1,16 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Quick HIIT Cycling Blast</name>
+      <description>A short High Intensity Interval Training (HIIT) session to boost your power - it's brief but it's gonna burn!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="hiit"/><tag name="power"/><tag name="short"/></tags>
+      <workout>
+        <Warmup Duration="300" PowerLow="0.35" PowerHigh="0.6"/>
+<IntervalsT Repeat="5" OnDuration="60" OffDuration="60" OnPower="1.2" OffPower="0.6"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.35"/>
+
+      </workout>
+    </workout_file>
+  

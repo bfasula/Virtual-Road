@@ -1,0 +1,18 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Short Tempo Z3-Z4 Builder (50 min)</name>
+      <description>A shortened 50-minute tempo workout emphasizing work in Zones 3 and 4. Designed to enhance your power at lactate threshold and improve muscular endurance within a tightened time frame.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="tempo"/><tag name="zone-3"/><tag name="zone-4"/><tag name="50-min"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.7" Cadence="85"/>
+<SteadyState Duration="1200" Power="0.75" Cadence="85"/>
+<SteadyState Duration="600" Power="0.85" Cadence="90"/>
+<SteadyState Duration="900" Power="0.75" Cadence="85"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.4" Cadence="80"/>
+
+      </workout>
+    </workout_file>
+  

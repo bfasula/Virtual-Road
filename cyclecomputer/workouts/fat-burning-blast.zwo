@@ -1,0 +1,19 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Fat Burning Blast</name>
+      <description>This workout is designed to help you burn fat and improve your cardiovascular fitness. It includes a combination of steady-state efforts and interval training to maximize calorie burn and improve your FTP over time. Keep your cadence between 80 and 95 RPM throughout the workout.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="fat-burning"/><tag name="weight-loss"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.6" Cadence="90"/>
+<SteadyState Duration="900" Power="0.6" Cadence="85"/>
+<IntervalsT Cadence="90" Repeat="5" OnDuration="180" OffDuration="180" OnPower="0.8" OffPower="0.6"/>
+<SteadyState Duration="600" Power="0.6" Cadence="85"/>
+<IntervalsT Cadence="90" Repeat="5" OnDuration="180" OffDuration="180" OnPower="0.8" OffPower="0.6"/>
+<Cooldown Duration="300" PowerLow="0.5" PowerHigh="0.4" Cadence="90"/>
+
+      </workout>
+    </workout_file>
+  

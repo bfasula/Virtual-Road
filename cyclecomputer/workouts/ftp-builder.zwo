@@ -1,0 +1,18 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>FTP Builder</name>
+      <description>This workout is designed to gradually increase your FTP by challenging your lactate threshold and sustainable power output.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="ftp"/><tag name="lactate-threshold"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.6"/>
+<IntervalsT Repeat="3" OnDuration="600" OffDuration="300" OnPower="0.9" OffPower="0.7"/>
+<SteadyState Duration="1800" Power="0.8"/>
+<IntervalsT Repeat="4" OnDuration="300" OffDuration="300" OnPower="0.95" OffPower="0.75"/>
+<Cooldown Duration="600" PowerLow="0.6" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  

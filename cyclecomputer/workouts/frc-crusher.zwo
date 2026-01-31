@@ -1,0 +1,21 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>FRC Crusher</name>
+      <description>The FRC Crusher workout is designed to boost your Functional Reserve Capacity, which is crucial for sustained efforts during intense rides and races. This workout will challenge your anaerobic capacity and teach your body to efficiently recover at higher intensities. Crush those limits and unleash your hidden power!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="frc"/><tag name="endurance"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65"/>
+<IntervalsT Repeat="5" OnDuration="30" OffDuration="30" OnPower="1.2" OffPower="0.5"/>
+<IntervalsT Repeat="3" OnDuration="60" OffDuration="30" OnPower="0.95" OffPower="0.75"/>
+<IntervalsT Repeat="2" OnDuration="90" OffDuration="30" OnPower="1" OffPower="0.8"/>
+<SteadyState Duration="180" Power="0.85"/>
+<IntervalsT Repeat="2" OnDuration="60" OffDuration="30" OnPower="1.2" OffPower="0.75"/>
+<IntervalsT Repeat="3" OnDuration="30" OffDuration="30" OnPower="1" OffPower="0.8"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  

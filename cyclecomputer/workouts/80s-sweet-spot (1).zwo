@@ -1,0 +1,19 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>80s Sweet Spot</name>
+      <description>Get ready to take a ride back to the 80s with this Sweet Spot Training workout! It's designed to increase your FTP while keeping the energy high and the beats pumping. Get ready to sweat and feel the burn!</description>
+      <sportType>bike</sportType>
+      <tags><tag name="sweet-spot"/><tag name="ftp"/><tag name="80s"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65"/>
+<SteadyState Duration="300" Power="0.75" Cadence="80"/>
+<IntervalsT Cadence="90" Repeat="4" OnDuration="180" OffDuration="60" OnPower="0.9" OffPower="0.75"/>
+<SteadyState Duration="300" Power="0.75" Cadence="80"/>
+<IntervalsT Cadence="90" Repeat="4" OnDuration="180" OffDuration="60" OnPower="0.9" OffPower="0.75"/>
+<Cooldown Duration="300" PowerLow="0.75" PowerHigh="0.55"/>
+
+      </workout>
+    </workout_file>
+  

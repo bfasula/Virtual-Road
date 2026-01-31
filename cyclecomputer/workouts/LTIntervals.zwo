@@ -1,0 +1,14 @@
+<workout_file>
+  <author>Bill Fasula</author>
+  <name>LT Intervals</name>
+  <description>LT Intervals</description>
+  <sportType>run</sportType>
+  <durationType>time</durationType>
+  <tags>
+    <tag name="Intervals"/>
+  </tags>
+  <workout>
+    <SteadyState Duration="300" Power="0.664" pace="0"/>
+    <IntervalsT Repeat="3" OnDuration="505" OffDuration="300" OnPower="1" OffPower="0.5" pace="2"/>
+  </workout>
+</workout_file>

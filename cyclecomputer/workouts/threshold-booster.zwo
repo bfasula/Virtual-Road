@@ -1,0 +1,16 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Threshold Booster</name>
+      <description>The Threshold Booster workout is designed to increase your lactate threshold, which is crucial for improving FTP. It includes intervals at or slightly above your threshold power to challenge your body and promote adaptations.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="ftp"/><tag name="threshold"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65" Cadence="90"/>
+<IntervalsT Cadence="90" Repeat="3" OnDuration="360" OffDuration="180" OnPower="0.95" OffPower="0.7"/>
+<Cooldown Duration="300" PowerLow="0.75" PowerHigh="0.55" Cadence="90"/>
+
+      </workout>
+    </workout_file>
+  

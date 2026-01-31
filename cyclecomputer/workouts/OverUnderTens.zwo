@@ -1,0 +1,33 @@
+<workout_file>
+    <author>Me</author>
+	<name>Over and Under Tens</name>
+	<description> Over and Under Tens
+    A quick warm-up followed by 2X10 minutes of over and under FTP,
+    to help your body recover at high intensity</description>
+	<sportType>bike</sportType>
+	<tags/>
+	<workout>
+		<Warmup Duration="240" PowerHigh="0.7" PowerLow="0.5">
+		</Warmup>
+		<SteadyState Duration="120" Power="1.12">
+		</SteadyState>
+		<SteadyState Duration="180" Power="1.0">
+		</SteadyState>
+		<SteadyState Duration="120" Power="1.12">
+		</SteadyState>
+		<SteadyState Duration="180" Power="1.0">
+		</SteadyState>
+		<SteadyState Duration="120" Power="0.6">
+		</SteadyState>
+		<SteadyState Duration="120" Power="1.12">
+		</SteadyState>
+		<SteadyState Duration="180" Power="1.0">
+		</SteadyState>
+		<SteadyState Duration="120" Power="1.12">
+		</SteadyState>
+		<SteadyState Duration="180" Power="1.0">
+		</SteadyState>
+        <SteadyState Duration="240" Power="0.6">
+		</SteadyState>
+	</workout>
+</workout_file>

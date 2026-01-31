@@ -1,0 +1,16 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Long Steady State</name>
+      <description>Long ride at a steady pace, working at your endurance zone.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="endurance"/></tags>
+      <workout>
+        <Warmup Duration="900" PowerLow="0.55" PowerHigh="0.7"/>
+<SteadyState Duration="2400" Power="0.75"/>
+<Cooldown Duration="900" PowerLow="0.6" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  

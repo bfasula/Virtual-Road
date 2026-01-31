@@ -1,0 +1,13 @@
+<workout_file>
+  <author>Bill</author>
+  <name>Sweet Spot</name>
+  <description>4 x 10 Min at almost FTP with 5 min recovery</description>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <Warmup Duration="300" PowerLow="0.474" PowerHigh="0.758" pace="0"/>
+     <IntervalsT Repeat="4" OnDuration="480" OffDuration="300" OnPower="0.9" OffPower="0.5" pace="2"/>
+    <Cooldown Duration="300" PowerLow="0.758" PowerHigh="0.486" pace="0"/>
+  </workout>
+</workout_file>

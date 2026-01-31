@@ -1,0 +1,16 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Power Endurance Extended Intervals</name>
+      <description>This workout now includes extended interval durations. The combination of 6-minute and 4-minute intervals at 75% and 70% of your FTP will help further improve your power endurance and overall cycling fitness.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="power-endurance"/><tag name="ftp"/><tag name="interval-training"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.45" PowerHigh="0.7"/>
+<IntervalsT Repeat="6" OnDuration="360" OffDuration="240" OnPower="0.75" OffPower="0.7"/>
+<Cooldown Duration="600" PowerLow="0.7" PowerHigh="0.45"/>
+
+      </workout>
+    </workout_file>
+  

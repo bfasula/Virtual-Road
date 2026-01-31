@@ -1,0 +1,18 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>VO2Max Booster</name>
+      <description>This workout is designed to target your VO2Max and help you improve your aerobic capacity. It includes a mix of intense intervals and recovery periods to challenge your limits and stimulate adaptations.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="vo2max"/><tag name="intervals"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.6" Cadence="90"/>
+<IntervalsT Cadence="100" Repeat="4" OnDuration="180" OffDuration="120" OnPower="0.9" OffPower="0.6"/>
+<IntervalsT Cadence="100" Repeat="4" OnDuration="120" OffDuration="60" OnPower="0.95" OffPower="0.6"/>
+<IntervalsT Cadence="100" Repeat="2" OnDuration="90" OffDuration="30" OnPower="1" OffPower="0.6"/>
+<Cooldown Duration="300" PowerLow="0.6" PowerHigh="0.4" CadenceResting="80"/>
+
+      </workout>
+    </workout_file>
+  

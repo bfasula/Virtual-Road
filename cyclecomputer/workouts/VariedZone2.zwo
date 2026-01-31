@@ -1,0 +1,25 @@
+<workout_file>
+  <author/>
+  <name>Zone 2</name>
+  <description>A steady ride in Zone2</description>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <Warmup Duration="300" PowerLow="0.53" PowerHigh="0.762" pace="0"/>
+    <SteadyState Duration="300" Power="0.761" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.761" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.897" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.757" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.753" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.897" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+    <SteadyState Duration="300" Power="0.757" pace="0"/>
+    <SteadyState Duration="300" Power="0.605" pace="0"/>
+  </workout>
+</workout_file>

@@ -1,0 +1,16 @@
+
+    
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Wednesday: Steady State Intervals</name>
+      <description>Imagine cruising through a rolling landscape - that's what this workout will feel like. Alternating between moderate and slightly higher intensity, this workout enhances steady-state power and muscular endurance.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="intervals"/><tag name="endurance"/><tag name="consistent-effort"/></tags>
+      <workout>
+        <Warmup Duration="900" PowerLow="0.5" PowerHigh="0.7"/>
+<IntervalsT Repeat="4" OnDuration="300" OffDuration="300" OnPower="0.88" OffPower="0.7"/>
+<Cooldown Duration="900" PowerLow="0.7" PowerHigh="0.5"/>
+
+      </workout>
+    </workout_file>
+  

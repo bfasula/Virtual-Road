@@ -1,0 +1,20 @@
+<workout_file>
+  <author/>
+  <name/>
+  <description/>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <SteadyState Duration="300" Power="0.5" pace="0"/>
+    <SteadyState Duration="240" Power="0.605" pace="0"/>
+    <SteadyState Duration="480" Power="0.901" pace="0"/>
+    <SteadyState Duration="240" Power="0.605" pace="0"/>
+    <SteadyState Duration="480" Power="0.901" pace="0"/>
+    <SteadyState Duration="240" Power="0.605" pace="0"/>
+    <SteadyState Duration="480" Power="0.901" pace="0"/>
+    <SteadyState Duration="240" Power="0.605" pace="0"/>
+    <SteadyState Duration="480" Power="0.901" pace="0"/>
+    <SteadyState Duration="240" Power="0.605" pace="0"/>
+  </workout>
+</workout_file>

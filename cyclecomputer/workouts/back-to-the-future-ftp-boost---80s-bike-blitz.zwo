@@ -1,0 +1,19 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Back to the Future FTP Boost - 80s Bike Blitz</name>
+      <description>This 80s themed workout is all about working in your sweet spot to maximize your functional threshold power (FTP). Just like the vibrant 80s, expect some pop in your training with intervals that will keep you engaged and maximize your power.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="80s-theme"/><tag name="ftp"/><tag name="sweet-spot"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.5" PowerHigh="0.65"/>
+<SteadyState Duration="300" Power="0.85"/>
+<IntervalsT CadenceLow="85" CadenceHigh="95" Repeat="3" OnDuration="180" OffDuration="180" OnPower="0.9" OffPower="0.7"/>
+<SteadyState Duration="300" Power="0.85"/>
+<IntervalsT CadenceLow="85" CadenceHigh="95" Repeat="3" OnDuration="180" OffDuration="180" OnPower="0.9" OffPower="0.7"/>
+<Cooldown Duration="600" PowerLow="0.65" PowerHigh="0.5"/>
+
+      </workout>
+    </workout_file>
+  

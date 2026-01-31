@@ -1,0 +1,17 @@
+
+  
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Sprint King</name>
+      <description>The Sprint King workout is designed to enhance your sprinting power and speed, helping you become a force to be reckoned with in the final push to the finish line.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="sprinting"/><tag name="power"/><tag name="speed"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.5" PowerHigh="0.7" Cadence="90"/>
+<IntervalsT Cadence="110" Repeat="5" OnDuration="10" OffDuration="50" OnPower="1.5" OffPower="0.6"/>
+<IntervalsT Cadence="120" Repeat="3" OnDuration="20" OffDuration="40" OnPower="1.7" OffPower="0.5"/>
+<Cooldown Duration="300" PowerLow="0.7" PowerHigh="0.5" Cadence="90"/>
+
+      </workout>
+    </workout_file>
+  

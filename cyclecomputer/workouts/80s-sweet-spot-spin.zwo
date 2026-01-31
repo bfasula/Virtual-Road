@@ -1,0 +1,18 @@
+
+    
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>80s Sweet Spot Spin</name>
+      <description>An 80s-inspired bike session focusing on sweet spot training. Perfect for those looking to increase their FTP in style.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="sweet-spot"/><tag name="ftp"/><tag name="80s-theme"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.65" Cadence="90"/>
+<IntervalsT CadenceLow="85" CadenceHigh="100" Repeat="4" OnDuration="300" OffDuration="120" OnPower="0.88" OffPower="0.5"/>
+<SteadyState Duration="600" Power="0.75" Cadence="95"/>
+<IntervalsT CadenceLow="85" CadenceHigh="100" Repeat="4" OnDuration="300" OffDuration="120" OnPower="0.9" OffPower="0.5"/>
+<Cooldown Duration="300" PowerLow="0.55" PowerHigh="0.4" Cadence="90"/>
+
+      </workout>
+    </workout_file>
+  

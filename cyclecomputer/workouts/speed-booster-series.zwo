@@ -1,0 +1,16 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Speed Booster Series2</name>
+      <description>A high-intensity session to improve your speed.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="speed"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.5" PowerHigh="0.7" Cadence="80"/>
+<IntervalsT CadenceLow="85" CadenceHigh="100" Repeat="6" OnDuration="180" OffDuration="180" OnPower="1.1" OffPower="0.6"/>
+<Cooldown Duration="600" PowerLow="0.6" PowerHigh="0.3" Cadence="80"/>
+
+      </workout>
+    </workout_file>
+  

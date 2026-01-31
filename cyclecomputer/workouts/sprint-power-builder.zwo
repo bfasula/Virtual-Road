@@ -1,0 +1,18 @@
+
+   
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Sprint Power Builder</name>
+      <description>This workout is designed to improve your sprinting power and speed. It includes short, high-intensity intervals with variations in cadence for maximum sprinting performance.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="sprint"/><tag name="power"/><tag name="speed"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.5" PowerHigh="0.7" Cadence="90"/>
+<IntervalsT Cadence="110" Repeat="5" OnDuration="10" OffDuration="50" OnPower="1.2" OffPower="0.6"/>
+<IntervalsT Cadence="100" Repeat="5" OnDuration="20" OffDuration="40" OnPower="1.4" OffPower="0.6"/>
+<IntervalsT Cadence="90" Repeat="5" OnDuration="30" OffDuration="30" OnPower="1.6" OffPower="0.6"/>
+<Cooldown Duration="300" PowerLow="0.5" PowerHigh="0.3" Cadence="80"/>
+
+      </workout>
+    </workout_file>
+  

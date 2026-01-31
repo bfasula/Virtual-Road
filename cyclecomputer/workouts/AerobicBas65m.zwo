@@ -1,0 +1,39 @@
+<workout_file>
+	<author>Jakub Novak (via TrainingPeaks)</author>
+	<name>Aerobic Base Climbs 40/20s + Tempo</name>
+	<description>Today&apos;s focus more on intensity, spending time on Anaerobic Threshold to improve your lactate tolerance.
+
+- 2 main type of workouts see below :
+
+• 2 x 10 min climb continuously 125-140% of FTP, 20s endurance ( you should reach your near HR max by the end ), rest 10-15min between
+
+• 1 x 20 min tempo at undulating course at tempo
+
+- rest of the ride your own tempo, between endurance and T3 zone</description>
+	<sportType>bike</sportType>
+	<tags/>
+	<workout>
+		<Warmup Duration="600" PowerHigh="0.7" PowerLow="0.5">
+		</Warmup>
+		<SteadyState Duration="300" Power="0.88">
+		</SteadyState>
+		<SteadyState Duration="300" Power="0.5">
+		</SteadyState>
+		<SteadyState Duration="300" Power="0.88">
+		</SteadyState>
+		<SteadyState Duration="300" Power="0.5">
+		</SteadyState>
+		<IntervalsT Repeat="5" OnDuration="40" OnPower="1.3" OffDuration="20" OffPower="0.65">
+		</IntervalsT>
+		<SteadyState Duration="300" Power="0.5">
+		</SteadyState>
+		<IntervalsT Repeat="5" OnDuration="40" OnPower="1.3" OffDuration="20" OffPower="0.65">
+		</IntervalsT>
+		<SteadyState Duration="300" Power="0.5">
+		</SteadyState>
+		<SteadyState Duration="600" Power="0.92">
+		</SteadyState>
+		<SteadyState Duration="300" Power="0.63">
+		</SteadyState>
+	</workout>
+</workout_file>

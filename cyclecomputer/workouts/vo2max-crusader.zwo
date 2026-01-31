@@ -1,0 +1,18 @@
+
+    
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>VO2max Crusader</name>
+      <description>A gruelling session to increase your VO2max, your body's ability to use oxygen efficiently. This workout features short, intense intervals to push your heart and lungs to their limit.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="vo2max"/><tag name="high-intensity"/></tags>
+      <workout>
+        <Warmup Duration="900" PowerLow="0.5" PowerHigh="0.7"/>
+<IntervalsT Repeat="5" OnDuration="180" OffDuration="180" OnPower="1.2" OffPower="0.7"/>
+<SteadyState Duration="600" Power="0.75"/>
+<IntervalsT Repeat="5" OnDuration="180" OffDuration="180" OnPower="1.2" OffPower="0.7"/>
+<Cooldown Duration="600" PowerLow="0.5" PowerHigh="0.2"/>
+
+      </workout>
+    </workout_file>
+  

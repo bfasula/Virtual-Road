@@ -1,0 +1,17 @@
+<workout_file>
+  <author>Bill</author>
+  <name>Sweet Spot (30 min)</name>
+  <description>20 Min at or just below FTP</description>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <Warmup Duration="295" PowerLow="0.474" PowerHigh="0.758" pace="0"/>
+    <SteadyState Duration="300" Power="0.973" pace="0"/>
+    <SteadyState Duration="300" Power="0.891" pace="0"/>
+    <SteadyState Duration="60" Power="0.54" pace="0"/>
+    <SteadyState Duration="300" Power="0.973" pace="0"/>
+    <SteadyState Duration="300" Power="0.891" pace="0"/>
+    <Cooldown Duration="295" PowerLow="0.758" PowerHigh="0.486" pace="0"/>
+  </workout>
+</workout_file>

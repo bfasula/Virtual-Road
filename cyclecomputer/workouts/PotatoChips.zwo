@@ -1,0 +1,13 @@
+<workout_file>
+  <author>Bill</author>
+  <name>Potato Chip (60 min)</name>
+  <description>5 x 5 Min at FTP with 5 min recovery</description>
+  <sportType>bike</sportType>
+  <durationType>time</durationType>
+  <tags/>
+  <workout>
+    <Warmup Duration="300" PowerLow="0.474" PowerHigh="0.758" pace="0"/>
+     <IntervalsT Repeat="5" OnDuration="300" OffDuration="300" OnPower="1.0" OffPower="0.5" pace="2"/>
+    <Cooldown Duration="300" PowerLow="0.758" PowerHigh="0.486" pace="0"/>
+  </workout>
+</workout_file>

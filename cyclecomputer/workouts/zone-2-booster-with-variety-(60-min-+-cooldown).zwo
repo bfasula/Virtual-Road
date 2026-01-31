@@ -1,0 +1,18 @@
+
+    <?xml version="1.0" ?>
+    <workout_file>
+      <author>Coach GPT</author>
+      <name>Zone 2 Booster with Variety (60 min + Cooldown)</name>
+      <description>An exactly 60-minute workout, this steady Zone 2 session includes varied intervals and a relaxing cooldown to keep you engaged while challenging your endurance.</description>
+      <sportType>bike</sportType>
+      <tags><tag name="endurance"/><tag name="zone-2"/><tag name="variety"/><tag name="60-min"/><tag name="cooldown"/></tags>
+      <workout>
+        <Warmup Duration="600" PowerLow="0.4" PowerHigh="0.6"/>
+<IntervalsT Repeat="2" OnDuration="450" OffDuration="225" OnPower="0.7" OffPower="0.6"/>
+<SteadyState Duration="450" Power="0.65"/>
+<IntervalsT Repeat="2" OnDuration="225" OffDuration="112" OnPower="0.75" OffPower="0.65"/>
+<Cooldown Duration="300" PowerLow="0.5" PowerHigh="0.4"/>
+
+      </workout>
+    </workout_file>
+  
