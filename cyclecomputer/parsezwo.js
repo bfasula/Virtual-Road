@@ -20,10 +20,32 @@ let maxPower=0;
 
   let totalSecs=0;
 let normalizedPower = new NormalizedPower(powerFTP);
+let mphThreshold=7.0; 
 
 export let workoutDirectory="Workouts/";
+export async function fetchWOFromServer(url) {
+  try {
+    const response = await fetch(url);
+    
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    // Read the response body as text
+    const fileContent = await response.text();
+    
+    console.log(fileContent);
+    processZWO(fileContent);
+    return fileContent;
+
+  } catch (error) {
+    console.error("Could not fetch the file:", error);
+  }
+}
 //export var gpxArray;
 export  function selectWorkout() {
+    console.log("selectWorkout " ); 
     var input = document.createElement('input');
     input.type = 'file';
     input.accept = ['.zwo']
@@ -53,6 +75,7 @@ export class zwoPoint{
     
   }
 }
+var sport;
    export var zwoArray;
     var response;
     var xArray = Array(0);
@@ -134,6 +157,11 @@ var doc = new DOMParser().parseFromString(xmlString, "text/xml");
      var desc=doc.querySelectorAll("description");
     console.log("desc Links "+desc.length);
     console.log(desc[0].textContent);
+
+     var sportl=doc.querySelectorAll("sportType");
+    console.log("spoer Links "+sportl.length);
+    sport=sportl[0].textContent
+    console.log("sport type "+sport);
     
      console.log("name");
      var name=doc.querySelectorAll("name");
@@ -240,9 +268,12 @@ var doc = new DOMParser().parseFromString(xmlString, "text/xml");
         console.log(zwoArray[i].tag +","+ zwoArray[i].duration+","+ zwoArray[i].power);
         totalSecs+=Number(zwoArray[i].duration);
         let power=Number(zwoArray[i].power)*Number(powerFTP);
+        if (sport == 'run') {
+         power=Number(zwoArray[i].power)*Number(mphThreshold);
+            }
         totalPower+=Number(zwoArray[i].duration)*power;
         if (power > maxPower) { maxPower=power};
-         console.log(i+" Total Power "+totalPower + " total Secs "+totalSecs);
+         console.log(i+" Power "+power +" Total Power "+totalPower + " total Secs "+totalSecs);
          addPoint(zwoArray[i].power,zwoArray[i].duration,totalSecs);
 //cmds+="\n Power "+ zwoArray[i].power + formatTime(Number(zwoArray[i].duration));
           cmds+="\n Power "+ power.toFixed(0) + " " + formatTime(Number(zwoArray[i].duration));
@@ -297,22 +328,26 @@ function addPoint(pwr,dur,totalSecs) {
 }
 
 export function powerColor(power) {
-         if (power >= (powerFTP*1.20)) {
+    let pwr=powerFTP;
+    if (sport == 'run') {
+        pwr=mphThreshold;
+        }
+         if (power >= (pwr*1.20)) {
             return 'purple';
             } else
-     if (power >= (powerFTP*1.05)) {
+     if (power >= (pwr*1.05)) {
              return 'red';
             } else
-        if (power >= (powerFTP*.90)) {
+        if (power >= (pwr*.90)) {
              return 'orange';
             } else
-         if (power >= (powerFTP*.80)) {
+         if (power >= (pwr*.80)) {
             return 'yellow';
             } else
-        if (power >= (powerFTP*.60)) {
+        if (power >= (pwr*.60)) {
              return 'green';
             } else
-        if (power >= (powerFTP*.40)) {
+        if (power >= (pwr*.40)) {
             return 'blue';
             } else
         {
