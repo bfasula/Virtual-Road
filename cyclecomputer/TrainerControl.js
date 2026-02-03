@@ -4,10 +4,13 @@ const serviceIds = {
     serviceFTMS: 0x1826,
     indoorBikeData: 0x2ad2,
     trainerControl: 0x2ad9
+    
  
 }
 
+
 export class TrainerControl {
+
 
     constructor() {
         this.controlPointCharacteristic = null;
@@ -15,6 +18,7 @@ export class TrainerControl {
         this.device = null;
         this.server = null;
         this.service = null;
+
 
         this.supportedSpeedRangeCharacteristic = null;
         this.supportedInclinationRangeCharacteristic = null;
@@ -45,7 +49,7 @@ export class TrainerControl {
             return false;
         }
     }
-
+   
     async connect() {
 
         this.device = await navigator.bluetooth.requestDevice({
@@ -62,6 +66,35 @@ export class TrainerControl {
         console.log("TrainerControl: start CP notification");
         await this.controlPointCharacteristic.startNotifications();
       
+          this.trainerDataCharacteristic = await this.service.getCharacteristic('indoor_bike_data');
+	    console.log("TrainerControl: start notification");
+        await this.trainerDataCharacteristic.startNotifications();
+        this.trainerDataCharacteristic.addEventListener('characteristicvaluechanged', this.handleNotifications.bind(this));
+ 	
+       
+  	
+    }
+ async connectDevice(device) {
+/*
+        this.device = await navigator.bluetooth.requestDevice({
+            filters: [{ services: [serviceIds.serviceFTMS] }]
+        });
+        */
+        this.device = device;
+        this.device .addEventListener('gattserverdisconnected', this.onDisconnected);
+	console.log("TrainerControl: connect");
+        this.server = await this.device.gatt.connect();
+        this.service = await this.server.getPrimaryService(serviceIds.serviceFTMS);
+
+      
+         this.controlPointCharacteristic = await this.service.getCharacteristic('fitness_machine_control_point');
+          this.controlPointCharacteristic.addEventListener('characteristicvaluechanged', this.handleCPNotifications.bind(this));
+        console.log("TrainerControl: start CP notification");
+        await this.controlPointCharacteristic.startNotifications();
+      
+     document.getElementById('wattsl').style.backgroundColor = 'green';
+    document.getElementById('wattsl').style.opacity=0.5;
+     
           this.trainerDataCharacteristic = await this.service.getCharacteristic('indoor_bike_data');
 	    console.log("TrainerControl: start notification");
         await this.trainerDataCharacteristic.startNotifications();
@@ -92,8 +125,31 @@ export class TrainerControl {
     async onDisconnected(event) {
         const device = event.target;
     alert(`Device ${device.name} is disconnected.`);
-        
-   
+         console.log(`Device ${device.name} is disconnected.`);
+         //await this.reconnectWithBackoff();
+        let maxRetries = 10;
+  let baseDelay = 1000;
+       
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Reconnect attempt ${attempt}`);
+      await this.device.gatt.connect();
+      await this.connect();
+     await this.controlPointCharacteristic.writeValue(
+            Uint8Array.from([0x00])
+        );
+      console.log('Reconnected to trainer');
+      return;
+    } catch (e) {
+      const delay = baseDelay * 2 ** (attempt - 1);
+      console.warn(`Retry in ${delay}ms`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+
+  console.error('Trainer reconnect failed');
+
+   /*
 	console.log("TrainerControl: connect");
         this.server = await device.gatt.connect();
         this.service = await this.server.getPrimaryService(serviceIds.serviceFTMS);
@@ -108,14 +164,18 @@ export class TrainerControl {
 	console.log("TrainerControl: start CP notification");
         await this.controlPointCharacteristic.startNotifications();
         this.controlPointCharacteristic.addEventListener('characteristicvaluechanged', this.handleCPNotifications.bind(this));
-
+*/
      
        
 }
+
+        
    handleCPNotifications(event) {
 	console.log("TrainerControl: handleCPNotifications "+event);
         let value = event.target.value;
 	}
+
+    
     handleNotifications(event) {
 	//console.log("TrainerControl: handleNotifications"+event);
 	printWatts(event);
@@ -185,8 +245,48 @@ export class TrainerControl {
         }
         this.dataHandler.forEach(cb => cb(result));
     }
+
+
+
+
+    
+ async  reconnectWithBackoff() {
+  let maxRetries = 10;
+  let baseDelay = 1000;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Reconnect attempt ${attempt}`);
+      await this.device.gatt.connect();
+      await this.connect();
+      await this.reinitializeTrainer();
+      console.log('Reconnected to trainer');
+      return;
+    } catch (e) {
+      const delay = baseDelay * 2 ** (attempt - 1);
+      console.warn(`Retry in ${delay}ms`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+
+  console.error('Trainer reconnect failed');
+}
+    
+
+
+   async  requestControl() {
+  // OpCode 0x00 = Request Control
+  await this.controlPointCharacteristic.writeValue(
+    Uint8Array.from([0x00])
+  );
+}
+async reinitializeTrainer() {
+  await this.requestControl();
+ // await setERGMode(200); // restore last target
 }
 
+
+}
 
 export class TrainerData {
     constructor() {

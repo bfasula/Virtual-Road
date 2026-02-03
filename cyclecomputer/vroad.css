@@ -75,7 +75,7 @@ div.absolutetopchart {
   position: absolute;
   top: 0px;
  
-  width: 825px;
+  width: 830px;
   height: 100px;
      margin-right: auto;
   margin-left: auto;
@@ -89,6 +89,7 @@ div.toprcorner {
   top:0;
   right:0;
   }
+
 div.absolutebottom {
 position: absolute;
   bottom: 0px;
@@ -97,6 +98,7 @@ position: absolute;
   left: 0px;
   right: 0px;
     }
+
 div.relative {
   position: relative;
   width: 1200px;

@@ -12,6 +12,48 @@ let gpxIndex=0;
 export var gpxFilename="";
 export var loopRoute=false;
 export var youtubeVideoId=null;
+//window.loadGPX=loadGPX;
+//export async function loadGPX() {
+//    fetchFileFromServer('/gpxfiles/70 minute Indoor Cycling 4 Hill WorkoutUT.gpx');
+//    }
+export async function fetchGPXFromServer(url) {
+  try {
+    const response = await fetch(url);
+    
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    gpxIndex=0;
+     initializeRoute();
+   
+    
+    console.log("Fetch "+url);
+    let fname=url.replace("gpxfiles/", "");
+    fname=fname.replace(".gpx", "");
+    fname = "  " +fname;
+    // Read the response body as text
+    const fileContent = await response.text();
+    
+    console.log(fileContent);
+    gpxFilename={name: fname};
+       console.log("gpxFilename "+gpxFilename);
+      if (gpxFilename.name.indexOf("Loop")  >= 0) {
+       ////////  if (filename.indexOf("Loop")  >= 0) {
+        loopRoute=true;
+        console.log("Loop Route ");
+        }
+    processXML(fileContent,{name: fname});
+    return fileContent;
+
+  } catch (error) {
+    console.error("Could not fetch the file:", error);
+  }
+}
+
+// Example usage:
+///fetchFileFromServer('/files/data.txt');
+
 
 export function resetYoutubeVideoId() {
     youtubeVideoId=null;
@@ -357,11 +399,12 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
       //    }
           //  updateMap(gpxArray[0].lat,gpxArray[0].lon,filename);
      updateMapOL(s1);
-        console.log("i = "+findGPX(100.0));
+        //console.log("i = "+findGPX(100.0));
      if (bMetric === 'true') {
           document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1000).toFixed(1) + " KM ";
     } else {
          document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles ";
+         console.log(filename + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles ");
     }
      drawElevation();
     return gpxArray;
