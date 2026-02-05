@@ -30,7 +30,7 @@ export async function fetchGPXFromServer(url) {
     
     console.log("Fetch "+url);
     let fname=url.replace("gpxfiles/", "");
-    fname=fname.replace(".gpx", "");
+    //fname=fname.replace(".gpx", "");
     fname = "  " +fname;
     // Read the response body as text
     const fileContent = await response.text();
