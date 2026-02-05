@@ -1594,7 +1594,7 @@ export async function processPower(power) {
                 lastRouteDistance=totalDistance;
                 initialDistance=0;
                 if (!loopRoute) {
-                    if (confirm("Route Ended, Save Data?") == true) {
+                    if (confirm("Route Ended, Save Ride?") == true) {
                         saveGPS();
                          gpsIndex=0;
                         saveData();
