@@ -1,64 +1,117 @@
-
-<h1 style="text-align: center;">Cyclecomputer</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Cyclecomputer</title>
+<meta charset="UTF-8">
+<title>Virtual Road</title>
+
+<style>
+  body {
+    margin: 0;
+    background: #0b0f14;
+    color: white;
+    font-family: "Segoe UI", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .card {
+    background: linear-gradient(180deg,#1a1f27,#0e1218);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 0 0 1px #2b3340;
+    width: 320px;
+    text-align: center;
+  }
+
+  h1 {
+    margin-top: 0;
+    color: #00e5ff;
+    font-size: 1.6rem;
+  }
+
+  .menu a,
+  .menu input {
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+    background: linear-gradient(180deg,#2a2f3a,#161a22);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: inset 0 0 0 1px #3a4252;
+    border: none;
+    cursor: pointer;
+  }
+
+  .menu a:active,
+  .menu input:active {
+    background: linear-gradient(180deg,#3a4252,#1a1f27);
+  }
+
+  .qrbox {
+    margin-top: 16px;
+  }
+
+  .qrbox img {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .session {
+    margin-top: 8px;
+    color: #8fa3ff;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+</style>
 </head>
+
 <body>
-  
- 
-  <script type="module"  src="./cyclecomputer.js"></script>
-<table style="width: 800px; margin-left: auto; margin-right: auto;">
-<tbody>
-<tr style="font-size:x-large;text-align: left;height: 20px;">
-<td style="width: 25px; height: 15px;">Time</td>
-<td style="width: 25px; height: 15px;">Distance</td>
-<td style="width: 25px; height: 15px;">Speed</td>
-<td style="width: 25px; height: 15px;">Watts</td>
-</tr>
-<tr style="font-size:xx-large;text-align: left;height: 75px;">
-<td style="width: 75px; height: 75px;"><label id="timelbl" for="timelbl"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="distance" for="distance"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="speed" for="speed"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="watts" for="watts"><strong>---</strong></label></td>
-</tr>
-<tr style="font-size:x-large;text-align: left;height: 25px;">
-<td style="width: 25px; height: 15px;">RPM</td>
-<td style="width: 25px; height: 15px;">HRM</td>
-<td style="width: 25px; height: 15px;">Ave Speed</td>
-<td style="width: 25px; height: 15px;">Ave Watts</td>
-</tr>
-<tr style="font-size:xx-large;text-align: left;height: 75px;">
-<td style="width: 75px; height: 75px;"><label id="rpm" for="rpm"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="hr" for="hr"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="avespeed" for="avespeed"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="avewatts" for="avewatts"><strong>---</strong></label></td>
-</tr>
-<tr style="font-size:x-large;text-align: left;height: 25px;">
-<td style="width: 25px; height: 15px;">Ave RPM</td>
-<td style="width: 25px; height: 15px;">Ave HRM</td>
-<td style="width: 25px; height: 15px;">Pwr Calories</td>
-<td style="width: 25px; height: 15px;">HR Calories</td>
-</tr>
-<tr style="font-size:xx-large;text-align: left;height: 75px;">
-<td style="width: 75px; height: 75px;"><label id="averpm" for="averpm"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="avehr" for="avehr"><strong>---</strong></label></td>
-<td style="width: 75px; height: 75px;"><label id="pcal" for="pcal"><strong>---</strong></label></td>
-<td style="width: 75px; height: 30px;"><label id="hrcal" for="hrcal"><strong>---</strong></label></td>
-</tr>
-</tbody>
-</table>
-  
-<p id="btns"style="font-size:large;text-align: center;">
-   <button onclick="functionToExecute()">Connect FTMS</button>&nbsp;
-     <button onclick="connectPM()">Connect PM</button>&nbsp;
-    <button onclick="connectHRM()">Connect HRM</button>&nbsp;
-   <button onclick="connectRPM()">Connect RPM</button><br><br>
-   <button onclick="startTimer()" id="timer" for="timer">Start</button><br><br>
-     <!-- Download link - defaults to # which means clicking it does nothing as no file download link has been assigned (yet) -->
-    <!-- Note the use of the download attribute! It tells the browser to download the file, and what the default file name should be -->
-    <a id="downloadLink" href="#" download="myFile.txt">Save Data</a><br>
-    <a href="prefs.html">Prefs</a>
-</p>
+
+<div class="card">
+  <h1>Virtual Road</h1>
+
+  <div class="menu">
+    <!--a id="vroadLink">Virtual Road</a-->
+    <a href="cyclecomputer/vroadYoutube.html">Virtual Road</a>
+    <a href="cyclecomputer/prefs.html">Settings</a>
+    <a href="cyclecomputer/shortcuts.html">Shortcuts</a>
+    <a href="cyclecomputer/help.html">Help</a>
+    <a href="cyclecomputer/howto.html">Quick Start Video</a>
+    
+    <a href="https://www.strava.com/dashboard">Strava</a>
+
+    <!--form action="mailto:stravaupload@gotoes.org?subject=Virtual_Road Bike Ride" method="post" enctype="text/plain">
+      <input type="submit" value="Email to Strava">
+    </form-->
+  </div>
+
+  <!--div class="qrbox">
+    <img id="qr">
+    <div class="session" id="sessionText"></div>
+  </div>
+</div>
+
+<script>
+const sessionId = Math.random().toString(36).slice(2,8).toUpperCase();
+
+const vroadUrl = `${location.origin}/cyclecomputer/vroadYoutube.html?session=${sessionId}`;
+const phoneUrl = `${location.origin}/cyclecomputer/phone.html?session=${sessionId}`;
+
+document.getElementById("vroadLink").href = vroadUrl;
+document.getElementById("vroadLink").textContent = "Virtual Road";
+
+document.getElementById("sessionText").textContent = "SESSION " + sessionId;
+
+document.getElementById("qr").src =
+  "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+  encodeURIComponent(phoneUrl);
+</script-->
+
+</body>
+</html>
