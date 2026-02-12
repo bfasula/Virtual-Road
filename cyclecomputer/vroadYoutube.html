@@ -147,24 +147,46 @@
     bottom: 5px;
     right: 5px;
   }
-.bottom-right {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 50px;
-    height: 50px;
-    background-color: #f0f0f0;
-    padding: 50px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 
-.bottom-left {
-  position: absolute;
-  bottom: 8px;
-  left: 16px;
-  font-size: 20px;
+
+  .value {
+    font-size: 1.8rem;
+    font-weight: 800;
+   // color: #00e5ff;
+      color:#000000
+    margin-top: 2px;
+      background: rgba(255,255,255, 0.0);
+  }
+  .accent-watts .value { color: #ffcc00; }
+  .accent-hrm   .value { color: #ff4d4d; }
+  .accent-rpm   .value { color: #8dff00; }
+  .accent-dist  .value { color: #ffffff; }
+    
+ .valuewatts {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color:  #ffcc00;
+    margin-top: 2px;
+     // background: rgba(255,255,255, 0.5);
 }
-
-
+     .valuehrm {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color:  #ff4d4d;
+    margin-top: 2px;
+}
+         .valuerpm {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color:  #8dff00;
+    margin-top: 2px;
+   }  
+           .valuedist {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color:  #8dff00;
+    margin-top: 2px;
+   }  
 </style>
 <body>
      <div id="button" style="position: absolute;  bottom: 0; left: 0;">
@@ -188,7 +210,7 @@
                 
                
             
-        <div class="progress-bar"   opacity:0.6;>
+        <div class="progress-bar"  opacity:0.6;>
             
             <div id="progress" class="progress"  opacity:0.6;></div>
                    
@@ -198,7 +220,7 @@
                   </div>
             
              <div class="absolutetopchart">
-                 <label id="pctlbl"   for="pctlbl" style="text-align: center;" opacity:0.7;>Miles</label>
+                 <label id="pctlbl" for="pctlbl"  opacity:0.7;>Miles</label>
                   
  
                  <div id="chartContainer"  style="height: 75px; width: 100%; opacity:0.7;"></div>
@@ -245,34 +267,34 @@
 <td style="width: 20px; height: 10px;"><b>Pwr Cal</b></td>
 <td style="width: 20px; height: 10px;"><b>HR Cal</b></td>
 </tr>
-<tr style="background: rgba(255,255,255, 0.5);color: rgba(0,0,0, 1.0);font-size:x-large;text-align: left;height: 25px;">
+<tr style="background: rgba(255,255,255, 0.6);color: rgba(0,0,0, 1.0);font-size:x-large;text-align: left;height: 25px;">
  
-<td style=" width: 50px; height: 25px;"><label id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="distance" for="distance" title="Total Distance of Ride"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="speed" for="speed" title="Current Speed(mph)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="watts" for="watts" title="Current Power"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="twatts" for="twatts" title="Target Watts for the interval"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="timeleft" for="timeleft" title="Time left for the interval" ><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="iwatts" for="iwatts" title="Average watts for the interval"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="hr" for="hr" title="Current Heart Rate(bpm)"><strong>---</strong></label></td>
-    <td style="color: black; width: 50px; height: 25px;"><label id="rpm" for="rpm" title="Current Cadence"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="grade" for="grade" title="Current grade of the road"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="vgear" for="vgear" title="Virtual Gear(-/+)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="trdiff" for="trdiff" title="Grade Feel %(Up/Down Arrow)"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="distance" for="distance" title="Total Distance of Ride"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="speed" for="speed" title="Current Speed(mph)"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="watts" for="watts" title="Current Power"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="twatts" for="twatts" title="Target Watts for the interval"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="timeleft" for="timeleft" title="Time left for the interval" ><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="iwatts" for="iwatts" title="Average watts for the interval"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="hr" for="hr" title="Current Heart Rate(bpm)"><strong>0</strong></label></td>
+<td style="width: 50px; height: 25px;"><label class="value" id="rpm" for="rpm" title="Current Cadence"><strong>0</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="grade" for="grade" title="Current grade of the road"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="vgear" for="vgear" title="Virtual Gear(-/+)"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="trdiff" for="trdiff" title="Grade Feel %(Up/Down Arrow)"><strong>---</strong></label></td>
 
-<td style=" width: 50px; height: 25px;"><label id="avespeed" for="avespeed" title="Average Speed(mph)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="avewatts" for="avewatts" title="Average Power"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="avespeed" for="avespeed" title="Average Speed(mph)"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="avewatts" for="avewatts" title="Average Power"><strong>---</strong></label></td>
 
-<td style=" width: 50px; height: 25px;"><label id="avehr" for="avehr" title="Average Heart Rate(bpm)"><strong>---</strong></label></td>
-    <td style=" width: 50px; height: 25px;"><label id="averpm" for="averpm" title="Average Cadence"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label id="hrcal" for="hrcal" title="Total Calories using Heart Rate"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="avehr" for="avehr" title="Average Heart Rate(bpm)"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="averpm" for="averpm" title="Average Cadence"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="hrcal" for="hrcal" title="Total Calories using Heart Rate"><strong>---</strong></label></td>
 </tr>
 
    
 </tbody>
 </table>
-       <div id="bottom-right-corner">
+        <div id="bottom-right-corner">
   <label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
        <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
             <option value="-15">-15</option> 
@@ -309,8 +331,11 @@
         </select>
       </label>
            </div>
-       
+        
   <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectWorkout();" type="button">Workouts</button-->
+
+  
+
     <!--p id="btns"style="font-size:xx-small;text-align: center; "-->
         <div id="buttons">
    <center>
