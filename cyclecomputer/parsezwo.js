@@ -37,6 +37,7 @@ export async function fetchWOFromServer(url) {
     
     console.log(fileContent);
     processZWO(fileContent);
+       sWorkout(url);
     return fileContent;
 
   } catch (error) {
