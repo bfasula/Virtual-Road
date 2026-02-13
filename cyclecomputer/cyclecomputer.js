@@ -109,7 +109,7 @@ loadWOList();
 
 
 /* 🆔 SESSION ID FROM URL */
-    
+    /*
 const params = new URLSearchParams(location.search);
 const sessionId = params.get("session");
 //const sessionId = 'abc123';
@@ -117,7 +117,7 @@ if (!sessionId) {
   document.body.innerHTML = "Missing ?session= in URL";
   throw new Error("No session id");
 }
-
+*/
 export var powerFTP = Number(localStorage.getItem(".powerFTP"));
 export var apikey = localStorage.getItem(".apikey");
 console.log("apikey "+apikey);
