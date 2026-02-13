@@ -162,7 +162,7 @@
   .accent-rpm   .value { color: #8dff00; }
   .accent-dist  .value { color: #ffffff; }
     
- .valuewatts {
+   .valuewatts {
     font-size: 1.8rem;
     font-weight: 800;
     color:  #ffcc00;
@@ -187,6 +187,19 @@
     color:  #8dff00;
     margin-top: 2px;
    }  
+
+    .label {
+    font-size: 0.8rem;
+   // color: #8fa3ff;
+         color: black;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+ .accent-watts .label { color: #ffcc00; }
+  .accent-hrm   .label { color: #ff4d4d; }
+  .accent-rpm   .label { color: #8dff00; }
+  .accent-dist  .label { color: #ffffff; }
+    
 </style>
 <body>
      <div id="button" style="position: absolute;  bottom: 0; left: 0;">
@@ -238,38 +251,39 @@
    <div id='alrt' style="font-size:xx-large;background-color: blue; color: white;text-align: center;"></div>
     
 
- <table id="table1" border="0" style="width: 1250px; margin-left: auto; margin-right: auto; ">
+ <table id="table1" border="0" style="width: 1300px; margin-left: auto; margin-right: auto; ">
    
 <tbody>
   
-<tr style="background: rgba(0,0,255, 0.4); color: rgba(255,255,255, 0.9); font-size:xx-small;text-align: left;height:10px;">
+<!--tr style="background: rgba(0,0,128, 0.9); color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;"-->
+<tr style="background: #4f46e5; opacity: 0.7;color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;">
 
-<td  width: 20px; height: 10px;"><b>Time</b>&nbsp<i class="fa fa-clock" ></td>
-<td style="width: 20px; height: 10px;" id="distancel"><b>Miles</b></td>
-<td style="width: 20px; height: 10px;" id="speedl"><b>MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
-<td style="width: 20px; height: 10px;" id="wattsl"> <b>Watts</b>&nbsp<i class="fa fa-bolt"></i></td>
-<td style="width: 20px; height: 10px;" id="twattsl"><b>Target</b></td>
-<td style="width: 20px; height: 10px;" id="tleftl"><b>Time Left</b></td>
-<td style="width: 20px; height: 10px;" id="iwattsl"><b>Int Watts</b></td>
+<td style="width: 80px; height: 10px; color: rgba(255,255,255, 1.0);" class="label"><b>TIME</b><i class="fa fa-clock" ></td>
+<td style="width: 20px; height: 10px; background:  #ffffff;" id="distancel" class="label"><strong>MILES</strong></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="speedl" class="label"><b>MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
+<td style="width: 20px; height: 10px;  background: #ffcc00;" id="wattsl" class="label"> <b>WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="twattsl" class="label"><b>TARGET</b></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="tleftl" class="label"><b>TIME LEFT</b></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="iwattsl" class="label"><b>INT WATTS</b></td>
 
-<td style="width: 20px; height: 10px;" id="hrml"><b>HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
-<td style="width: 20px; height: 10px;" id="rpml"><b>RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
-<td style="width: 20px; height: 10px;"><b>Grade</b>&nbsp<i class="fa fa-area-chart"></td>
+<td style="width: 20px; height: 10px;  background:  #ff4d4d;" id="hrml" class="label"><b>HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
+<td style="width: 20px; height: 10px; background:  #8dff00;" id="rpml" class="label"><b>RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>GRADE</b>&nbsp<i class="fa fa-area-chart"></td>
    
-<td style="width: 20px; height: 10px;"><label id="vgearl" for="vgearl"><b>VGear</b>&nbsp<i class="fa fa-gear"></td>
-<td style="width: 20px; height: 10px;"><label id="trdiffl" for="trdiffl"><b>Grade Feel%</b></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><label id="vgearl" for="vgearl"><b>VGEAR</b>&nbsp<i class="fa fa-gear"></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><label id="trdiffl" for="trdiffl"><b>Grade Feel%</b></td>
 
-<td style="width: 20px; height: 10px;" id="avespeedl"><b>Ave MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
-<td style="width: 20px; height: 10px;"><b>Ave Watts</b>&nbsp<i class="fa fa-bolt"></i></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="avespeedl" class="label"><b>AVE MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
+<td style="width: 20px; height: 10px;  background: #ffcc00;" class="label"><b>AVE WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
 
-<td style="width: 20px; height: 10px;"><b>Ave HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
-<td style="width: 20px; height: 10px;"><b>Ave RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
-<td style="width: 20px; height: 10px;"><b>Pwr Cal</b></td>
-<td style="width: 20px; height: 10px;"><b>HR Cal</b></td>
+<td style="width: 20px; height: 10px;  background:  #ff4d4d;" class="label"><b>AVE HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
+<td style="width: 20px; height: 10px; background:  #8dff00;" class="label"><b>AVE RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>PWR CAL</b><i class="fa fa-burn"></td>
+<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>HR CAL</b><i class="fa fa-burn"></td>
 </tr>
 <tr style="background: rgba(255,255,255, 0.6);color: rgba(0,0,0, 1.0);font-size:x-large;text-align: left;height: 25px;">
  
-<td style=" width: 50px; height: 25px;"><label class="value" id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>---</strong></label></td>
+<td style=" width: 80px; height: 25px;"><label class="value" id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>00:00:00</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="distance" for="distance" title="Total Distance of Ride"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="speed" for="speed" title="Current Speed(mph)"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="watts" for="watts" title="Current Power"><strong>---</strong></label></td>
@@ -277,7 +291,7 @@
 <td style=" width: 50px; height: 25px;"><label class="value" id="timeleft" for="timeleft" title="Time left for the interval" ><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="iwatts" for="iwatts" title="Average watts for the interval"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="hr" for="hr" title="Current Heart Rate(bpm)"><strong>0</strong></label></td>
-<td style="width: 50px; height: 25px;"><label class="value" id="rpm" for="rpm" title="Current Cadence"><strong>0</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="rpm" for="rpm" title="Current Cadence"><strong>0</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="grade" for="grade" title="Current grade of the road"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="vgear" for="vgear" title="Virtual Gear(-/+)"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="trdiff" for="trdiff" title="Grade Feel %(Up/Down Arrow)"><strong>---</strong></label></td>
@@ -287,7 +301,7 @@
 
 <td style=" width: 50px; height: 25px;"><label class="value" id="avehr" for="avehr" title="Average Heart Rate(bpm)"><strong>---</strong></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="averpm" for="averpm" title="Average Cadence"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></label></td>
+<td style=" width: 50px; height: 25px;"><label class="value" id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></i></label></td>
 <td style=" width: 50px; height: 25px;"><label class="value" id="hrcal" for="hrcal" title="Total Calories using Heart Rate"><strong>---</strong></label></td>
 </tr>
 

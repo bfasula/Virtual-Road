@@ -12,7 +12,7 @@ import { TrainerControl , TrainerData} from "./TrainerControl.js";
 import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
 import {updateMarkerOL} from './minimap.js';
-//import {sendData} from './senddata.js';
+import {sendData} from './senddata.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
 export function modifyCadenceConnected( value ) { cadenceConnected = value; }
@@ -109,7 +109,7 @@ loadWOList();
 
 
 /* 🆔 SESSION ID FROM URL */
-    /*
+    
 const params = new URLSearchParams(location.search);
 const sessionId = params.get("session");
 //const sessionId = 'abc123';
@@ -117,8 +117,10 @@ if (!sessionId) {
   document.body.innerHTML = "Missing ?session= in URL";
   throw new Error("No session id");
 }
-*/
+
 export var powerFTP = Number(localStorage.getItem(".powerFTP"));
+export var apikey = localStorage.getItem(".apikey");
+console.log("apikey "+apikey);
 let tpower=Number(powerFTP*0.65); // zone2
 document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
 document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
@@ -427,8 +429,10 @@ var minHR;
 
 let emailAddress="";
 var windSpeed;
-var coefficientRR=0.005 // rolling resistance
-var coefficientWR=0.50;  // wind resistance
+//export var coefficientRR=0.005 // rolling resistance
+//export var coefficientWR=0.50;  // wind resistance
+export var coefficientRR=0.005 // rolling resistance
+export var coefficientWR=0.40;  // wind resistance
 
 let activeRpm=50;
 let currentRpm=0;
@@ -461,6 +465,7 @@ export var videoSeconds2add=0;
 export let initialDistance = 0; //miles
 export var minimumIncline=-15.0;
 export var maximumIncline=15.0;
+export var effectiveGrade=0.0;
 let lastEffectiveGrade=0.0;
 let baseVgear=0.0;
 let maximumHR=0;
@@ -597,8 +602,8 @@ async function handleHR(service){
   const c=await service.getCharacteristic('heart_rate_measurement');
   await c.startNotifications();
     
-     document.getElementById('hrml').style.backgroundColor = 'green';
-    document.getElementById('hrml').style.opacity=0.5;
+     //document.getElementById('hrml').style.backgroundColor = 'green';
+    //document.getElementById('hrml').style.opacity=0.5;
   c.addEventListener("characteristicvaluechanged",printHeartRate);
   
 }
@@ -619,8 +624,8 @@ async function handleCSC(service){
   const c=await service.getCharacteristic('csc_measurement');
   await c.startNotifications();
    
-     document.getElementById('rpml').style.backgroundColor = 'green';
-    document.getElementById('rpml').style.opacity=0.5;
+   //  document.getElementById('rpml').style.backgroundColor = 'green';
+  //  document.getElementById('rpml').style.opacity=0.5;
   c.addEventListener("characteristicvaluechanged",printCSC);
   
 }
@@ -637,8 +642,8 @@ async function handlePM(service){
   const c=await service.getCharacteristic('cycling_power_measurement');
   await c.startNotifications();
   
-     document.getElementById('wattsl').style.backgroundColor = 'green';
-    document.getElementById('wattsl').style.opacity=0.5;
+    // document.getElementById('wattsl').style.backgroundColor = 'green';
+   // document.getElementById('wattsl').style.opacity=0.5;
   c.addEventListener("characteristicvaluechanged",printPM);
   
 }
@@ -1496,11 +1501,11 @@ export async function processPower(power) {
         gpsArray = Array(gpxArray.length*10); // for upto 10 laps
       
         initStartLoc();
-        /*
+     if (apikey !== undefined && apikey != null) {
         sendData( "", 
                   0,
                  0, 0 , 0, 0,0,0,0,0,0,0,0,0);
-                 */
+       }
         /*
         if (bWorkout) {
             hideShowERG();
@@ -1633,8 +1638,12 @@ export async function processPower(power) {
                
                 if (gpsTime !== lastGPSTime) {
                     let p1 = new GPXPoint(gpxArray[gradeIndex].lat, gpxArray[gradeIndex].lon, gpxArray[gradeIndex].ele, gpxArray[gradeIndex].smoothEle, gpxArray[gradeIndex].secs, gpxArray[gradeIndex].grade, gpxArray[gradeIndex].smoothGrade, gpxArray[gradeIndex].totaldistancem, gpxArray[gradeIndex].mps, gpsTime, heartRate, power);
-                    if ((gradeIndex % markerFrequency) == 0) {         
+                    if ((gradeIndex % markerFrequency) == 0) {        
+                             try {
                             updateMarkerOL(gpxArray[gradeIndex].lat,gpxArray[gradeIndex].lon);
+                                     } catch (error) {
+                                console.error("Could not fetch the minimap:", error);
+                             }
                     }   
                     gpsArray[gpsIndex++] = p1;
                 }
@@ -1663,7 +1672,7 @@ export async function processPower(power) {
         }
       
         document.getElementById('speed').innerHTML = velocity.toFixed(1);
-    /*
+     if (apikey !== undefined && apikey != null) {
       sendData( document.getElementById('timelbl').textContent, 
                   document.getElementById('distance').textContent,
                  power,
@@ -1679,7 +1688,7 @@ export async function processPower(power) {
               document.getElementById('grade').textContent,
             document.getElementById('vgear').textContent,
                 );
-       */
+     }
     
         if (velocity >= pauseSpeed) {
             if (appPaused == 1 ) { 
@@ -1747,7 +1756,8 @@ export async function processPower(power) {
                  rpmAutoShift(currentRpm, activeRpm);
                  gradeAutoShift(nextGrade);
                
-                 let effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
+                 effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
+                  document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
                  console.log("effect grade "+effectiveGrade+ " grade "+(grade*100.0).toFixed(2) + " diff% " +trainerDifficulty+ " vgear "+vgear);
                  if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
                     trainerCommands.sendSimulation(effectiveGrade,windSpeed, coefficientRR, coefficientWR);

@@ -92,8 +92,8 @@ export class TrainerControl {
         console.log("TrainerControl: start CP notification");
         await this.controlPointCharacteristic.startNotifications();
       
-     document.getElementById('wattsl').style.backgroundColor = 'green';
-    document.getElementById('wattsl').style.opacity=0.5;
+   //  document.getElementById('wattsl').style.backgroundColor = 'green';
+   // document.getElementById('wattsl').style.opacity=0.5;
      
           this.trainerDataCharacteristic = await this.service.getCharacteristic('indoor_bike_data');
 	    console.log("TrainerControl: start notification");
