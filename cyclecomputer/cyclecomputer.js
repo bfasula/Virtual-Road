@@ -12,7 +12,7 @@ import { TrainerControl , TrainerData} from "./TrainerControl.js";
 import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
 import {updateMarkerOL} from './minimap.js';
-import {sendData} from './senddata.js';
+//import {sendData} from './senddata.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
 export function modifyCadenceConnected( value ) { cadenceConnected = value; }
@@ -1501,11 +1501,13 @@ export async function processPower(power) {
         gpsArray = Array(gpxArray.length*10); // for upto 10 laps
       
         initStartLoc();
+        /*
      if (apikey !== undefined && apikey != null) {
         sendData( "", 
                   0,
                  0, 0 , 0, 0,0,0,0,0,0,0,0,0);
        }
+       */
         /*
         if (bWorkout) {
             hideShowERG();
@@ -1672,6 +1674,7 @@ export async function processPower(power) {
         }
       
         document.getElementById('speed').innerHTML = velocity.toFixed(1);
+    /*
      if (apikey !== undefined && apikey != null) {
       sendData( document.getElementById('timelbl').textContent, 
                   document.getElementById('distance').textContent,
@@ -1689,6 +1692,7 @@ export async function processPower(power) {
             document.getElementById('vgear').textContent,
                 );
      }
+     */
     
         if (velocity >= pauseSpeed) {
             if (appPaused == 1 ) { 
