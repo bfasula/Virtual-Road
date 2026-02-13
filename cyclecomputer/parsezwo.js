@@ -127,6 +127,11 @@ function processZWO(xmlString) {
      yArray = Array(0);
      wArray = Array(0);
      cArray = Array(0);
+    var startxml = xmlString.indexOf("<?xml ");
+    var endxml = xmlString.indexOf("?>");
+    if (endxml > 0) {
+     xmlString = xmlString.slice(endxml+2, xmlString.length);
+        }
 var doc = new DOMParser().parseFromString(xmlString, "text/xml");
     
       totalSecs=0;
@@ -149,6 +154,7 @@ var doc = new DOMParser().parseFromString(xmlString, "text/xml");
 
     */
     
+    
     var start = xmlString.indexOf("<workout>");
     var end = xmlString.indexOf("</workout>");
     let cmds = xmlString.slice(start+9, end-9);
@@ -157,18 +163,22 @@ var doc = new DOMParser().parseFromString(xmlString, "text/xml");
     console.log("description");
      var desc=doc.querySelectorAll("description");
     console.log("desc Links "+desc.length);
+    if (desc.length > 0) {
     console.log(desc[0].textContent);
+        }
 
      var sportl=doc.querySelectorAll("sportType");
     console.log("spoer Links "+sportl.length);
-    sport=sportl[0].textContent
+             if (sportl.length > 0) {
+    sport=sportl[0].textContent;
+                 }
     console.log("sport type "+sport);
     
      console.log("name");
      var name=doc.querySelectorAll("name");
     console.log("name Links "+name.length);
     //console.log(name[0]);
-    console.log(name[0].textContent);
+    //console.log(name[0].textContent);
 
     
     var links = doc.querySelectorAll("workout");
