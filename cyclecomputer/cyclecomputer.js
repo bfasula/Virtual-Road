@@ -42,15 +42,30 @@ modal.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
 async function loadGPXList() {
   const files = await fetch("gpxfiles/index.json").then(r => r.json());
   files.forEach(file => {
+      //console.log("file "+file);
+      //format gpxfname,description,distance,climbingft,country
+      const myArray = file.split(",");
     const opt = document.createElement("option");
-    opt.value = "gpxfiles/" + file;
-    opt.textContent = file.replace(".gpx", "");
+   
+    
+      if (myArray.length > 1) {
+          if (myArray.length > 2) {
+               opt.textContent = myArray[1] + "-"+myArray[2] + " Miles";
+              } else {        
+                opt.textContent = myArray[1]; // use description if there is one
+              }
+           opt.value = "gpxfiles/" +  myArray[0];
+          } else {
+           opt.textContent = file.replace(".gpx", "");
+           opt.value = "gpxfiles/" + file;
+          }
     select.appendChild(opt);
   });
 }
 
 select.addEventListener("change", e => {
   const url = e.target.value;
+  const description = select.selectedOptions[0]?.textContent?.trim() ?? "";
   if (!url) return;
 
   console.log("Selected:", url);
@@ -58,7 +73,7 @@ select.addEventListener("change", e => {
     if (url == "gpxfiles/Select From Folder") {
         selectGPX();
         } else {
-    fetchGPXFromServer(url);
+    fetchGPXFromServer(url,description);
         }
   // load GPX here
 });
@@ -1848,8 +1863,9 @@ export async function processPower(power) {
                 i = findGPX(initialDistance * miles2meters);
                 }
             let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds+videoSeconds2add;
+            console.log("initLoc gpxSeconds "+gpxSeconds);
             seekVideo(gpxSeconds, syncSeconds);
-        }
+        } else { console.log("Invalid initLoc")};
      }
  
 

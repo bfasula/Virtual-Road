@@ -16,7 +16,7 @@ export var youtubeVideoId=null;
 //export async function loadGPX() {
 //    fetchFileFromServer('/gpxfiles/70 minute Indoor Cycling 4 Hill WorkoutUT.gpx');
 //    }
-export async function fetchGPXFromServer(url) {
+export async function fetchGPXFromServer(url,description) {
   try {
     const response = await fetch(url);
     
@@ -43,7 +43,7 @@ export async function fetchGPXFromServer(url) {
         loopRoute=true;
         console.log("Loop Route ");
         }
-    processXML(fileContent,{name: fname});
+    processXML(fileContent,{name: fname},description);
     return fileContent;
 
   } catch (error) {
@@ -209,7 +209,7 @@ var response;
                     response = fr.result;
       //        console.log("response ");
      //console.log(response);
-             processXML(response,filename);
+             processXML(response,filename,filename.name);
                 }
          await  fr.readAsText(filename);
          /*****
@@ -230,7 +230,11 @@ var response;
        
     }
     }
-function processXML(response,file) {
+function processXML(response,file,description) {
+    //  const result = calculateRealisticClimbingFromGPX(response);
+   const result = calculateClimbingFromGPX(response);
+ console.log(`Elevation gain: ${result.totalClimb} m`);
+    console.log(`Elevation loss: ${result.totalDescent} m`);
 let filename=file.name;
 let s1=   response;
     
@@ -398,15 +402,27 @@ console.log("max grade " + maxInclination + " min grade " + minInclination);
       //     printGPX(i);
       //    }
           //  updateMap(gpxArray[0].lat,gpxArray[0].lon,filename);
+    try {
      updateMapOL(s1);
+         } catch (error) {
+    console.error("Could not fetch the minimap:", error);
+  }
         //console.log("i = "+findGPX(100.0));
      if (bMetric === 'true') {
-          document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1000).toFixed(1) + " KM ";
+          document.getElementById('pctlbl').innerHTML = description + " " +(totaldistancem/ 1000).toFixed(1) + " KM, Ascent "
+              + result.totalClimb +
+              " Descent "+ result.totalDescent;
     } else {
-         document.getElementById('pctlbl').innerHTML = filename + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles ";
+         document.getElementById('pctlbl').innerHTML = description + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles,Ascent "
+             + (result.totalClimb*3.28084).toFixed(0) +
+              " Descent "+ (result.totalDescent*3.28084).toFixed(0);
          console.log(filename + " " +(totaldistancem/ 1609.344).toFixed(1) + " Miles ");
     }
+    try {
      drawElevation();
+          } catch (error) {
+    console.error("Could not draw elevation:", error);
+        }
     return gpxArray;
     }
 export function findGPX(distance) {
@@ -608,3 +624,139 @@ function smoothElevationLSQ(ele,i) {
         return smoothEle;
         
     }
+/**
+ * Calculates total elevation gain (meters of climbing) from a GPX file
+ * @param {string} gpxString - The raw GPX file content as string
+ * @returns {Object} { totalClimb: number, totalDescent: number, elevationPoints: number }
+ */
+function calculateClimbingFromGPX(gpxString) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(gpxString, "text/xml");
+
+    // Get all <trkpt> elements
+    const trkpts = doc.getElementsByTagName("trkpt");
+    if (trkpts.length < 2) {
+        return { totalClimb: 0, totalDescent: 0, elevationPoints: 0 };
+    }
+
+    let elevations = [];
+    
+    // Extract elevation values
+    for (let pt of trkpts) {
+        const ele = pt.getElementsByTagName("ele")[0];
+        if (ele && ele.textContent) {
+            const elevation = parseFloat(ele.textContent);
+            if (!isNaN(elevation)) {
+                elevations.push(elevation);
+            }
+        }
+    }
+
+    if (elevations.length < 2) {
+        return { totalClimb: 0, totalDescent: 0, elevationPoints: elevations.length };
+    }
+
+    let totalClimb = 0;
+    let totalDescent = 0;
+    let lastValidElevation = elevations[0];
+
+    // Simple positive differences only (ignores noise going down-up-down)
+    for (let i = 1; i < elevations.length; i++) {
+        const current = elevations[i];
+        
+        // Skip clearly invalid points
+        if (Math.abs(current - lastValidElevation) > 200) {
+            continue; // probably GPS glitch
+        }
+
+        const diff = current - lastValidElevation;
+
+        if (diff > 0) {
+            totalClimb += diff;
+        } else if (diff < 0) {
+            totalDescent -= diff; // make positive
+        }
+
+        lastValidElevation = current;
+    }
+
+    return {
+        totalClimb:    Math.round(totalClimb * 10) / 10,     // 0.1 m precision
+        totalDescent:  Math.round(totalDescent * 10) / 10,
+        elevationPoints: elevations.length,
+        avgClimbPerPoint: elevations.length > 1 ? 
+            Math.round(totalClimb / (elevations.length - 1) * 100) / 100 : 0
+    };
+}
+
+// ────────────────────────────────────────────────
+//          More robust version with smoothing
+// ────────────────────────────────────────────────
+
+/**
+ * More realistic climbing calculation with small noise suppression
+ */
+function calculateRealisticClimbingFromGPX(gpxString, minClimbThreshold = 1.5) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(gpxString, "text/xml");
+
+    const points = Array.from(doc.getElementsByTagName("trkpt"))
+        .map(pt => {
+            const ele = pt.getElementsByTagName("ele")[0];
+            return ele ? parseFloat(ele.textContent) : null;
+        })
+        .filter(e => e !== null && !isNaN(e));
+
+    if (points.length < 3) {
+        return { totalClimb: 0, totalDescent: 0 };
+    }
+
+    let climb = 0;
+    let descent = 0;
+
+    // Use a simple 3-point smoothing to reduce GPS noise
+    for (let i = 1; i < points.length - 1; i++) {
+        const prev = points[i-1];
+        const curr = points[i];
+        const next = points[i+1];
+
+        const smoothed = (prev + curr + next) / 3;
+        const diff = smoothed - points[i-1];
+
+        if (diff > minClimbThreshold) {
+            climb += diff;
+        } else if (diff < -minClimbThreshold) {
+            descent -= diff;
+        }
+    }
+
+    // Add last segment without smoothing
+    const lastDiff = points[points.length-1] - points[points.length-2];
+    if (lastDiff > minClimbThreshold) {
+        climb += lastDiff;
+    } else if (lastDiff < -minClimbThreshold) {
+        descent -= lastDiff;
+    }
+console.log("totalClimb "+climb);
+    return {
+        
+        totalClimb:    Math.round(climb * 10) / 10,
+        totalDescent:  Math.round(descent * 10) / 10,
+        pointsUsed:    points.length
+    };
+}
+
+// ────────────────────────────────────────────────
+//                   Usage example
+// ────────────────────────────────────────────────
+
+/*
+async function example() {
+    const response = await fetch("my-ride.gpx");
+    const gpxText = await response.text();
+
+    const result = calculateRealisticClimbingFromGPX(gpxText);
+    console.log(`Elevation gain: ${result.totalClimb} m`);
+    console.log(`Elevation loss: ${result.totalDescent} m`);
+}
+*/
