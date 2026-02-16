@@ -292,7 +292,9 @@ var doc = new DOMParser().parseFromString(xmlString, "text/xml");
           calculateNP(zwoArray[i].power, zwoArray[i].duration);
          console.log("NP "+normalizedPower.NP);
         }
-   console.log("NP "+normalizedPower.NP + " IF " + normalizedPower.intensityFactor + " TSS " + normalizedPower.calcTSS(totalSecs));
+    const normpwr = " NP "+normalizedPower.NP + " IF " + normalizedPower.intensityFactor + " TSS " + normalizedPower.calcTSS(totalSecs);
+   console.log(normpwr);
+    
     const result= formatTime(totalSecs);
      //alert(name[0].textContent+"\nTime "+ result + "\n" +desc[0].textContent+"\n"+cmds);
     //document.getElementById('barChart').setAttribute('title', desc[0].textContent);
@@ -387,6 +389,7 @@ async function  createPlot(title1)  {
 }
 
 async function drawChart(title,data) {
+     document.getElementById("charttitle").innerHTML = title;
         const canvas = document.getElementById('barChart');
         const ctx = canvas.getContext('2d');
         ctx.canvas.hidden = false;
@@ -443,8 +446,9 @@ async function drawChart(title,data) {
 ctx.fillStyle = 'black';
 ctx.font = '16px Arial';
 ctx.textAlign = 'center';
-ctx.fillText(title, canvas.width / 2, padding - 20);
-//ctx.fillText(title, padding+20, padding - 20);
+
+//ctx.fillText(title, canvas.width / 2, padding - 20);
+
 let yvalue=chartHeight;
 let y=0;
 let len=maxPower/50;
