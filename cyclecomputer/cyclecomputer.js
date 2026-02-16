@@ -93,9 +93,15 @@ async function loadWOList() {
   const files = await fetch("workouts/index.json").then(r => r.json());
   files.forEach(file => {
     //  console.log(file);
+        const myArray = file.split(",");
     const opt = document.createElement("option");
+       if (myArray.length > 1) {
+            opt.textContent = myArray[1]; // use description if there is one
+           opt.value = "workouts/" +  myArray[0];
+          } else {
     opt.value = "workouts/" + file;
     opt.textContent = file.replace(".zwo", "");
+           }
     selectwo.appendChild(opt);
   });
 }
@@ -134,6 +140,7 @@ if (!sessionId) {
 }
 */
 export var powerFTP = Number(localStorage.getItem(".powerFTP"));
+console.log("Power FTP "+powerFTP);
 export var apikey = localStorage.getItem(".apikey");
 console.log("apikey "+apikey);
 let tpower=Number(powerFTP*0.65); // zone2

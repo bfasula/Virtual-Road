@@ -53,6 +53,7 @@ export class NormalizedPower{
     
   addPower(power) {
    //console.log("addPower "+power+ " pIndex "+this.pIndex);
+      console.log("PowerFTP "+this.ftp);
     this.pArray[this.pIndex++]=power;
     if (this.pIndex == 30) {
         this.pIndex=0;
