@@ -41,16 +41,33 @@ modal.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
 
 async function loadGPXList() {
   const files = await fetch("gpxfiles/index.json").then(r => r.json());
-  files.forEach(file => {
+ 
       //console.log("file "+file);
       //format gpxfname,description,distance,climbingft,country
+    
+      files.sort((a, b) => {
+  const getDistance = str => {
+    const parts = str.split(",");
+    // If there's a third field → use it, else 0
+    return parts.length >= 3 ? parseFloat(parts[2]) || 0 : 0;
+  };
+
+  const distA = getDistance(a);
+  const distB = getDistance(b);
+
+  return distA - distB;               // ascending (short → long)
+  // return distB - distA;            // descending (long → short)
+});
+    
+     files.forEach(file => {
       const myArray = file.split(",");
     const opt = document.createElement("option");
    
     
       if (myArray.length > 1) {
           if (myArray.length > 2) {
-               opt.textContent = myArray[1] + "-"+myArray[2] + " Miles";
+               //opt.textContent = myArray[1] + "-"+myArray[2] + " Miles";
+               opt.textContent = myArray[2] + " Miles-" + myArray[1] ;
               } else {        
                 opt.textContent = myArray[1]; // use description if there is one
               }
@@ -91,12 +108,29 @@ modalwo.onclick = e => { if (e.target === modalwo) modalwo.style.display = "none
 
 async function loadWOList() {
   const files = await fetch("workouts/index.json").then(r => r.json());
+    
+       
+    files.sort((a, b) => {
+  const getDesc = str => {
+    const parts = str.split(",");
+    return (parts[2]);
+  };
+
+  const descA = getDesc(a);
+  const descB = getDesc(b);
+  return descA.localeCompare(descB);
+});
+
   files.forEach(file => {
     //  console.log(file);
         const myArray = file.split(",");
     const opt = document.createElement("option");
        if (myArray.length > 1) {
-            opt.textContent = myArray[1]; // use description if there is one
+           if (myArray.length > 2) {
+               opt.textContent = myArray[2] + "-" + myArray[1] ;
+              } else {    
+                opt.textContent = myArray[1]; // use description if there is one
+            }
            opt.value = "workouts/" +  myArray[0];
           } else {
     opt.value = "workouts/" + file;
