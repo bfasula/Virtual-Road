@@ -78,40 +78,66 @@
 
   <div class="menu">
     <!--a id="vroadLink">Virtual Road</a-->
-    <a href="cyclecomputer/vroadYoutube.html">Virtual Road</a>
+    <a href="cyclecomputer/vroadYoutube.html" id="vroad">Virtual Road</a>
     <a href="cyclecomputer/prefs.html">Settings</a>
     <a href="cyclecomputer/shortcuts.html">Shortcuts</a>
     <a href="cyclecomputer/help.html">Help</a>
-    <a href="cyclecomputer/howto.html">Quick Start Video</a>
-    
-    <a href="https://www.strava.com/dashboard">Strava</a>
+    <!--a href="https://www.strava.com/dashboard">Strava</a-->
+    <a href="https://www.strava.com/upload/select">Strava Upload</a>
+      
 
-    <!--form action="mailto:stravaupload@gotoes.org?subject=Virtual_Road Bike Ride" method="post" enctype="text/plain">
-      <input type="submit" value="Email to Strava">
-    </form-->
+  
   </div>
 
-  <!--div class="qrbox">
+  <div class="qrbox">
     <img id="qr">
     <div class="session" id="sessionText"></div>
   </div>
 </div>
 
 <script>
-const sessionId = Math.random().toString(36).slice(2,8).toUpperCase();
+//const sessionId = "ABC123"; // your generated session
+//var apikey = Number(localStorage.getItem(".apikey"));
+ const apikey = localStorage.getItem('.apikey');
+//apikey="xxxxxxxx";
+console.log("apikey "+apikey);
 
-const vroadUrl = `${location.origin}/cyclecomputer/vroadYoutube.html?session=${sessionId}`;
-const phoneUrl = `${location.origin}/cyclecomputer/phone.html?session=${sessionId}`;
+//const sessionId = Math.random().toString(36).slice(2);
+//const sessionId = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    const sessionId = generateSessionId(12);  // e.g. "k7p9m2x4q8r5"
+//const url = location.origin + location.pathname + "?session=" + sessionId;
 
-document.getElementById("vroadLink").href = vroadUrl;
-document.getElementById("vroadLink").textContent = "Virtual Road";
+    /*
+    let link = document.createElement("a");
+link.href = `${location.origin}/cyclecomputer/vroadYoutube.html?session=${sessionId}`;
+link.textContent = "Virtual Road";
+link.style.display = 'block'; // Make the link a block element
+link.style.textAlign = 'center'; // Center the text
+*/
+  document.getElementById('vroad').href=`${location.origin}/cyclecomputer/vroadYoutube.html?session=${sessionId}`;
 
-document.getElementById("sessionText").textContent = "SESSION " + sessionId;
+//document.body.appendChild(link);
+ //   document.body.prepend(link);
 
+
+const phoneUrl = `${location.origin}/cyclecomputer/phone.html?session=${sessionId}&apikey=${apikey}`;
+if (apikey !== undefined && apikey != null) {
 document.getElementById("qr").src =
-  "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+  "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" +
   encodeURIComponent(phoneUrl);
-</script-->
+  }
+    function generateSessionId(length = 12) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for (let i = 0; i < length; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
 
-</body>
-</html>
+
+</script>
+    
+
+       
+    </body>
