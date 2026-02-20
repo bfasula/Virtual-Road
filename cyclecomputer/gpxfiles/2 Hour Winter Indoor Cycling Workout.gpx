@@ -3,45 +3,15 @@
   <metadata>
     <name>2 Hour Winter Indoor Cycling Workout:0:CAne-kwttmk</name>
     <link href="https://www.mapstogpx.com/strava"/>
-    <time>2026-02-19T22:43:03.489Z</time>
-    <bounds minlat="49.166003000" minlon="7.121789000" maxlat="49.250897000" maxlon="7.249315000"/>
+    <time>2026-02-20T17:27:24.516Z</time>
+    <bounds minlat="49.166003000" minlon="7.121887000" maxlat="49.250897000" maxlon="7.249315000"/>
   </metadata>
   <trk>
     <name>2 Hour Winter Indoor Cycling Workout2 Hour Winter Indoor Cycling Workout</name>
     <link href="https://www.strava.com/activities/4781679753"/>
     <trkseg>
-      <trkpt lat="49.231301000" lon="7.163022000">
-        <ele>364.800</ele>
-        <time>2026-02-12T17:22:03Z</time>
-      </trkpt>
-      <trkpt lat="49.231252000" lon="7.163105000">
-        <ele>364.600</ele>
-        <time>2026-02-12T17:22:04Z</time>
-      </trkpt>
-      <trkpt lat="49.231203400" lon="7.163185000">
-        <ele>364.400</ele>
-        <time>2026-02-12T17:22:05Z</time>
-      </trkpt>
-      <trkpt lat="49.231154800" lon="7.163265000">
-        <ele>364.200</ele>
-        <time>2026-02-12T17:22:06Z</time>
-      </trkpt>
-      <trkpt lat="49.231106200" lon="7.163345000">
-        <ele>364.000</ele>
-        <time>2026-02-12T17:22:07Z</time>
-      </trkpt>
-      <trkpt lat="49.231057600" lon="7.163425000">
-        <ele>363.800</ele>
-        <time>2026-02-12T17:22:08Z</time>
-      </trkpt>
-      <trkpt lat="49.231009000" lon="7.163505000">
-        <ele>363.600</ele>
-        <time>2026-02-12T17:22:09Z</time>
-      </trkpt>
-      <trkpt lat="49.230965000" lon="7.163582333">
-        <ele>363.400</ele>
-        <time>2026-02-12T17:22:10Z</time>
-      </trkpt>
+      
+      
       <trkpt lat="49.230921000" lon="7.163659667">
         <ele>363.200</ele>
         <time>2026-02-12T17:22:11Z</time>
@@ -30617,34 +30587,6 @@
       <trkpt lat="49.246280000" lon="7.121887000">
         <ele>379.200</ele>
         <time>2026-02-12T19:29:34Z</time>
-      </trkpt>
-      <trkpt lat="49.246359571" lon="7.121873000">
-        <ele>379.214</ele>
-        <time>2026-02-12T19:29:35Z</time>
-      </trkpt>
-      <trkpt lat="49.246439143" lon="7.121859000">
-        <ele>379.229</ele>
-        <time>2026-02-12T19:29:36Z</time>
-      </trkpt>
-      <trkpt lat="49.246518714" lon="7.121845000">
-        <ele>379.243</ele>
-        <time>2026-02-12T19:29:37Z</time>
-      </trkpt>
-      <trkpt lat="49.246598286" lon="7.121831000">
-        <ele>379.257</ele>
-        <time>2026-02-12T19:29:38Z</time>
-      </trkpt>
-      <trkpt lat="49.246677857" lon="7.121817000">
-        <ele>379.271</ele>
-        <time>2026-02-12T19:29:39Z</time>
-      </trkpt>
-      <trkpt lat="49.246757429" lon="7.121803000">
-        <ele>379.286</ele>
-        <time>2026-02-12T19:29:40Z</time>
-      </trkpt>
-      <trkpt lat="49.246837000" lon="7.121789000">
-        <ele>379.300</ele>
-        <time>2026-02-12T19:29:41Z</time>
       </trkpt>
     </trkseg>
   </trk>
