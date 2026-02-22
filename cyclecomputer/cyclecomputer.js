@@ -1817,7 +1817,7 @@ export async function processPower(power) {
                  gradeAutoShift(nextGrade);
                
                  effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
-                  document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
+                 // document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
                  console.log("effect grade "+effectiveGrade+ " grade "+(grade*100.0).toFixed(2) + " diff% " +trainerDifficulty+ " vgear "+vgear);
                  if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
                     trainerCommands.sendSimulation(effectiveGrade,windSpeed, coefficientRR, coefficientWR);
