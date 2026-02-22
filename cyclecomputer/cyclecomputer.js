@@ -649,7 +649,7 @@ async function connectGATT(device){
 
 async function autoReconnect(device){
    alert ("Disconnected: "+device.name+" reconnecting...");
-  consol.log("Disconnected: "+device.name+" reconnecting...");
+  console.log("Disconnected: "+device.name+" reconnecting...");
   setTimeout(()=>connectGATT(device).catch(e=>log("Reconnect failed")),2000);
 }
 
@@ -800,11 +800,13 @@ export let powerFTP=180;
     */
 //console.clear();
 
-
+ let calibrationPct = localStorage.getItem('.calibrationPct');
  let bUseMetric = localStorage.getItem('checkboxState')
  console.log("Use Metric " +bUseMetric);
  let bUseSmoothGrade = localStorage.getItem('checkboxSmoothGrade')
  console.log("Use Smooth Grade " +bUseSmoothGrade);
+let bUseZeroRPMWatts = localStorage.getItem('checkboxZeroRPMWatts')
+ console.log("Use RPM 0 Watts 0 " +bUseZeroRPMWatts);
 
 if (bUseMetric === "false") {
     console.log("bUseMetric1=false"); //correct
@@ -1580,7 +1582,9 @@ export async function processPower(power) {
             */
     }
    
-
+    if (bUseZeroRPMWatts && totalRPMPts > 0 && currentRpm == 0) {
+        power = 0; // If Cadence sensor use and no pedaling then 0 watts
+    }
 
     document.getElementById('watts').innerHTML = power;
      document.getElementById('watts').style.backgroundColor=powerColor(power);
@@ -1817,11 +1821,11 @@ export async function processPower(power) {
                  gradeAutoShift(nextGrade);
                
                  effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
-                 // document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
+                  //document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
                  console.log("effect grade "+effectiveGrade+ " grade "+(grade*100.0).toFixed(2) + " diff% " +trainerDifficulty+ " vgear "+vgear);
-                 if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
+              //   if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
                     trainerCommands.sendSimulation(effectiveGrade,windSpeed, coefficientRR, coefficientWR);
-                }
+               // }
                  lastEffectiveGrade = effectiveGrade;
             } // if smarttrainerconnected
             lastGradeIndex = gradeIndex;
