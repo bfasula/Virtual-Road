@@ -180,6 +180,7 @@ console.log("apikey "+apikey);
 let tpower=Number(powerFTP*0.65); // zone2
 document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
 document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
+export var bUseCalibration = false;
 
 document.addEventListener('keydown', function(event) {
     if(event.keyCode == 109) { // minus
@@ -216,7 +217,11 @@ document.addEventListener('keydown', function(event) {
         connectRPM();  // cadence
     }
     else if(event.keyCode == 67) { // letter c
+          if (event.shiftKey) {
+             toggleCalibration();
+             } else {
        hideElevationChart();
+              }
     }
     else if(event.keyCode == 68) { // letter d
       saveData();
@@ -227,7 +232,7 @@ document.addEventListener('keydown', function(event) {
     else if(event.keyCode == 86) { // letter v
         hideHud();
     }
-    else if(event.keyCode == 87) { // letter w
+    else if(event.keyCode == 87) { // letter w      
         hideWorkout();
     }
     else if(event.keyCode == 77) { // letter m
@@ -375,6 +380,15 @@ function showWorkoutCells() {
                         //document.getElementById("barChart").style.display = "none";
                         ctx.canvas.hidden = true;
 }
+function toggleCalibration() {
+    if (bUseCalibration) {
+        bUseCalibration=false;
+        console.log("Calibration off");
+        } else {
+         bUseCalibration=true;
+          console.log("Calibration on");
+        }
+    }
 function toggleAutoShift() {
     if (!bUseAutoShift) {
          bUseAutoShift=true;
@@ -521,7 +535,7 @@ export var videoSeconds2add=0;
 export let initialDistance = 0; //miles
 export var minimumIncline=-15.0;
 export var maximumIncline=15.0;
-export var effectiveGrade=0.0;
+
 let lastEffectiveGrade=0.0;
 let baseVgear=0.0;
 let maximumHR=0;
@@ -612,7 +626,10 @@ async function connectGATT(device){
   for(const s of services){
     //if(s.uuid.includes("1826")) await handleFTMS(s);
     if(s.uuid.includes("1826")) {
-        trainerControl.connectDevice(device);
+     //   await trainerControl.connect();
+     //    await trainerCommands.requestControl();
+        await trainerControl.connectDevice(device);
+        await trainerCommands.requestControl();
          console.log("Device name " + trainerControl.device.name);
         trainerConnected = true
     	smartTrainerConnected = true
@@ -650,7 +667,7 @@ async function connectGATT(device){
 async function autoReconnect(device){
    alert ("Disconnected: "+device.name+" reconnecting...");
   console.log("Disconnected: "+device.name+" reconnecting...");
-  setTimeout(()=>connectGATT(device).catch(e=>log("Reconnect failed")),2000);
+  setTimeout(()=>connectGATT(device).catch(e=>console.log("Reconnect failed")),2000);
 }
 
 /* ---------------- HR ---------------- */
@@ -839,6 +856,7 @@ minrpm =  Number(localStorage.getItem(".minRPM"));
 maxrpm =  Number(localStorage.getItem(".maxRPM"));
 minimumIncline =  Number(localStorage.getItem(".minGrade"));
 maximumIncline =  Number(localStorage.getItem(".maxGrade"));
+
 
 if (!riderAge) {
     console.log("Default age");
@@ -1548,7 +1566,7 @@ export async function processRPM(rpm) {
     }
 export async function processPower(power) {
 
-
+    
     let distancem = 0
     let nextGrade = 0.0;
     //let workoutIndex=0;
@@ -1820,12 +1838,12 @@ export async function processPower(power) {
                  rpmAutoShift(currentRpm, activeRpm);
                  gradeAutoShift(nextGrade);
                
-                 effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
+                let  effectiveGrade = ((grade * 100.0) * (trainerDifficulty / 100.0))+vgear;
                   //document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
                  console.log("effect grade "+effectiveGrade+ " grade "+(grade*100.0).toFixed(2) + " diff% " +trainerDifficulty+ " vgear "+vgear);
-              //   if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
+                 if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
                     trainerCommands.sendSimulation(effectiveGrade,windSpeed, coefficientRR, coefficientWR);
-               // }
+                }
                  lastEffectiveGrade = effectiveGrade;
             } // if smarttrainerconnected
             lastGradeIndex = gradeIndex;
