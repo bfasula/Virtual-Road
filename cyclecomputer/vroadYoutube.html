@@ -199,6 +199,21 @@
   .accent-hrm   .label { color: #ff4d4d; }
   .accent-rpm   .label { color: #8dff00; }
   .accent-dist  .label { color: #ffffff; }
+// route filter
+    #filterInput {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+#gpxSelect {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.4rem;
+}
     
 </style>
 <body>
@@ -375,10 +390,11 @@
 <div id="modal" class="modal">
   <div class="modal-content">
     <h3>Select a ride</h3>
-
-    <select id="gpxSelect">
+ <input id="filterInput" type="text" placeholder="Filter rides…" />
+         <select id="gpxSelect" size="8"></select>
+    <!--select id="gpxSelect" size="8">
       <option value="">Select a GPX file…</option>
-    </select>
+    </select-->
 
     <div class="modal-actions">
       <button id="closePicker">Cancel</button>
@@ -405,54 +421,7 @@
   
             
   
-    
-    <!--select id="connectDevice"   style="background: rgba(255,255,255, 0.5); color: black;" >
-  <option value="">Connect Device</option>
-  <option value="FTMS">FTMS Trainer</option>
-  <option value="PWR">Power Meter</option>
-  <option value="HRM">HR Monitor</option>
-  <option value="RPM">Cadence/Speed</option>
-  <option value="RUN">Run Pod</option>
-  <option value="Virtual">Virtual Power</option>
-    </select-->
-&nbsp;
-
-
-        
-    <!--label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
-       <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
-            <option value="-15">-15</option> 
-            <option value="-14">-14</option> 
-            <option value="-13">-13</option> 
-            <option value="-12">-12</option> 
-            <option value="-11">-11</option> 
-            <option value="-10">-10</option> 
-            <option value="-9">-9</option> 
-            <option value="-8">-8</option> 
-            <option value="-7">-7</option> 
-            <option value="-6">-6</option> 
-            <option value="-5">-5</option> 
-            <option value="-4">-4</option> 
-            <option value="-3">-3</option> 
-            <option value="-2">-2</option> 
-            <option value="-1">-1</option> 
-        <option value="0" selected>0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-        </select-->
+  
 
 
 <label id="synclbl" for="synclbl"><strong>Sync</strong></label>
