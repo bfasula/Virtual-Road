@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-      <!-- Include OpenLayers CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
-  <title>Virtual Road</title>
-     <link rel="stylesheet" type="text/css" href="vroad.css" media="all" />
-    <!--script src='https://cdn.plot.ly/plotly-2.35.2.min.js'></script-->
-     <!--script src='../cdnjs/plotly-2.35.2.min.js'></script-->
-  
-  <!--script src="http://www.openlayers.org/api/OpenLayers.js"></script-->
-    <!--script src="../OpenLayers-2.13.1/OpenLayers.js"></script-->
-     <!-- Include OpenLayers JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    
+   <!-- Include OpenLayers CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
+   <title>Virtual Road</title>
+   <link rel="stylesheet" type="text/css" href="vroad.css" media="all" />
+   
+   <!-- Include OpenLayers JavaScript -->
+   <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
    <script type="text/javascript">
-     
-
-		var map;//complex object of type OpenLayers.Map
-        var markerSource ;
-       </script>
-    <script src="https://www.youtube.com/iframe_api"></script>
+      var map;//complex object of type OpenLayers.Map
+            var markerSource ;
+           
+   </script>
+   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <style>
 
@@ -217,226 +213,169 @@
     
 </style>
 <body>
-     <div id="button" style="position: absolute;  bottom: 0; left: 0;">
-         <button id="startbutton" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()"  <i class="fa fa-play"</i>Start</button>
-    </div>
-    
-  <div class="toprcorner" id="map" style="height:250px;width:300px; opacity:0.8;"></div>
-		<div id="home-top-video">
-
-            
-  <div id="youtubePlayer"></div>
-            
-<video id="myVid" width="1600" height="800">
- <source src="TBLoop.mp4" type="video/mp4">
- 
-</video>
-            
-             <script type="module"  src="./cyclecomputer.js"></script>
-             
-            <div class="absolutetop">
-                
-               
-            
-        <div class="progress-bar"  opacity:0.6;>
-            
-            <div id="progress" class="progress"  opacity:0.6;></div>
-                   
-    </div>
-                
-            <!--progress id="progress" value="10" max="100">100 %</progress-->
-                  </div>
-            
-             <div class="absolutetopchart">
-                 <label id="pctlbl" for="pctlbl"  opacity:0.7;>Miles</label>
-                  
-                   
-                 <div id="chartContainer"  style="height: 75px; width: 100%; opacity:0.7;"></div>
-                  <label id=charttitle opacity:0.7;></label>
-        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-                    <center>       
-    <canvas id="barChart" title="Workout" width="1000" height="125" style="border:1px solid #000; width: 100%; opacity:0.8;"></canvas>
-                        
-        </center>
-                 
-                  </div>
-     
+   <div id="button" style="position: absolute;  bottom: 0; left: 0;">
+      <button id="startbutton" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()"  class="fa fa-play">Start</button>
+   </div>
+   <div class="toprcorner" id="map" style="height:250px;width:300px; opacity:0.8;"></div>
+   <div id="home-top-video">
+   <div id="youtubePlayer"></div>
+   <video id="myVid" width="1600" height="800">
+      <source src="TBLoop.mp4" type="video/mp4">
+   </video>
+   <script type="module"  src="./cyclecomputer.js"></script>
+   <div class="absolutetop">
+      <div class="progress-bar"  opacity:0.6;>
+         <div id="progress" class="progress"  opacity:0.6;></div>
+      </div>
+      <!--progress id="progress" value="10" max="100">100 %</progress-->
+   </div>
+   <div class="absolutetopchart">
+      <label id="pctlbl" for="pctlbl"  opacity:0.7;>Miles</label>
+      <div id="chartContainer"  style="height: 75px; width: 100%; opacity:0.7;"></div>
+      <label id=charttitle opacity:0.7;></label>
+      <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+      <center>
+         <canvas id="barChart" title="Workout" width="1000" height="125" style="border:1px solid #000; width: 100%; opacity:0.8;"></canvas>
+      </center>
+   </div>
    <div id="hud" class="absolutebottom">
-            
-            
    <div id='alrt' style="font-size:xx-large;background-color: blue; color: white;text-align: center;"></div>
-    
 
  <table id="table1" border="0" style="width: 1300px; margin-left: auto; margin-right: auto; ">
    
 <tbody>
-  
-<!--tr style="background: rgba(0,0,128, 0.9); color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;"-->
-<tr style="background: #4f46e5; opacity: 0.7;color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;">
-
-<td style="width: 80px; height: 10px; color: rgba(255,255,255, 1.0);" class="label"><b>TIME</b><i class="fa fa-clock" ></td>
-<td style="width: 20px; height: 10px; background:  #ffffff;" id="distancel" class="label"><strong>MILES</strong></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="speedl" class="label"><b>MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
-<td style="width: 20px; height: 10px;  background: #ffcc00;" id="wattsl" class="label"> <b>WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="twattsl" class="label"><b>TARGET</b></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="tleftl" class="label"><b>TIME LEFT</b></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="iwattsl" class="label"><b>INT WATTS</b></td>
-
-<td style="width: 20px; height: 10px;  background:  #ff4d4d;" id="hrml" class="label"><b>HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
-<td style="width: 20px; height: 10px; background:  #8dff00;" id="rpml" class="label"><b>RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>GRADE</b>&nbsp<i class="fa fa-area-chart"></td>
-   
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><label id="vgearl" for="vgearl"><b>VGEAR</b>&nbsp<i class="fa fa-gear"></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><label id="trdiffl" for="trdiffl"><b>Grade Feel%</b></td>
-
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="avespeedl" class="label"><b>AVE MPH</b>&nbsp<i class="fa fa-tachometer-alt"></td>
-<td style="width: 20px; height: 10px;  background: #ffcc00;" class="label"><b>AVE WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
-
-<td style="width: 20px; height: 10px;  background:  #ff4d4d;" class="label"><b>AVE HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
-<td style="width: 20px; height: 10px; background:  #8dff00;" class="label"><b>AVE RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>PWR CAL</b><i class="fa fa-burn"></td>
-<td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>HR CAL</b><i class="fa fa-burn"></td>
-</tr>
-<tr style="background: rgba(255,255,255, 0.6);color: rgba(0,0,0, 1.0);font-size:x-large;text-align: left;height: 25px;">
- 
-<td style=" width: 80px; height: 25px;"><label class="value" id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>00:00:00</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="distance" for="distance" title="Total Distance of Ride"><strong>00.00</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="speed" for="speed" title="Current Speed(mph)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="watts" for="watts" title="Current Power"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="twatts" for="twatts" title="Target Watts for the interval"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="timeleft" for="timeleft" title="Time left for the interval" ><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="iwatts" for="iwatts" title="Average watts for the interval"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="hr" for="hr" title="Current Heart Rate(bpm)"><strong>0</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="rpm" for="rpm" title="Current Cadence"><strong>0</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="grade" for="grade" title="Current grade of the road"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="vgear" for="vgear" title="Virtual Gear(-/+)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="trdiff" for="trdiff" title="Grade Feel %(Up/Down Arrow)"><strong>---</strong></label></td>
-
-<td style=" width: 50px; height: 25px;"><label class="value" id="avespeed" for="avespeed" title="Average Speed(mph)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="avewatts" for="avewatts" title="Average Power"><strong>---</strong></label></td>
-
-<td style=" width: 50px; height: 25px;"><label class="value" id="avehr" for="avehr" title="Average Heart Rate(bpm)"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="averpm" for="averpm" title="Average Cadence"><strong>---</strong></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></i></label></td>
-<td style=" width: 50px; height: 25px;"><label class="value" id="hrcal" for="hrcal" title="Total Calories using Heart Rate"><strong>---</strong></label></td>
-</tr>
-
-   
+   <!--tr style="background: rgba(0,0,128, 0.9); color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;"-->
+   <tr style="background: #4f46e5; opacity: 0.7;color: rgba(0,0,0, 1.0); font-size:xx-small;text-align: left;height:10px;">
+      <td style="width: 80px; height: 10px; color: rgba(255,255,255, 1.0);" class="label"><b>TIME</b><i class="fa fa-clock" ></i></td>
+      <td style="width: 20px; height: 10px; background:  #ffffff;" id="distancel" class="label"><strong>MILES</strong></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="speedl" class="label"><b>MPH</b>&nbsp<i class="fa fa-tachometer-alt"></i></td>
+      <td style="width: 20px; height: 10px;  background: #ffcc00;" id="wattsl" class="label"> <b>WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="twattsl" class="label"><b>TARGET</b></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="tleftl" class="label"><b>TIME LEFT</b></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="iwattsl" class="label"><b>INT WATTS</b></td>
+      <td style="width: 20px; height: 10px;  background:  #ff4d4d;" id="hrml" class="label"><b>HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
+      <td style="width: 20px; height: 10px; background:  #8dff00;" id="rpml" class="label"><b>RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>GRADE</b>&nbsp<i class="fa fa-area-chart"></i></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label">
+         <label id="vgearl" for="vgearl">
+            <b>VGEAR</b>&nbsp<i class="fa fa-gear"></i>
+      </td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><label id="trdiffl" for="trdiffl"><b>Grade Feel%</b></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" id="avespeedl" class="label"><b>AVE MPH</b>&nbsp<i class="fa fa-tachometer-alt"></i></td>
+      <td style="width: 20px; height: 10px;  background: #ffcc00;" class="label"><b>AVE WATTS</b>&nbsp<i class="fa fa-bolt"></i></td>
+      <td style="width: 20px; height: 10px;  background:  #ff4d4d;" class="label"><b>AVE HRM</b>&nbsp<i class="fa fa-heartbeat"></i></td>
+      <td style="width: 20px; height: 10px; background:  #8dff00;" class="label"><b>AVE RPM</b>&nbsp<i class="fa fa-circle-notch"></i></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>PWR CAL</b><i class="fa fa-burn"></i></td>
+      <td style="width: 20px; height: 10px;color: rgba(255,255,255, 1.0)" class="label"><b>HR CAL</b><i class="fa fa-burn"></i></td>
+   </tr>
+   <tr style="background: rgba(255,255,255, 0.6);color: rgba(0,0,0, 1.0);font-size:x-large;text-align: left;height: 25px;">
+   <td style=" width: 80px; height: 25px;"><label class="value" id="timelbl" for="timelbl" title="Elapsed Time of Ride"><strong>00:00:00</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="distance" for="distance" title="Total Distance of Ride"><strong>00.00</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="speed" for="speed" title="Current Speed(mph)"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="watts" for="watts" title="Current Power"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="twatts" for="twatts" title="Target Watts for the interval"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="timeleft" for="timeleft" title="Time left for the interval" ><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="iwatts" for="iwatts" title="Average watts for the interval"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="hr" for="hr" title="Current Heart Rate(bpm)"><strong>0</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="rpm" for="rpm" title="Current Cadence"><strong>0</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="grade" for="grade" title="Current grade of the road"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="vgear" for="vgear" title="Virtual Gear(-/+)"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="trdiff" for="trdiff" title="Grade Feel %(Up/Down Arrow)"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="avespeed" for="avespeed" title="Average Speed(mph)"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="avewatts" for="avewatts" title="Average Power"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="avehr" for="avehr" title="Average Heart Rate(bpm)"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="averpm" for="averpm" title="Average Cadence"><strong>---</strong></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="pcal" for="pcal" title="Total Calories using Power"><strong>---</strong></i></label></td>
+   <td style=" width: 50px; height: 25px;"><label class="value" id="hrcal" for="hrcal" title="Total Calories using Heart Rate"><strong>---</strong></label></td>
+   </tr>
 </tbody>
 </table>
-        <div id="bottom-right-corner">
-  <label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
-       <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
-            <option value="-15">-15</option> 
-            <option value="-14">-14</option> 
-            <option value="-13">-13</option> 
-            <option value="-12">-12</option> 
-            <option value="-11">-11</option> 
-            <option value="-10">-10</option> 
-            <option value="-9">-9</option> 
-            <option value="-8">-8</option> 
-            <option value="-7">-7</option> 
-            <option value="-6">-6</option> 
-            <option value="-5">-5</option> 
-            <option value="-4">-4</option> 
-            <option value="-3">-3</option> 
-            <option value="-2">-2</option> 
-            <option value="-1">-1</option> 
-        <option value="0" selected>0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-        </select>
-      </label>
-           </div>
-        
-  <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectWorkout();" type="button">Workouts</button-->
-
-  
-
-    <!--p id="btns"style="font-size:xx-small;text-align: center; "-->
-        <div id="buttons">
-   <center>
-     
-       <!--button id="startbutton"style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()"  <i class="fa fa-play"</i>Start</button-->
-         <label id="beginlbl" for="beginlbl"><strong>Start Loc</strong></label>
-   <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="initialdistance" class="initialdistance" value="0" placeholder="Start" title="Distance to begin (miles)" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
-       
-     <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveData()" id="data" for="data">Save Ride</button>
-     <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveGPS()" id="gps" for="gps">Save GPX</button-->
-      
-    <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectVideo();" type="button">Video</button>&nbsp;
-    <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectGPX();" type="button">GPX</button>&nbsp;
-        <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="connectDevice();" type="button">Connect</button> &nbsp;
-    <label id="vplbl" for="vpbeginlbl"><strong>VP</strong></label>
-       <input type="checkbox" id="vwCheck" onclick="virtualWatts()">
-    
-   
-
-       
-  <button id="openPicker">Rides</button>
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <h3>Select a ride</h3>
- <input id="filterInput" type="text" placeholder="Filter rides…" />
-         <select id="gpxSelect" size="8"></select>
-    <!--select id="gpxSelect" size="8">
-      <option value="">Select a GPX file…</option>
-    </select-->
-
-    <div class="modal-actions">
-      <button id="closePicker">Cancel</button>
-    </div>
-  </div>
+<div id="bottom-right-corner">
+   <label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
+   <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
+      <option value="-15">-15</option>
+      <option value="-14">-14</option>
+      <option value="-13">-13</option>
+      <option value="-12">-12</option>
+      <option value="-11">-11</option>
+      <option value="-10">-10</option>
+      <option value="-9">-9</option>
+      <option value="-8">-8</option>
+      <option value="-7">-7</option>
+      <option value="-6">-6</option>
+      <option value="-5">-5</option>
+      <option value="-4">-4</option>
+      <option value="-3">-3</option>
+      <option value="-2">-2</option>
+      <option value="-1">-1</option>
+      <option value="0" selected>0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+   </select>
+   </label>
 </div>
-  
-                  
-     <button id="openPickerwo">Workouts</button>
-<div id="modalwo" class="modalwo">
-    
-  <div class="modal-contentwo">
-    <h3>Select a workout</h3>
-
-    <select id="woSelect">
-      <option value="">Select a workout</option>
-    </select>
-
-    <div class="modal-actionswo">
-      <button id="closePickerwo">Cancel</button>
-    </div>
-  </div>
-</div> 
-  
-            
-  
-  
-
-
-<label id="synclbl" for="synclbl"><strong>Sync</strong></label>
-         <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="secs2add" class="secs2add" value="0" placeholder="secs2add" title="Add secs to video" maxlength="4" size="2" />&nbsp;
- 
-   </center>
+<!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectWorkout();" type="button">Workouts</button-->
+<!--p id="btns"style="font-size:xx-small;text-align: center; "-->
+<div id="buttons">
+   <center>
+      <!--button id="startbutton"style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()"  <i class="fa fa-play"</i>Start</button-->
+      <label id="beginlbl" for="beginlbl"><strong>Start Loc</strong></label>
+      <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="initialdistance" class="initialdistance" value="0" placeholder="Start" title="Distance to begin (miles)" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveData()" id="data" for="data">Save Ride</button>
+      <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveGPS()" id="gps" for="gps">Save GPX</button-->
+      <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectVideo();" type="button">Video</button>&nbsp;
+      <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectGPX();" type="button">GPX</button>&nbsp;
+      <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="connectDevice();" type="button">Connect</button> &nbsp;
+      <label id="vplbl" for="vpbeginlbl"><strong>VP</strong></label>
+      <input type="checkbox" id="vwCheck" onclick="virtualWatts()">
+       
+      <button id="openPicker">Rides</button>
+      <div id="modal" class="modal">
+         <div class="modal-content">
+            <h3>Select a ride</h3>
+            <input id="gpxfilterInput" type="text" placeholder="Filter rides…" />
+            <select id="gpxSelect" size="8"></select>
+            <!--select id="gpxSelect" size="8">
+               <option value="">Select a GPX file…</option>
+               </select-->
+            <div class="modal-actions">
+               <button id="closePicker">Cancel</button>
             </div>
-  <!--/p-->
- 
-  
-         
-  
-
-             
-    
-    
+         </div>
+      </div>
+       
+      <button id="openPickerwo">Workouts</button>
+      <div id="modalwo" class="modalwo">
+         <div class="modal-contentwo">
+            <h3>Select a workout</h3>
+            <input id="wofilterInput" type="text" placeholder="Filter workouts…" />
+            <select id="woSelect" size="8"></select>
+            <!--select id="woSelect">
+               <option value="">Select a workout</option>
+            </select-->
+            <div class="modal-actionswo">
+               <button id="closePickerwo">Cancel</button>
+            </div>
+         </div>
+      </div>
+       
+      <label id="synclbl" for="synclbl"><strong>Sync</strong></label>
+      <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="secs2add" class="secs2add" value="0" placeholder="secs2add" title="Add secs to video" maxlength="4" size="2" />&nbsp;
+   </center>
+</div>
+<!--/p-->
 </body>
 </html>

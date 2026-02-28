@@ -34,7 +34,7 @@ const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openPicker");
 const closeBtn = document.getElementById("closePicker");
 const select = document.getElementById("gpxSelect");
-const filterInput = document.getElementById("filterInput");
+const filterInput = document.getElementById("gpxfilterInput");
 
 let allFiles = [];
 
@@ -47,10 +47,10 @@ modal.onclick = (e) => {
 async function loadGPXList() {
     bUseShortcut = false;
     allFiles = await fetch("gpxfiles/index.json").then((r) => r.json());
-    renderList(allFiles, 0);
+    renderGPXList(allFiles, 0);
 }
 
-function renderList(files, dist) {
+function renderGPXList(files, dist) {
     //format gpxfname,description,distance,climbingft,country
     console.log("Filter distance " + dist);
     select.innerHTML = "";
@@ -106,14 +106,14 @@ filterInput.addEventListener("input", () => {
             let distance = term.substring(1, term.length);
             console.log("Distance " + distance);
             if (term.substring(0, 1) === "<") {
-                renderList(allFiles, -distance);
+                renderGPXList(allFiles, -distance);
             } else {
-                renderList(allFiles, distance);
+                renderGPXList(allFiles, distance);
             }
         }
     } else {
         const filtered = allFiles.filter((f) => f.toLowerCase().includes(term));
-        renderList(filtered, 0);
+        renderGPXList(filtered, 0);
     }
 });
 
@@ -124,10 +124,11 @@ select.addEventListener("change", (e) => {
 
     console.log("Selected:", url);
     modal.style.display = "none";
+    bUseShortcut = true;
     if (url == "gpxfiles/Select From Folder") {
         selectGPX();
     } else {
-        bUseShortcut = true;
+      
         fetchGPXFromServer(url, description);
     }
     // load GPX here
@@ -140,6 +141,8 @@ const modalwo = document.getElementById("modalwo");
 const openBtnwo = document.getElementById("openPickerwo");
 const closeBtnwo = document.getElementById("closePickerwo");
 const selectwo = document.getElementById("woSelect");
+const filterInputwo = document.getElementById("wofilterInput");
+let allwoFiles = [];
 
 openBtnwo.onclick = () => (modalwo.style.display = "flex");
 closeBtnwo.onclick = () => (modalwo.style.display = "none");
@@ -148,8 +151,15 @@ modalwo.onclick = (e) => {
 };
 
 async function loadWOList() {
-    const files = await fetch("workouts/index.json").then((r) => r.json());
+   
+    bUseShortcut = false;
+    allwoFiles = await fetch("workouts/index.json").then((r) => r.json());
+    renderWOList(allwoFiles);
+}
 
+function renderWOList(files) {
+     console.log("renderWOLIst ");
+ selectwo.innerHTML = "";
     files.sort((a, b) => {
         const getDesc = (str) => {
             const parts = str.split(",");
@@ -180,15 +190,42 @@ async function loadWOList() {
     });
 }
 
+filterInputwo.addEventListener("input", () => {
+    const term = filterInputwo.value.toLowerCase();
+        
+    console.log("filterInput " + term + " " + term.substring(0, 1));
+    /*
+
+    if (term.substring(0, 1) === ">" || term.substring(0, 1) === "<") {
+        if (term.length >= 2) {
+            let distance = term.substring(1, term.length);
+            console.log("Distance " + distance);
+            if (term.substring(0, 1) === "<") {
+                renderGPXList(allFiles, -distance);
+            } else {
+                renderGPXList(allFiles, distance);
+            }
+        }
+    } else {
+    */
+    
+        const filtered = allwoFiles.filter((f) => f.toLowerCase().includes(term));
+        renderWOList(filtered);
+    //}
+});
+
 selectwo.addEventListener("change", (e) => {
     const url = e.target.value;
+    console.log(url);
     if (!url) return;
 
     console.log("Selected:", url);
     modalwo.style.display = "none";
+    bUseShortcut = true;
     if (url == "workouts/Select From Folder") {
         selectWorkout();
     } else {
+        
         fetchWOFromServer(url);
     }
     //
@@ -762,30 +799,7 @@ async function handlePM(service) {
     // document.getElementById('wattsl').style.opacity=0.5;
     c.addEventListener("characteristicvaluechanged", printPM);
 }
-/*
- function parseCSC(event) {
-   
-      
-        const bits1 = event.target.value.getUint8(0,true)
-        
-        let hasWheelData = (bits1 & 0x01) > 0;
-        let hasCrankData = (bits1 & 0x02) > 0;
-        if (hasWheelData) {printCSC(event);}
-       if (hasCrankData) {printRSC(event);}
-     }
-*/
-// const service = await server.getPrimaryService('heart_rate')
-//    const char = await service.getCharacteristic('heart_rate_measurement')
-//      const service = await server.getPrimaryService('cycling_speed_and_cadence')
-//    const char = await service.getCharacteristic('csc_measurement')
-//      const service = await server.getPrimaryService('running_speed_and_cadence')
-//    const char = await service.getCharacteristic('rsc_measurement')
-//     const charact = await ftmsService.getCharacteristic('fitness_machine_feature')
-//    const data = await charact.readValue() // Returns a DataView object
-//const service = await server.getPrimaryService('cycling_power')
-//const char = await service.getCharacteristic('cycling_power_measurement')
 
-//*********************************************************************
 
 function myFunction() {
     var checkBox = document.getElementById("myCheck");
