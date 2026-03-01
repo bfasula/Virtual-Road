@@ -312,7 +312,11 @@ document.addEventListener('keydown', function(event) {
         hideWorkout();
     }
     else if(event.keyCode == 77) { // letter m
-        hideMap();
+         if (event.shiftKey) {
+             toggleMapsize();
+        } else {
+            hideMap();
+        }
     }
     else if(event.keyCode == 65) { // letter a toggle autoshift 
         toggleAutoShift();
@@ -422,6 +426,29 @@ function hideWorkout() {
         x.style.display = "none";
     }
 }
+
+
+function toggleMapsize() {
+    
+    var x = document.getElementById("map");
+    if (!bUseLargeMap) {
+        document.getElementById("map").setAttribute("class","fullmap");
+     //x.style.width=1600;
+    // x.style.height=800;
+        
+        bUseLargeMap=true;
+         console.log("toggleMapsize enlarge");
+        //document.getElementById('map').setAttribute("style","width:100%");
+        //  document.getElementById('map').setAttribute("style","hieight:80%");
+     } else {
+        document.getElementById("map").setAttribute("class","toprcorner");
+    // x.style.width=300;
+    // x.style.height=250;
+         bUseLargeMap=false;
+        retoreSize();
+         console.log("toggleMapsize shrink");
+        }
+    }
 function hideMap() {
     var x = document.getElementById("map");
     if (x.style.display === "none") {
@@ -596,6 +623,7 @@ let bUseAutoShift=false;
 let bUseAutoShiftRPM=false;
 let bUseAutoShiftGrade=false;
 let bUseAveVelocity=false;
+let bUseLargeMap=false;
 //let bUseSmoothGrade=false;
 let ftms=false;
 let lastGPSTime="";
