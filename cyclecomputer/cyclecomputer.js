@@ -233,7 +233,7 @@ selectwo.addEventListener("change", (e) => {
 
 loadWOList();
 
-
+bUseShortcut = true;
 
 
 
