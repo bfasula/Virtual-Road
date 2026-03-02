@@ -52,6 +52,10 @@ export function updateMapOL(gpxDataString) {
             padding: [50, 50, 50, 50], // Optional padding around the extent
             maxZoom: 15 // Maximum zoom level when fitting
         });
+    map.getView().on('change:resolution', function () {
+   zoom = map.getView().getZoom();
+  //console.log("Zoom changed to:", zoom);
+});
     
 }
 
@@ -101,16 +105,11 @@ export function updateMarkerOL(lat, lon) {
       // Recenter map to marker
         map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
         map.getView().setZoom(zoom);
-    /*
-            map.getView().animate({
-                center: markerCoordinates,
-                zoom: 14,
-                duration: 1000
-            });
-            */
+    
         
     
 }
+ 
 export function incMapZoom() {
     zoom++;
      map.getView().setZoom(zoom);
