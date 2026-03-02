@@ -1,5 +1,7 @@
-
-
+let zoom=15;
+export function updateMapSize() {
+    map.updateSize();
+    }
 export function updateMapOL(gpxDataString) {
      // Initialize the map
      if (map === undefined) {
@@ -98,7 +100,7 @@ export function updateMarkerOL(lat, lon) {
       
       // Recenter map to marker
         map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
-        map.getView().setZoom(15);
+        map.getView().setZoom(zoom);
     /*
             map.getView().animate({
                 center: markerCoordinates,
@@ -109,3 +111,11 @@ export function updateMarkerOL(lat, lon) {
         
     
 }
+export function incMapZoom() {
+    zoom++;
+     map.getView().setZoom(zoom);
+    }
+export function decMapZoom() {
+    zoom--;
+     map.getView().setZoom(zoom);
+    }

@@ -11,7 +11,7 @@ import {speedFromWatts} from './speedFromWatts.js';
 import { TrainerControl , TrainerData} from "./TrainerControl.js";
 import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
-import {updateMarkerOL} from './minimap.js';
+import {updateMarkerOL,incMapZoom,decMapZoom,updateMapSize} from './minimap.js';
 //import {sendData} from './senddata.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
@@ -321,9 +321,16 @@ document.addEventListener('keydown', function(event) {
     else if(event.keyCode == 65) { // letter a toggle autoshift 
         toggleAutoShift();
     }
+        else if(event.keyCode == 90) { // letter z
+         if (event.shiftKey) {
+             decMapZoom();
+        } else {
+            incMapZoom();
+        }
+    }
     else {
         
-        //alert("key "+event.keyCode);
+       // alert("key "+event.keyCode);
         }
    
 });
@@ -429,26 +436,30 @@ function hideWorkout() {
 
 
 function toggleMapsize() {
-    
+
     var x = document.getElementById("map");
     if (!bUseLargeMap) {
-        document.getElementById("map").setAttribute("class","fullmap");
-     //x.style.width=1600;
-    // x.style.height=800;
-        
-        bUseLargeMap=true;
-         console.log("toggleMapsize enlarge");
+        document.getElementById("map").setAttribute("class", "fullmap");
+        //x.style.width=1600;
+        // x.style.height=800;
+
+        bUseLargeMap = true;
+        incMapZoom();
+        console.log("toggleMapsize enlarge");
         //document.getElementById('map').setAttribute("style","width:100%");
         //  document.getElementById('map').setAttribute("style","hieight:80%");
-     } else {
-        document.getElementById("map").setAttribute("class","toprcorner");
-    // x.style.width=300;
-    // x.style.height=250;
-         bUseLargeMap=false;
-        retoreSize();
-         console.log("toggleMapsize shrink");
-        }
+    } else {
+        document.getElementById("map").setAttribute("class", "toprcorner");
+        // x.style.width=300;
+        // x.style.height=250;
+        bUseLargeMap = false;
+        decMapZoom();
+        console.log("toggleMapsize shrink");
     }
+   updateMapSize();
+    updateMarkerOL(gpxArray[gradeIndex].lat, gpxArray[gradeIndex].lon);
+}
+
 function hideMap() {
     var x = document.getElementById("map");
     if (x.style.display === "none") {
@@ -463,6 +474,7 @@ function hideMap() {
         x.style.display = "none";
     }
 }
+
 function hideElevationChart() {
     var x = document.getElementById("chartContainer");
     if (x.style.display === "none") {
