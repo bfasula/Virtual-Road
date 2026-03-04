@@ -46,7 +46,7 @@ modal.onclick = (e) => {
 };
 
 async function loadGPXList() {
-    bUseShortcut = false;
+   
     allFiles = await fetch("gpxfiles/index.json").then((r) => r.json());
     renderGPXList(allFiles, 0);
 }
@@ -154,7 +154,6 @@ modalwo.onclick = (e) => {
 
 async function loadWOList() {
    
-    bUseShortcut = false;
     allwoFiles = await fetch("workouts/index.json").then((r) => r.json());
     renderWOList(allwoFiles);
 }
@@ -1640,6 +1639,7 @@ export function initializeRoute() {
     gpsArray = undefined;
     gpsIndex = 0;
     beginTime = Date.now();
+    
 }
 export async function processRPM(rpm) {
     currentRpm = rpm;
@@ -1665,6 +1665,7 @@ export async function processPower(power) {
         gpsArray = Array(gpxArray.length * 10); // for upto 10 laps
 
         initStartLoc();
+         bUseShortcut = true;
         /*
      if (apikey !== undefined && apikey != null) {
         sendData( "", 
