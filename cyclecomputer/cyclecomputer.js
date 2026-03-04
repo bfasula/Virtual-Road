@@ -42,6 +42,7 @@ openBtn.onclick = () => (modal.style.display = "flex");
 closeBtn.onclick = () => (modal.style.display = "none");
 modal.onclick = (e) => {
     if (e.target === modal) modal.style.display = "none";
+    bUseShortcut=false;
 };
 
 async function loadGPXList() {
@@ -148,6 +149,7 @@ openBtnwo.onclick = () => (modalwo.style.display = "flex");
 closeBtnwo.onclick = () => (modalwo.style.display = "none");
 modalwo.onclick = (e) => {
     if (e.target === modalwo) modalwo.style.display = "none";
+     bUseShortcut=false;
 };
 
 async function loadWOList() {
