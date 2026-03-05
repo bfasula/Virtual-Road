@@ -73,7 +73,7 @@ function renderGPXList(files, dist) {
         //console.log("file "+file);
         const myArray = file.split(",");
         const opt = document.createElement("option");
-
+        if (myArray[0].substring(0,2) == "//") { return;}
         if (myArray.length > 1) {
             if (myArray.length > 2) {
                 //opt.textContent = myArray[1] + "-"+myArray[2] + " Miles";
