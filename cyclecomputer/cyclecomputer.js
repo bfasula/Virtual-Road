@@ -85,7 +85,7 @@ function renderGPXList(files, dist) {
                     // filter greater than distance
                     return;
                 }
-                opt.textContent = myArray[2] + " Miles-" + myArray[1];
+                 opt.textContent = myArray[2] + " Miles-" + myArray[1];
             } else {
                 opt.textContent = myArray[1]; // use description if there is one
             }

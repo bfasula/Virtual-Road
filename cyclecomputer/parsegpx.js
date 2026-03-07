@@ -27,6 +27,9 @@ export var gpxFilename = "";
 export var loopRoute = false;
 export var youtubeVideoId = null;
 var gpxText;
+var gpxPoints = [];
+var classifyResult;
+
 //window.loadGPX=loadGPX;
 //export async function loadGPX() {
 //    fetchFileFromServer('/gpxfiles/70 minute Indoor Cycling 4 Hill WorkoutUT.gpx');
@@ -50,7 +53,7 @@ export async function fetchGPXFromServer(url, description) {
 		// Read the response body as text
 		const fileContent = await gpxText.text();
 
-		console.log(fileContent);
+		//console.log(fileContent);
 		gpxFilename = {
 			name: fname
 		};
@@ -60,15 +63,36 @@ export async function fetchGPXFromServer(url, description) {
 			loopRoute = true;
 			console.log("Loop Route ");
 		}
+        /*
+        // Example: parse GPX first (using toGeoJSON)
+const xml = new DOMParser().parseFromString(gpxString, "text/xml");
+const geojson = toGeoJSON.gpx(xml);
+
+// Extract points (assuming one main track)
+const points = geojson.features[0].geometry.coordinates.map(coord => ({
+  lon: coord[0],
+  lat: coord[1],
+  ele: coord[2] || 0   // elevation may be missing → fallback 0 or use DEM lookup
+}));
+
+//const result = classifyRouteFromGPXPoints(points);
+//console.log(result);
+// → { category: "rolling hills", details: { ... } }
+*/
+        
 		processXML(fileContent, {
 			name: fname
 		}, description);
+   
+        
 		return fileContent;
 
 	} catch (error) {
 		console.error("Could not fetch the file:", error);
 	}
 }
+
+
 
 // Example usage:
 ///fetchFileFromServer('/files/data.txt');
@@ -260,7 +284,7 @@ function processXML(response, file, description) {
 	let str1 = s1.indexOf("<name>");
 	let end1 = s1.indexOf("</name>");
 	var nameString = s1.slice(str1 + "<name>".length, end1);
-	console.log("Xml name=" + nameString);
+	///////console.log("Xml name=" + nameString);
 	const nArray = nameString.split(":");
 
 	var length = nArray.length;
@@ -341,6 +365,7 @@ function processXML(response, file, description) {
 			} else {
 				var mytime = timeElement.textContent;
 				secs = timeToSeconds(mytime);
+               // console.log("Time "+mytime+" secs "+secs);
 			}
 
 			let distancem = 0
@@ -391,7 +416,12 @@ function processXML(response, file, description) {
 
 
 			}
-
+             let point = { lat: lat, lon: lon, ele: ele };
+            //let coord = [lat, lon, ele]; // Example coordinates (longitude, latitude)
+            //let point = [Number(lat), Number(lon), Number(ele) ]; // 
+            gpxPoints.push(point);
+            
+            
 			let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps, "");
 			gpxArray[gpxIndex++] = p1;
 			/*
@@ -420,7 +450,8 @@ function processXML(response, file, description) {
 	console.log("total miles " + (totaldistancem / 1000 * .62).toFixed(2));
 	console.log("total points " + gpxIndex);
 	console.log("gpxArray size " + gpxArray.length);
-
+classifyResult = classifyRouteFromGPXPoints(gpxPoints);
+console.log(classifyResult);
 	// for(var i =0; i< gpxArray.length; i++) {
 	//     printGPX(i);
 	//    }
@@ -432,13 +463,15 @@ function processXML(response, file, description) {
 	}
 	//console.log("i = "+findGPX(100.0));
 	if (bMetric === 'true') {
-		document.getElementById('pctlbl').innerHTML = description + " " + (totaldistancem / 1000).toFixed(1) + " KM, Ascent " +
-			result.totalClimb +
-			" Descent " + result.totalDescent;
+		document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length) + " " + (totaldistancem / 1000).toFixed(1) + " KM " + classifyResult.category;
 	} else {
+        /*
 		document.getElementById('pctlbl').innerHTML = description + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles,Ascent " +
 			(result.totalClimb * 3.28084).toFixed(0) +
 			" Descent " + (result.totalDescent * 3.28084).toFixed(0);
+            */
+        document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length)  + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles " + classifyResult.category;
+			
 		console.log(filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
 	}
 	try {
@@ -809,3 +842,112 @@ async function example() {
     console.log(`Elevation loss: ${result.totalDescent} m`);
 }
 */
+// Helper: approximate horizontal distance (meters) between two lat/lon points
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371000; // Earth radius in meters
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Main classification function
+function classifyRouteFromGPXPoints(points) {
+  // points = array of {lat, lon, ele}  (elevation in meters)
+
+  if (points.length < 3) return { category: "unknown", details: {} };
+
+  let totalDistance = 0;
+  let ascent = 0;
+  let descent = 0;
+  let netElevation = points[points.length-1].ele - points[0].ele;
+ 
+  let gradeChanges = 0;          // count direction reversals
+  let lastGradeSign = 0;
+  let flatDistance = 0;
+  let uphillDistance = 0;
+  let downhillDistance = 0;
+  let rollingDistance = 0;
+
+  const MIN_GRADE_FLAT = 1.5;    // %
+  const MIN_CLIMB_LENGTH = 200;  // meters — ignore micro-bumps
+
+  let currentSegmentLength = 0;
+  let currentSegmentGain = 0;
+
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i-1];
+    const curr = points[i];
+
+    const dist = haversineDistance(prev.lat, prev.lon, curr.lat, curr.lon);
+    if (dist < 1) continue; // skip duplicate / tiny steps
+
+    totalDistance += dist;
+
+    const deltaEle = curr.ele - prev.ele;
+    const grade = (deltaEle / dist) * 100; // %
+
+    // Accumulate ascent / descent (simple method — can smooth later)
+    if (deltaEle > 0) ascent += deltaEle;
+    else if (deltaEle < 0) descent -= deltaEle; // make positive
+
+    // Grade sign change detection for rolling hills
+    const gradeSign = grade > MIN_GRADE_FLAT ? 1 : grade < -MIN_GRADE_FLAT ? -1 : 0;
+    if (gradeSign !== lastGradeSign && lastGradeSign !== 0) {
+      gradeChanges++;
+    }
+    lastGradeSign = gradeSign;
+
+    // Rough per-segment classification (can be improved with smoothing)
+    if (Math.abs(grade) <= MIN_GRADE_FLAT) {
+      flatDistance += dist;
+    } else if (grade > MIN_GRADE_FLAT) {
+      uphillDistance += dist;
+    } else {
+      downhillDistance += dist;
+    }
+  }
+
+  // Heuristics to decide overall category
+  const absNet = Math.abs(netElevation);
+  const rollingThreshold = totalDistance * 0.08; // e.g. 8% of route has elevation swings
+
+  let category = "Flat";
+
+  if (ascent > 400 || absNet > 300) {
+    if (ascent > descent * 1.8 && uphillDistance > downhillDistance * 1.5) {
+      category = "Uphill";
+    } else if (descent > ascent * 1.8 && downhillDistance > uphillDistance * 1.5) {
+      category = "Downhill";
+    }
+  }
+
+  // Rolling hills: significant both ascent & descent + frequent reversals
+  if (ascent > 150 && descent > 150 && 
+      Math.abs(ascent - descent) < rollingThreshold && 
+      gradeChanges > 8) {
+    category = "Rolling Hills";
+  }
+
+  // Override if almost no elevation change
+  if (ascent + descent < 80 || totalDistance > 5000 && ascent + descent < 150) {
+    category = "Flat";
+  }
+
+  return {
+    category,
+    details: {
+      totalDistance: Math.round(totalDistance / 1000 * 10) / 10 + " km",
+      ascent: Math.round(ascent) + " m",
+      descent: Math.round(descent) + " m",
+      netElevation: Math.round(netElevation) + " m",
+      uphillPercent: Math.round((uphillDistance / totalDistance) * 100),
+      downhillPercent: Math.round((downhillDistance / totalDistance) * 100),
+      flatPercent: Math.round((flatDistance / totalDistance) * 100),
+      reversalCount: gradeChanges
+    }
+  };
+}
