@@ -287,6 +287,14 @@ document.addEventListener('keydown', function(event) {
     else if(event.keyCode == 72) { // letter h
       connectHRM();
     }
+     else if(event.keyCode == 73) { // letteri
+       if (event.shiftKey) {
+           syncSeconds--;
+        } else {
+           syncSeconds++;
+        }
+             console.log("syncSeconds "+syncSeconds);
+    }
     else if(event.keyCode == 75) { // letter k
      skipWorkoutInterval();  //skip the workout interal
     }
@@ -970,7 +978,7 @@ if (!riderWeight) {
 }
 if (!syncSeconds) {
     console.log("Default sync Seconds");
-    syncSeconds = 5;
+    syncSeconds = 10;
     localStorage.setItem(".syncSeconds", syncSeconds);
 }
 if (!pauseSpeed) {
