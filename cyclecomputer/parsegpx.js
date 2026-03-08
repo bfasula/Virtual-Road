@@ -470,6 +470,7 @@ function processXML(response, file, description) {
 	console.log("total miles " + (totaldistancem / 1000 * .62).toFixed(2));
 	console.log("total points " + gpxIndex);
 	console.log("gpxArray size " + gpxArray.length);
+    /*
 classifyResult = classifyRouteFromGPXPoints(gpxPoints);
 console.log(classifyResult);
     hoverText= "Distance "+classifyResult.details.totalDistance + ","+
@@ -480,6 +481,7 @@ console.log(classifyResult);
       "downhillPercent "+classifyResult.details.downhillPercent+ ","+
       "flatPercent "+classifyResult.details.flatPercent+ ","+
       "reversalCount "+classifyResult.details.reversalCount;
+      */
 	// for(var i =0; i< gpxArray.length; i++) {
 	//     printGPX(i);
 	//    }
@@ -491,14 +493,14 @@ console.log(classifyResult);
 	}
 	//console.log("i = "+findGPX(100.0));
 	if (bMetric === 'true') {
-		document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length) + " " + (totaldistancem / 1000).toFixed(1) + " KM " + classifyResult.category;
+		document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length) + " " + (totaldistancem / 1000).toFixed(1) + " KM ";
 	} else {
         /*
 		document.getElementById('pctlbl').innerHTML = description + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles,Ascent " +
 			(result.totalClimb * 3.28084).toFixed(0) +
 			" Descent " + (result.totalDescent * 3.28084).toFixed(0);
             */
-        document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length)  + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles " + classifyResult.category;
+        document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length)  + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ";
 			
 		console.log(filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
 	}
