@@ -5,7 +5,8 @@ import {dec2bin} from './util.js';
 import {CalculateVelocity} from './power_v_speed.js';
 import {speedFromPower} from './power_v_speed.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess,openFullscreen} from './playvideo.js';
-import {parseXML,gpxArray,findGPX,printGPX,GPXPoint,loopRoute,gpxFilename,fetchGPXFromServer} from './parsegpx.js';
+import {parseXML,gpxArray,findGPX,printGPX,GPXPoint,loopRoute,gpxFilename,fetchGPXFromServer,
+        calculateClimbingFromGPX2,classifyRouteFromGPXPoints} from './parsegpx.js';
 import {parseZWO,zwoArray,zwoPoint,powerColor,drawTimeCompleted,fetchWOFromServer} from './parsezwo.js';
 import {speedFromWatts} from './speedFromWatts.js';
 import { TrainerControl , TrainerData} from "./TrainerControl.js";
@@ -50,7 +51,41 @@ async function loadGPXList() {
     allFiles = await fetch("gpxfiles/index.json").then((r) => r.json());
     renderGPXList(allFiles, 0);
 }
+export async function fetchGPX(url, desc) {
+	try {
+       // console.log("Fetch " + url);
+		const gpxText = await fetch(url);
+       
+   
+		// Check if the request was successful
+		if (!gpxText.ok) {
+			throw new Error(`HTTP error! status: ${gpxText.status}`);
+		}
+		
+	
+		
+		// Read the response body as text
+		const fileContent = await gpxText.text();
 
+         const points = calculateClimbingFromGPX2(fileContent);
+    let classifyResult = classifyRouteFromGPXPoints(points);
+    console.log("Category " +desc+ "," +classifyResult.category );
+        /*
+    let Text= classifyResult.category + " distance "+classifyResult.details.totalDistance + ","+
+        "ascent "+classifyResult.details.ascent+ ","+
+      "descent "+classifyResult.details.descent+ ","+
+      "netElevation "+classifyResult.details.netElevation+ ","+
+      "uphillPercent "+classifyResult.details.uphillPercent+ ","+
+      "downhillPercent "+classifyResult.details.downhillPercent+ ","+
+      "flatPercent "+classifyResult.details.flatPercent+ ","+
+      "reversalCount "+classifyResult.details.reversalCount;
+    console.log(Text);
+    */
+        
+        } catch (error) {
+		console.error("Could not fetch the file:", error);
+	}
+    }
 function renderGPXList(files, dist) {
     //format gpxfname,description,distance,climbingft,country
     console.log("Filter distance " + dist);
@@ -71,6 +106,7 @@ function renderGPXList(files, dist) {
 
     files.forEach((file) => {
         //console.log("file "+file);
+        
         const myArray = file.split(",");
         const opt = document.createElement("option");
         if (myArray[0].substring(0,2) == "//") { return;}
@@ -85,11 +121,16 @@ function renderGPXList(files, dist) {
                     // filter greater than distance
                     return;
                 }
+                if (myArray.length > 3) {
+                     opt.textContent = myArray[2] + " Miles-" + myArray[1] + "-" + myArray[3];
+                    } else {
                  opt.textContent = myArray[2] + " Miles-" + myArray[1];
+                    }
             } else {
                 opt.textContent = myArray[1]; // use description if there is one
             }
             opt.value = "gpxfiles/" + myArray[0];
+            //fetchGPX("gpxfiles/" + myArray[0], file);
         } else {
             opt.textContent = file.replace(".gpx", "");
             opt.value = "gpxfiles/" + file;
@@ -120,6 +161,7 @@ filterInput.addEventListener("input", () => {
 
 select.addEventListener("change", (e) => {
     const url = e.target.value;
+    console.log("Url "+url);
     const description = select.selectedOptions[0]?.textContent?.trim() ?? "";
     if (!url) return;
 

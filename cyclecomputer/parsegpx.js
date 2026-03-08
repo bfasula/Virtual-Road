@@ -41,6 +41,7 @@ export async function fetchGPXFromServer(url, description) {
 	try {
 		const gpxText = await fetch(url);
         gpxPoints = [];
+   
 		// Check if the request was successful
 		if (!gpxText.ok) {
 			throw new Error(`HTTP error! status: ${gpxText.status}`);
@@ -278,9 +279,25 @@ export async function parseXML(filename) {
 
 function processXML(response, file, description) {
 	//  const result = calculateRealisticClimbingFromGPX(response);
+    /*
+    const points = calculateClimbingFromGPX2(response);
+    classifyResult = classifyRouteFromGPXPoints(points);
+    console.log(classifyResult);
+    let Text= classifyResult.category + " distance "+classifyResult.details.totalDistance + ","+
+        "ascent "+classifyResult.details.ascent+ ","+
+      "descent "+classifyResult.details.descent+ ","+
+      "netElevation "+classifyResult.details.netElevation+ ","+
+      "uphillPercent "+classifyResult.details.uphillPercent+ ","+
+      "downhillPercent "+classifyResult.details.downhillPercent+ ","+
+      "flatPercent "+classifyResult.details.flatPercent+ ","+
+      "reversalCount "+classifyResult.details.reversalCount;
+    console.log(Text);
+    
 	const result = calculateClimbingFromGPX(response);
 	console.log(`Elevation gain: ${result.totalClimb} m`);
 	console.log(`Elevation loss: ${result.totalDescent} m`);
+    */
+    
 	let filename = file.name;
 	let s1 = response;
 
@@ -783,6 +800,59 @@ function calculateClimbingFromGPX(gpxString) {
 	};
 }
 
+/**
+ * Calculates total elevation gain (meters of climbing) from a GPX file
+ * @param {string} gpxString - The raw GPX file content as string
+ * @returns {Object} { totalClimb: number, totalDescent: number, elevationPoints: number }
+ */
+export function calculateClimbingFromGPX2(gpxString) {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(gpxString, "text/xml");
+
+	// Get all <trkpt> elements
+	const trkpts = doc.getElementsByTagName("trkpt");
+	if (trkpts.length < 2) {
+		return {
+			totalClimb: 0,
+			totalDescent: 0,
+			points: 0
+		};
+	}
+
+	let points = [];
+    let elevation=0;
+    let latitude=0;
+    let longitude=0;
+      
+
+	// Extract elevation values
+	for (let pt of trkpts) {
+		const ele = (pt.getElementsByTagName("ele")[0]).textContent;
+        //const lat = pt.getElementsByTagName("lat")[0];
+        //const lon = pt.getElementsByTagName("lon")[0];
+        var lat = pt.getAttribute("lat");
+		var lon = pt.getAttribute("lon");
+        /*
+		if (ele && ele.textContent) {
+			 elevation = parseFloat(ele.textContent);
+			
+		}
+        if (lat && lat.textContent) {
+			 latitude = parseFloat(lat.textContent);
+			
+		}
+        if (lon && lon.textContent) {
+			 longitude = parseFloat(lon.textContent);
+			
+		}
+        */
+        let point = { lat: lat, lon: lon, ele: ele };
+        points.push(point);
+	}
+    return points;
+	
+}
+
 // ────────────────────────────────────────────────
 //          More robust version with smoothing
 // ────────────────────────────────────────────────
@@ -870,7 +940,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 // Main classification function
-function classifyRouteFromGPXPoints(points) {
+export function classifyRouteFromGPXPoints(points) {
   // points = array of {lat, lon, ele}  (elevation in meters)
 
   if (points.length < 3) return { category: "unknown", details: {} };
