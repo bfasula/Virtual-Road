@@ -22,6 +22,8 @@ let nMps = 5;
 let mps2mph = 2.236936;
 var lastMps = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 let gpxIndex = 0;
+let km2miles = 0.6213712;
+let m2feet = 3.28084;
 
 export var gpxFilename = "";
 export var loopRoute = false;
@@ -29,6 +31,7 @@ export var youtubeVideoId = null;
 var gpxText;
 var gpxPoints = [];
 var classifyResult;
+var hoverText;
 
 //window.loadGPX=loadGPX;
 //export async function loadGPX() {
@@ -37,7 +40,7 @@ var classifyResult;
 export async function fetchGPXFromServer(url, description) {
 	try {
 		const gpxText = await fetch(url);
-
+        gpxPoints = [];
 		// Check if the request was successful
 		if (!gpxText.ok) {
 			throw new Error(`HTTP error! status: ${gpxText.status}`);
@@ -452,6 +455,14 @@ function processXML(response, file, description) {
 	console.log("gpxArray size " + gpxArray.length);
 classifyResult = classifyRouteFromGPXPoints(gpxPoints);
 console.log(classifyResult);
+    hoverText= "Distance "+classifyResult.details.totalDistance + ","+
+        "ascent "+classifyResult.details.ascent+ ","+
+      "descent "+classifyResult.details.descent+ ","+
+      "netElevation "+classifyResult.details.netElevation+ ","+
+      "uphillPercent "+classifyResult.details.uphillPercent+ ","+
+      "downhillPercent "+classifyResult.details.downhillPercent+ ","+
+      "flatPercent "+classifyResult.details.flatPercent+ ","+
+      "reversalCount "+classifyResult.details.reversalCount;
 	// for(var i =0; i< gpxArray.length; i++) {
 	//     printGPX(i);
 	//    }
@@ -475,7 +486,7 @@ console.log(classifyResult);
 		console.log(filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
 	}
 	try {
-		drawElevation();
+		drawElevation(hoverText);
 	} catch (error) {
 		console.error("Could not draw elevation:", error);
 	}
@@ -564,7 +575,7 @@ function smoothMps(mps, i) {
 
 }
 
-function drawElevation() {
+function drawElevation(hoverText) {
 	const data = [];
 	let min = 10;
 	let max = 0;
@@ -587,6 +598,7 @@ function drawElevation() {
 	var chart = new CanvasJS.Chart("chartContainer", {
 		animationEnabled: true,
 		theme: "light2",
+        
 		/*
 	title:{
 		text: "Elevation Profile"
@@ -602,12 +614,15 @@ function drawElevation() {
 			valueFormatString: " ", // remove labels
 
 		},
+         toolTipContent: "Value in 2025: {y} <br>Category: {label}",
 		data: [{
 			type: "line",
 			indexLabelFontSize: 16,
 			dataPoints: data
 		}]
 	});
+    console.log("hoverText "+hoverText);
+    chart.options.data[0].toolTipContent = hoverText;  
 	chart.render();
 
 }
@@ -925,6 +940,7 @@ function classifyRouteFromGPXPoints(points) {
     }
   }
 
+
   // Rolling hills: significant both ascent & descent + frequent reversals
   if (ascent > 150 && descent > 150 && 
       Math.abs(ascent - descent) < rollingThreshold && 
@@ -936,7 +952,14 @@ function classifyRouteFromGPXPoints(points) {
   if (ascent + descent < 80 || totalDistance > 5000 && ascent + descent < 150) {
     category = "Flat";
   }
-
+    let uphillPercent= Math.round((uphillDistance / totalDistance) * 100);
+    let  downhillPercent= Math.round((downhillDistance / totalDistance) * 100);
+    let  flatPercent= Math.round((flatDistance / totalDistance) * 100);
+    if (uphillPercent >= 50 && downhillPercent < 20) {
+         category = "Uphill";
+        }
+      
+if (bMetric) {
   return {
     category,
     details: {
@@ -944,10 +967,25 @@ function classifyRouteFromGPXPoints(points) {
       ascent: Math.round(ascent) + " m",
       descent: Math.round(descent) + " m",
       netElevation: Math.round(netElevation) + " m",
-      uphillPercent: Math.round((uphillDistance / totalDistance) * 100),
-      downhillPercent: Math.round((downhillDistance / totalDistance) * 100),
-      flatPercent: Math.round((flatDistance / totalDistance) * 100),
+      uphillPercent: uphillPercent,
+      downhillPercent: downhillPercent,
+      flatPercent: flatPercent,
       reversalCount: gradeChanges
     }
   };
+    } else {
+    return {
+    category,
+    details: {
+      totalDistance: ((Math.round(totalDistance / 1000 * 10) / 10) * km2miles).toFixed(1) + " mi",
+      ascent: (Math.round(ascent)*m2feet).toFixed(0) + " ft",
+      descent: (Math.round(descent)*m2feet).toFixed(0) + " ft",
+      netElevation: (Math.round(netElevation)*m2feet).toFixed(0) + " ft",
+      uphillPercent: uphillPercent,
+      downhillPercent: downhillPercent,
+      flatPercent: flatPercent,
+      reversalCount: gradeChanges
+    }
+  };
+    }
 }
