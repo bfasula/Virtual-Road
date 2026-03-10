@@ -32,6 +32,7 @@ var gpxText;
 var gpxPoints = [];
 var classifyResult;
 var hoverText;
+var bUsedRideList;
 
 //window.loadGPX=loadGPX;
 //export async function loadGPX() {
@@ -39,6 +40,7 @@ var hoverText;
 //    }
 export async function fetchGPXFromServer(url, description) {
 	try {
+        bUsedRideList=true;
 		const gpxText = await fetch(url);
         gpxPoints = [];
    
@@ -106,6 +108,7 @@ export function resetYoutubeVideoId() {
 	youtubeVideoId = null;
 }
 export function selectGPX() {
+     bUsedRideList=false;
 	var input = document.createElement('input');
 	input.type = 'file';
 	input.accept = ['.gpx', 'GPX']
@@ -279,11 +282,13 @@ export async function parseXML(filename) {
 
 function processXML(response, file, description) {
 	//  const result = calculateRealisticClimbingFromGPX(response);
-    /*
+    
     const points = calculateClimbingFromGPX2(response);
     classifyResult = classifyRouteFromGPXPoints(points);
     console.log(classifyResult);
-    let Text= classifyResult.category + " distance "+classifyResult.details.totalDistance + ","+
+  
+    console.log(Text);
+     hoverText= "Distance "+classifyResult.details.totalDistance + ","+
         "ascent "+classifyResult.details.ascent+ ","+
       "descent "+classifyResult.details.descent+ ","+
       "netElevation "+classifyResult.details.netElevation+ ","+
@@ -291,8 +296,8 @@ function processXML(response, file, description) {
       "downhillPercent "+classifyResult.details.downhillPercent+ ","+
       "flatPercent "+classifyResult.details.flatPercent+ ","+
       "reversalCount "+classifyResult.details.reversalCount;
-    console.log(Text);
-    
+    console.log(hoverText);
+    /*
 	const result = calculateClimbingFromGPX(response);
 	console.log(`Elevation gain: ${result.totalClimb} m`);
 	console.log(`Elevation loss: ${result.totalDescent} m`);
@@ -492,15 +497,19 @@ console.log(classifyResult);
 		console.error("Could not fetch the minimap:", error);
 	}
 	//console.log("i = "+findGPX(100.0));
+    let routeDesc=description.substring(10,description.length);
+     let routeType="";
+     if (bUsedRideList === false) {
+         routeType = classifyResult.category;
+         routeDesc=description;
+         console.log(routeDesc);
+         }
 	if (bMetric === 'true') {
-		document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length) + " " + (totaldistancem / 1000).toFixed(1) + " KM ";
+		document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " " + routeType + " - "
+            + (totaldistancem / 1000).toFixed(1) + " KM " ;
 	} else {
-        /*
-		document.getElementById('pctlbl').innerHTML = description + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles,Ascent " +
-			(result.totalClimb * 3.28084).toFixed(0) +
-			" Descent " + (result.totalDescent * 3.28084).toFixed(0);
-            */
-        document.getElementById('pctlbl').innerHTML = "."+ description.substring(10,description.length)  + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ";
+        document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " "   + routeType + " - "
+            + (totaldistancem / 1609.344).toFixed(1) + " Miles " ;
 			
 		console.log(filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
 	}
