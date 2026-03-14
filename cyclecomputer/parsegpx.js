@@ -16,8 +16,10 @@ import {
 	onYouTubeIframeAPIReady2
 } from './playvideo.js';
 window.selectGPX = selectGPX
-let nElevations = 5;
+let nElevations = 7;
 var lastElevations = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+let nGrades = 7;
+var lastGrades = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 let nMps = 5;
 let mps2mph = 2.236936;
 var lastMps = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -357,6 +359,8 @@ function processXML(response, file, description) {
 	//var children = rootElement.childNodes;
 	let lastSmoothEle = 0;
 	let lastele = 0;
+    let lastSmoothGrade = 0;
+	let lastgrade = 0;
 	let lastlat = 0;
 	let lastlon = 0;
 	let totaldistancem = 0;
@@ -399,13 +403,13 @@ function processXML(response, file, description) {
 			var mps = 0;
 
 
-			// let smoothEle=smoothElevation(Number(ele), i);
+		    //let smoothEle=smoothElevation(Number(ele), i);
 			let smoothEle = smoothElevationLSQ(Number(ele), i);
 
 			if (lastele != 0) {
 				distancem = calculateDistance(lat, lon, lastlat, lastlon) * 1000;
 				totaldistancem = totaldistancem + distancem
-				if (distancem > 0.1) {
+				if (distancem > 0.01) {
 					grade = (ele - lastele) / distancem;
 				} else {
 					grade = 0;
@@ -427,12 +431,14 @@ function processXML(response, file, description) {
 				} else {
 					smoothGrade = 0;
 				}
+                smoothGrade=smoothGradient(smoothGrade, i);
 				if (smoothGrade > maxInclination) {
 					smoothGrade = maxInclination;
 				}
 				if (smoothGrade < minInclination) {
 					smoothGrade = minInclination;
 				}
+               
 				// console.log("meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
 				mps = distancem / (secs - lastsecs);
 				///////////////////////////////mps=smoothMps(mps,i); 12/25/25
@@ -449,6 +455,7 @@ function processXML(response, file, description) {
             
 			let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps, "");
 			gpxArray[gpxIndex++] = p1;
+            console.log(i+ " time " +mytime + " ele " + ele + " smoothEle "+smoothEle.toFixed(1) + " grade " + grade + " smoothGrade " + smoothGrade.toFixed(3));
 			/*
 			 console.log(i+ " time " +mytime + " secs "+secs
 			 +",mps "+mps.toFixed(2)  + ",mph " +( mps  * mps2mph).toFixed(2)
@@ -679,6 +686,33 @@ function smoothElevation(ele, i) {
 	//grade= smoothGradient;
 
 	return smoothEle;
+
+}
+
+function smoothGradient(grade, i) {
+
+
+	let smoothGrade = grade;
+	if (i >= nGrades) { // average last 5 grades
+		let tGrade = 0;
+		for (let j = 0; j < nGrades; j++) {
+			tGrade += lastGrades[j];
+			// console.log("last ele "+j+" " +lastElevations[j]);
+		}
+		smoothGrade = tGrade / nGrades;
+		// console.log("tele " + tElevation + "  smooth " + smoothEle);
+	}
+	//for (let j=1; j<nElevations; j++) { // shift grades 1 to the right
+	//    lastElevations[j]= lastElevations[j-1];
+	//}
+	for (let j = nGrades - 1; j > 0; j--) { // shift right
+		lastGrades[j] = lastGrades[j - 1];
+	}
+	lastGrades[0] = grade; // save current elevation
+	//console.log("ele " + ele + "  smooth " + smoothEle);
+	//grade= smoothGradient;
+
+	return smoothGrade;
 
 }
 /* Least Squares 

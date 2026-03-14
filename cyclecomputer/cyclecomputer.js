@@ -2403,6 +2403,24 @@ function saveGPS() {
     //sendGPS();
     // sendGPS("Mail to strava");
 }
+/*
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" creator="https://www.mapstogpx.com/strava" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd" xmlns:gpxdata="http://www.cluetrust.com/XML/GPXDATA/1/0">
+ <metadata>
+  <name>Spain Virtual Roadbike Training Camp 2021🚵‍♀️🌞💨 Day 6 Part 4 Ultra HD:0:ZecW6w3fLBc</name>
+  <author>
+   <name></name>
+   <link href="https://www.strava.com/activities/5023866517"/>
+  </author>
+  <link href="https://www.mapstogpx.com/strava" />
+  <time>2026-01-25T16:27:57Z</time>
+ </metadata>
+ <trk>
+  <name>Spain Virtual Roadbike Training Camp 2021🚵‍♀️🌞💨 Day 6 Part 4 Ultra HD</name>
+  <link href="https://www.strava.com/activities/5023866517"/>
+  <number>1</number>
+  <trkseg>
+  */
 
 function getGPS() {
     let activity = "VirtualRide";
@@ -2413,20 +2431,22 @@ function getGPS() {
     let text =
         '<?xml version="1.0" encoding="UTF-8"?>' +
         '<gpx version="1.0">' +
+        "<metadata>" +
         "<name>" +
-        "Virtual " +
+        "vRoad " +
         activity +
         "-" +
-        gpxFilename +
+        gpxFilename.name +
         "</name>" +
+        "</metadata>\n" +
         "<trk>" +
         "<name>" +
-        "Virtual " +
+        "vRoad " +
         activity +
-        gpxFilename +
-        "</name><type>" +
+        gpxFilename.name +
+        "</name>\n<type>" +
         activity +
-        "</type><trkseg>\n";
+        "</type>\n<trkseg>\n";
     let footer = "</trkseg>" + "</trk>" + "</gpx>";
     console.log("gpsArray size " + gpsIndex);
 
