@@ -30,6 +30,7 @@ let m2feet = 3.28084;
 export var gpxFilename = "";
 export var loopRoute = false;
 export var youtubeVideoId = null;
+export var gpxTitle = "";
 var gpxText;
 var gpxPoints = [];
 var classifyResult;
@@ -313,7 +314,7 @@ function processXML(response, file, description) {
 	var nameString = s1.slice(str1 + "<name>".length, end1);
 	///////console.log("Xml name=" + nameString);
 	const nArray = nameString.split(":");
-
+    gpxTitle=nArray[0];
 	var length = nArray.length;
 	console.log(length);
 	let videoSyncSeconds = 0;

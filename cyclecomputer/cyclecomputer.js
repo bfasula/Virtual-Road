@@ -6,13 +6,14 @@ import {CalculateVelocity} from './power_v_speed.js';
 import {speedFromPower} from './power_v_speed.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess,openFullscreen} from './playvideo.js';
 import {parseXML,gpxArray,findGPX,printGPX,GPXPoint,loopRoute,gpxFilename,fetchGPXFromServer,
-        calculateClimbingFromGPX2,classifyRouteFromGPXPoints} from './parsegpx.js';
+        calculateClimbingFromGPX2,classifyRouteFromGPXPoints,gpxTitle} from './parsegpx.js';
 import {parseZWO,zwoArray,zwoPoint,powerColor,drawTimeCompleted,fetchWOFromServer} from './parsezwo.js';
 import {speedFromWatts} from './speedFromWatts.js';
 import { TrainerControl , TrainerData} from "./TrainerControl.js";
 import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
 import {updateMarkerOL,incMapZoom,decMapZoom,updateMapSize} from './minimap.js';
+import { TrainerPhysics} from './TrainerPhysics.js';
 //import {sendData} from './senddata.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
@@ -28,6 +29,11 @@ window.onbeforeunload = function () {
     //saveGPS();
     return "Do you really want to close?";
 };
+
+let trainerPhysics = new TrainerPhysics();
+let  lastMilliSeconds = 0;
+let velocity = 0.0; // mph
+let speed = 0.0; // mps
 
 let bUseShortcut = true;
 
@@ -1882,8 +1888,30 @@ export async function processPower(power) {
         weight = riderWeight;
     }
 
-    let velocity = speedFromPower(power, grade * 100.0, elevation, weight); // mps
-
+  
+    
+    if (!smartTrainerConnected) { // use calculation that includes inertia if only power meter
+  
+    const p = {
+        massKg:  weight,          // rider + bike
+        cda: 0.32,
+        crr: 0.004,
+        airDensity: 1.226,
+        grade: grade ,
+        drivetrainEff: 0.96,
+        inertiaFactor: 1.05
+    };
+        let deltatime = (totalMSeconds - lastMilliSeconds) / 1000.0;
+        speed = trainerPhysics.updateSpeed(speed, power, deltatime, p); // mps
+        velocity = speed;
+        console.log("velocity " + velocity + " dt " + deltatime + " power " + power);
+        lastMilliSeconds =  totalMSeconds ;
+    } else {
+        velocity = speedFromPower(power, grade * 100.0, elevation, weight); // mps
+    }
+    
+     
+    
     if (bMetric) {
         velocity = velocity * mps2kph;
     } else {
@@ -2355,10 +2383,13 @@ function saveData() {
     a.click();
     window.URL.revokeObjectURL(url);
     //sendMail(text);
+    sendGPS();
 }
 function sendMail(message) {
+    
     if (emailAddress.includes("@")) {
-        var subject = "vRoad Data";
+        //var subject = "vRoad Data";
+        var subject = gpxFilename.name;
         document.location.href =
             "mailto:" +
             emailAddress +
@@ -2368,16 +2399,18 @@ function sendMail(message) {
             encodeURIComponent(message);
     }
 }
+
+
 function sendGPS() {
+     if (emailAddress.includes("@")) {
     let text = getGPS();
 
-    var subject = "Virtual_Road Bike Ride";
+    var subject = "Virtual Ride "+ gpxTitle;
     document.location.href =
-        "mailto:stravaupload@gotoes.org?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(text);
+          "mailto:stravaupload@gotoes.org?subject=" + encodeURIComponent(subject) + "&body=" + gpxTitle;
+         }
 }
-async function wait(ms) {
-    return await new Promise((res) => setTimeout(res, ms));
-}
+
 
 function saveGPS() {
     //const data = new Blob(['Hello, world!'], { type: 'text/plain' });
@@ -2400,7 +2433,6 @@ function saveGPS() {
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
-    //sendGPS();
     // sendGPS("Mail to strava");
 }
 /*

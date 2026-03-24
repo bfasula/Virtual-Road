@@ -108,7 +108,7 @@ export function speedFromPower(power, grade, elevation, riderWeight) {
       // Drivetrain loss Lossdt (%)
       rp_dtl: 4,
       // Coefficient of rolling resistance Crr
-      ep_crr: 0.005,
+      ep_crr: 0.004,
       // Grade %
       ep_g: grade,
       ep_rho: CalculateRho(temp, pressure, dew)
