@@ -323,6 +323,14 @@ document.addEventListener('keydown', function(event) {
     else if(event.keyCode == 83) { // letter s
       startTimer();
     }
+    else if(event.keyCode == 84) { // letter t
+     if (bUseTrainerPhysics) {
+         bUseTrainerPhysics=false;
+      } else {
+         bUseTrainerPhysics=true;
+      }
+           console.log("use trainer physics " +  bUseTrainerPhysics);
+    }
     else if(event.keyCode == 71) { // letter g
       saveGPS();
     }
@@ -693,6 +701,7 @@ let bUseAutoShiftRPM=false;
 let bUseAutoShiftGrade=false;
 let bUseAveVelocity=false;
 let bUseLargeMap=false;
+let bUseTrainerPhysics=false;
 //let bUseSmoothGrade=false;
 let ftms=false;
 let lastGPSTime="";
@@ -1890,7 +1899,9 @@ export async function processPower(power) {
 
   
     
-    if (!smartTrainerConnected) { // use calculation that includes inertia if only power meter
+    if ((!smartTrainerConnected || bUseTrainerPhysics)  // use calculation that includes inertia if only power meter
+      // && totalPMWattsPts > 10
+       ) { // seed new trainer physics model
   
     const p = {
         massKg:  weight,          // rider + bike
@@ -1908,6 +1919,7 @@ export async function processPower(power) {
         lastMilliSeconds =  totalMSeconds ;
     } else {
         velocity = speedFromPower(power, grade * 100.0, elevation, weight); // mps
+        speed = velocity;
     }
     
      
