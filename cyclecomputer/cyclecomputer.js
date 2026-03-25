@@ -835,6 +835,7 @@ async function connectGATT(device) {
         }
         if (s.uuid.includes("1818")) {
             trainerConnected = true;
+            powerMeterConnected = true;
             bUseVirtualWatts = false;
             //hideVGear();
             await handlePM(s);
@@ -1142,6 +1143,7 @@ var ftmsDevice;
 var ftmsServer;
 export let trainerConnected = false;
 export var smartTrainerConnected = false;
+export var powerMeterConnected = false;
 var cadenceConnected=false;
 //let trainerConnected = false
 //let smartTrainerConnected = false
@@ -1626,6 +1628,7 @@ function connectPM() {
 
 function printPM(event) {
     const power = event.target.value.getInt16(1);
+    powerMeterConnected=true;
     processPower(power);
 
 }
@@ -1899,14 +1902,16 @@ export async function processPower(power) {
 
   
     
-    if ((!smartTrainerConnected || bUseTrainerPhysics)  // use calculation that includes inertia if only power meter
+    if ((powerMeterConnected || bUseTrainerPhysics)  // use calculation that includes inertia if only power meter
       // && totalPMWattsPts > 10
        ) { // seed new trainer physics model
   
     const p = {
         massKg:  weight,          // rider + bike
-        cda: 0.32,
-        crr: 0.004,
+        //cda: 0.32,
+        //crr: 0.004,
+        cda:  coefficientWR,
+        crr: coefficientRR,
         airDensity: 1.226,
         grade: grade ,
         drivetrainEff: 0.96,
@@ -1918,7 +1923,7 @@ export async function processPower(power) {
         console.log("velocity " + velocity + " dt " + deltatime + " power " + power);
         lastMilliSeconds =  totalMSeconds ;
     } else {
-        velocity = speedFromPower(power, grade * 100.0, elevation, weight); // mps
+        velocity = speedFromPower(power, grade * 100.0, elevation, weight, coefficientRR); // mps
         speed = velocity;
     }
     

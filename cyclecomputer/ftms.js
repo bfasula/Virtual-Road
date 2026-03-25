@@ -1,5 +1,5 @@
 import {dec2bin} from './util.js';
-import {appStart,totalSeconds,processPower} from './cyclecomputer.js';
+import {appStart,totalSeconds,processPower,powerMeterConnected} from './cyclecomputer.js';
 
 
 let totalWatts=0
@@ -166,7 +166,9 @@ const remainingTimePresent       =  ((flags >> 12) & 1) > 0
         //console.log("powerPresent")
                
                    const power = event.target.value.getUint16(i,true) // i=5 power (5)
+                if (!powerMeterConnected) { // let power meter process power
                 processPower(power);
+                    }
                 /*
         console.log("i "+i+ "bit4 Power " + power  + " "+dec2bin(power))
            document.getElementById('watts').innerHTML = power

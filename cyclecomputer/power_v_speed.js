@@ -90,7 +90,7 @@ export function CalculateVelocity(power, params) {
 
     return midvel;
 }
-export function speedFromPower(power, grade, elevation, riderWeight) {
+export function speedFromPower(power, grade, elevation, riderWeight, crr) {
     let temp = 23.8889;
     let pressure = Math.exp(-elevation / 7000) * 1000;
     let dew = 7.5;
@@ -108,7 +108,8 @@ export function speedFromPower(power, grade, elevation, riderWeight) {
       // Drivetrain loss Lossdt (%)
       rp_dtl: 4,
       // Coefficient of rolling resistance Crr
-      ep_crr: 0.004,
+      //ep_crr: 0.004,
+      ep_crr: crr,
       // Grade %
       ep_g: grade,
       ep_rho: CalculateRho(temp, pressure, dew)
