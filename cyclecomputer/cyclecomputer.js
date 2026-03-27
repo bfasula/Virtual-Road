@@ -1625,13 +1625,82 @@ function connectPM() {
         onChange: printPM
     }).catch(console.error)
 }
-
-function printPM(event) {
+/*
+function printPM1(event) {
+   
     const power = event.target.value.getInt16(1);
     powerMeterConnected=true;
     processPower(power);
+   
 
 }
+*/
+function printPM(event) {
+  const value = event.target.value;
+  const dataView = new DataView(value.buffer);
+
+  let index = 0;
+
+  // Flags (2 bytes, little endian)
+  const flags = dataView.getUint16(index, true);
+  index += 2;
+
+  // Instantaneous Power (2 bytes, signed)
+  const power = dataView.getInt16(index, true);
+  powerMeterConnected=true;
+  processPower(power);
+  index += 2;
+
+  let cadence = null;
+
+  // Check if crank revolution data is present (bit 5)
+  const CRANK_REV_PRESENT = 1 << 5;
+
+  if (flags & CRANK_REV_PRESENT) {
+    const cumulativeCrankRevs = dataView.getUint16(index, true);
+    index += 2;
+
+    const lastCrankEventTime = dataView.getUint16(index, true);
+    index += 2;
+
+    let rpm = computeCadence(cumulativeCrankRevs, lastCrankEventTime);
+    if (rpm !== null) {
+    processRPM(rpm);
+        }
+  }
+
+  console.log(`Power: ${power} W, Cadence: ${cadence ?? 'N/A'} RPM`);
+}
+
+// Store previous values to compute cadence
+let prevRevs = null;
+let prevTime = null;
+
+function computeCadence(revs, time) {
+  if (prevRevs === null) {
+    prevRevs = revs;
+    prevTime = time;
+    return null;
+  }
+
+  const deltaRevs = revs - prevRevs;
+  let deltaTime = time - prevTime;
+
+  // Handle rollover (16-bit, 1/1024 sec units)
+  if (deltaTime < 0) deltaTime += 65536;
+
+  prevRevs = revs;
+  prevTime = time;
+
+  if (deltaTime === 0) return null;
+
+  // Convert to RPM
+  const cadence = (deltaRevs / (deltaTime / 1024)) * 60;
+
+  return Math.round(cadence);
+}
+
+
 export
 
 function connectRSC() {
