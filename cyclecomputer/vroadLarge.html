@@ -36,8 +36,8 @@
   border: none;
   background: #4f46e5;
   color: white;
-  font-size: 1rem;
-  max-width: 80px;
+  font-size: 1.5rem;
+  max-width: 100px;
   cursor: pointer;
 }
  #button {
@@ -46,7 +46,8 @@
   border: none;
   background: #4f46e5;
   color: white;
-  font-size: 1rem;
+//font-size: 1.0rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
        #openPickerwo {
@@ -55,7 +56,7 @@
   border: none;
   background:rgba(0,0,255, 0.5);
   color: white;
-  font-size: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
     .modalwo {
@@ -108,7 +109,7 @@
   border: none;
   background: rgba(0,0,255, 0.5);
   color: white;
-  font-size: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 
@@ -332,7 +333,7 @@
 </tbody>
 </table>
 <div id="bottom-right-corner">
-   <label id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
+   <label class="label" id="vgearlbl" for="vgearlbl"><strong>vGear</strong></label>
    <select id="virtualgear"   style="background: rgba(255,255,255, 0.5); color: black;" >
       <option value="-15">-15</option>
       <option value="-14">-14</option>
@@ -366,21 +367,21 @@
       <option value="14">14</option>
       <option value="15">15</option>
    </select>
-   </label>
+   <!--/label-->
 </div>
 <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectWorkout();" type="button">Workouts</button-->
 <!--p id="btns"style="font-size:xx-small;text-align: center; "-->
 <div id="buttons">
    <center>
       <!--button id="startbutton"style="background: rgba(0,0,255, 0.5); color: white;"  onclick="startTimer()"  <i class="fa fa-play"</i>Start</button-->
-      <label id="beginlbl" for="beginlbl"><strong>Start Loc</strong></label>
+      <label   class="label" id="beginlbl" for="beginlbl"><strong>Start Loc</strong></label>
       <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="initialdistance" class="initialdistance" value="0" placeholder="Start" title="Distance to begin (miles)" maxlength="4" size="2" />&nbsp;&nbsp;&nbsp;&nbsp;
       <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveData()" id="data" for="data">Save Ride</button>
       <!--button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="saveGPS()" id="gps" for="gps">Save GPX</button-->
       <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectVideo();" type="button">Video</button>&nbsp;
       <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="selectGPX();" type="button">GPX</button>&nbsp;
       <button id="button" style="background: rgba(0,0,255, 0.5); color: white;"  onclick="connectDevice();" type="button">Connect</button> &nbsp;
-      <label id="vplbl" for="vpbeginlbl"><strong>VP</strong></label>
+      <label class="label" id="vplbl" for="vpbeginlbl"><strong>VP</strong></label>
       <input type="checkbox" id="vwCheck" onclick="virtualWatts()">
        
       <button id="openPicker">Rides</button>
@@ -413,7 +414,7 @@
          </div>
       </div>
        
-      <label id="synclbl" for="synclbl"><strong>Sync</strong></label>
+      <label class="label" id="synclbl" for="synclbl"><strong>Sync</strong></label>
       <input  style="background: rgba(255,255,255, 0.5); color: black; width: 20px;" type="text" id="secs2add" class="secs2add" value="0" placeholder="secs2add" title="Add secs to video" maxlength="4" size="2" />&nbsp;
    </center>
 </div>
