@@ -1162,6 +1162,7 @@ var lasti;
 export var gpsArray;
 //export let gpsIndex=0;
 var heartRate = 0;
+var hrwatts = 0;
 let beginTime = Date.now();
 export let appStart = false;
 export let appStarted = false;
@@ -1729,6 +1730,14 @@ function printHeartRate(event) {
         cal = cal * (totalSeconds / 60.0)
         document.getElementById('hrcal').innerHTML = cal.toFixed(0)   
        
+            let hrcal = (-55.0969 + (0.6309 * heartRate) + (0.1988 * weight) + (0.2017 * riderAge)) / 4.184
+            hrcal = hrcal * (1 / 60.0)
+           
+             hrwatts = hrcal / (3.6 * (1.0/3600.0));
+            if (!trainerConnected && !powerMeterConnected && !bUseVirtualWatts)  {
+                processPower(Number(hrwatts.toFixed(0)));
+            }
+       
     }
 
 }
@@ -2219,8 +2228,8 @@ export function startTimer() {
     //try {
     console.log("start timer..." + appStart);
 
-    if (!trainerConnected) {
-        alert("Connect a trainer, power meter or check VP (Virtual Power)");
+    if (!trainerConnected && heartRate == 0) {
+        alert("Connect a trainer, power meter, heart rate monitor or check VP (Virtual Power)");
         return;
     }
     if (!appStarted) {
