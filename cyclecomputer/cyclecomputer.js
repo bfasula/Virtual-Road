@@ -1,7 +1,7 @@
 import {printCSC} from './csc.js';
 import {printRSC} from './rsc.js';
 import {printWatts} from './ftms.js';
-import {dec2bin} from './util.js';
+import {dec2bin,getGradeColor} from './util.js';
 import {CalculateVelocity} from './power_v_speed.js';
 import {speedFromPower} from './power_v_speed.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess,openFullscreen} from './playvideo.js';
@@ -14,6 +14,7 @@ import { TrainerCommands } from "./TrainerCommands.js";
 import {NormalizedPower} from './NormalizedPower.js';
 import {updateMarkerOL,incMapZoom,decMapZoom,updateMapSize} from './minimap.js';
 import { TrainerPhysics} from './TrainerPhysics.js';
+import {BlePowerMeterProcessor} from './BlePowerMeterProcessor.js';
 //import {sendData} from './senddata.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
@@ -31,7 +32,8 @@ window.onbeforeunload = function () {
 };
 
 let trainerPhysics = new TrainerPhysics();
-let  lastMilliSeconds = 0;
+let blePowerMeterProcessor = new BlePowerMeterProcessor();
+let lastMilliSeconds = 0;
 let velocity = 0.0; // mph
 let speed = 0.0; // mps
 
@@ -1638,8 +1640,33 @@ function printPM1(event) {
 */
 function printPM(event) {
   const value = event.target.value;
+ 
+    
   const dataView = new DataView(value.buffer);
 
+     const bytes = new Uint8Array(
+        dataView.buffer, 
+        dataView.byteOffset, 
+        dataView.byteLength
+    );
+
+     blePowerMeterProcessor.processPowerData(bytes, Date.now());
+  let pwr =  blePowerMeterProcessor.getInstantPower();
+  let apwr =  blePowerMeterProcessor.getAveragePower();
+  let rpm = blePowerMeterProcessor.getCadence();
+  let NP = blePowerMeterProcessor.getNormalizedPower();
+  //console.log("Power: %.0fW | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n");
+  //console.log('Power: ${pwr} | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n');
+  console.log(`Power: ${pwr} W, Cadence: ${rpm ?? 'N/A'} RPM APower ${apwr} NP ${NP}`);
+    /*
+    processor.getInstantPower(),
+    processor.getCadence(),
+    processor.getAveragePower(),
+    processor.getNormalizedPower(),
+    processor.getLeftPower(),
+    processor.getRightPower());
+    */
+    
   let index = 0;
 
   // Flags (2 bytes, little endian)
@@ -1649,6 +1676,7 @@ function printPM(event) {
   // Instantaneous Power (2 bytes, signed)
   const power = dataView.getInt16(index, true);
   powerMeterConnected=true;
+  
   processPower(power);
   index += 2;
 
@@ -1969,8 +1997,10 @@ export async function processPower(power) {
             }
             lastGPSTime = gpsTime;
         }
-
-        document.getElementById("grade").innerHTML = (grade * 100.0).toFixed(1);
+        const gradePct = (grade * 100.0).toFixed(1)
+        document.getElementById("grade").innerHTML = gradePct;
+        const color = getGradeColor(gradePct);
+        document.getElementById("grade").style.backgroundColor = color;
     }
 
     let weight = riderWeight / lbs2kg;
