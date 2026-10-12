@@ -92,8 +92,7 @@ function   nthRoot(x, n) {
   }
 
 function estimateFtp(powerWatts, sampleIntervalSeconds) {
-  //const testSeconds = 20 * 60;
-    const testSeconds = 1 * 60;
+  const testSeconds = 20 * 60;
 
   if (
     !Array.isArray(powerWatts) ||
