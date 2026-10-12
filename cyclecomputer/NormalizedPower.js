@@ -39,7 +39,9 @@ export class NormalizedPower{
     
    
     this.pArray = [];
+    this.powerArray = [];
     this.pIndex=0;
+    this.powerIndex=0;
     this.arrayFilled=false;
     this.totalP=0;
     this.totalPPts=0;
@@ -53,8 +55,9 @@ export class NormalizedPower{
     
   addPower(power) {
    //console.log("addPower "+power+ " pIndex "+this.pIndex);
-      console.log("PowerFTP "+this.ftp);
+    //  console.log("PowerFTP "+this.ftp);
     this.pArray[this.pIndex++]=power;
+    this.powerArray[this.powerIndex++]=power;
     if (this.pIndex == 30) {
         this.pIndex=0;
         this.arrayFilled=true;
@@ -77,6 +80,9 @@ export class NormalizedPower{
         this.tss= (sec * this.NP * this.intensityFactor) / (this.ftp * 3600) * 100;
         return this.tss;
     }
+    calcFTP() {
+        return estimateFtp(this.powerArray,1);
+        }
     
    
 }
@@ -84,3 +90,50 @@ function   nthRoot(x, n) {
   if(x < 0 && n%2 != 1) return NaN; // Not well defined
   return (x < 0 ? -1 : 1) * Math.pow(Math.abs(x), 1/n);
   }
+
+function estimateFtp(powerWatts, sampleIntervalSeconds) {
+  //const testSeconds = 20 * 60;
+    const testSeconds = 1 * 60;
+
+  if (
+    !Array.isArray(powerWatts) ||
+    !Number.isInteger(sampleIntervalSeconds) ||
+    sampleIntervalSeconds <= 0 ||
+    testSeconds % sampleIntervalSeconds !== 0
+  ) {
+    throw new RangeError(
+      "Provide power samples and an interval that evenly divides 1200 seconds."
+    );
+  }
+
+  const windowSize = testSeconds / sampleIntervalSeconds;
+
+  if (powerWatts.length < windowSize) {
+    console.log("pWatts length " + powerWatts.length);
+    console.log("windowsize " + windowSize);
+    throw new RangeError("Need at least 20 minutes of power data.");
+  }
+
+  let windowSum = 0;
+
+  for (let i = 0; i < windowSize; i++) {
+    if (!Number.isInteger(powerWatts[i]) || powerWatts[i] < 0) {
+      throw new RangeError("Power samples cannot be negative.");
+    }
+    windowSum += powerWatts[i];
+  }
+
+  let maxSum = windowSum;
+
+  for (let i = windowSize; i < powerWatts.length; i++) {
+    if (!Number.isInteger(powerWatts[i]) || powerWatts[i] < 0) {
+      throw new RangeError("Power samples cannot be negative.");
+    }
+
+    windowSum += powerWatts[i] - powerWatts[i - windowSize];
+    maxSum = Math.max(maxSum, windowSum);
+  }
+
+  const best20MinuteAverage = maxSum / windowSize;
+  return best20MinuteAverage * 0.95;
+}

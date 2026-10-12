@@ -2126,7 +2126,7 @@ export async function processPower(power) {
             rpmAutoShift(currentRpm, activeRpm);
             gradeAutoShift(nextGrade);
 
-            let effectiveGrade = grade * 100.0 * (trainerDifficulty / 100.0) + vgear;
+            let effectiveGrade = (grade * 100.0) * (trainerDifficulty / 100.0) + vgear;
             //document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
             console.log(
                 "effect grade " +
@@ -2465,7 +2465,19 @@ function speak(text) {
 }
 function saveData() {
     saveGPS();
+    try {
     //const data = new Blob(['Hello, world!'], { type: 'text/plain' });
+    let newftp=normalizedPower.calcFTP().toFixed(0);
+     console.log("New ftp " + newftp);
+    if (newftp > powerFTP) {
+        console.log("New ftp " + newftp);
+         //alert("New ftp " + newftp);
+        if (confirm("New FTP " + powerFTP + "=>" + newftp + ", update now?")) {
+             localStorage.setItem('.powerFTP', newftp);
+        }
+
+    }
+    
     let text =
         "datetime," +
         new Date().toLocaleString() +
@@ -2493,7 +2505,9 @@ function saveData() {
         ",IF," +
         Number(normalizedPower.intensityFactor).toFixed(2) +
         ",TSS," +
-        Number(normalizedPower.calcTSS(totalSeconds)).toFixed(0);
+        Number(normalizedPower.calcTSS(totalSeconds)).toFixed(0) +
+        ",FTP," +
+        Number(newftp).toFixed(0);
 
     let data = new Blob([text], {
         type: "text/plain",
@@ -2508,7 +2522,11 @@ function saveData() {
     a.click();
     window.URL.revokeObjectURL(url);
     //sendMail(text);
-    sendGPS();
+   // sendGPS();
+           
+        } catch (error) {
+		console.error("Save data error:", error);
+	}
 }
 function sendMail(message) {
     
