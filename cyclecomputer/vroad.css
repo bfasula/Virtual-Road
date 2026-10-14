@@ -105,6 +105,45 @@ div.toprcorner {
   width:300px;
   }
 
+.rightside {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  min-width: 180px;
+  min-height: 150px;
+  resize: both;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 1.0;
+}
+
+
+//.rightside {
+//  position: absolute;
+//  top: 0;
+//  right: 0;
+//  width: 300px;
+//  height: 400px;
+//  opacity: 1.0;
+//}
+
+.drag-handle {
+  flex: 0 0 30px;
+  cursor: move;
+  user-select: none;
+  touch-action: none;
+  background: #ddd;
+}
+
+#map {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
 
 div.fullscreen {
   position: fixed;

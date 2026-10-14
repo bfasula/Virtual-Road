@@ -770,6 +770,11 @@ var sel = document.getElementById('connectDevice');
 //*********************************************************************
 const SERVICES = [0x1826, 0x180d, 0x1816, 0x1818];
 const devices = new Map();
+ const resizeObserver = new ResizeObserver(() => {
+  requestAnimationFrame(() => map.updateSize());
+});
+
+resizeObserver.observe(document.getElementById("mapWindow"));
 let ftmsControlChar = null;
 
 //function log(m){logDiv.textContent+=m+"\n";logDiv.scrollTop=logDiv.scrollHeight;}
@@ -919,6 +924,31 @@ function myFunction() {
         text.style.display = "none";
     }
 }
+
+const windowEl = document.getElementById("mapWindow");
+const handle = windowEl.querySelector(".drag-handle");
+
+let offsetX = 0;
+let offsetY = 0;
+let startX;
+let startY;
+
+handle.addEventListener("pointerdown", (event) => {
+  startX = event.clientX;
+  startY = event.clientY;
+  handle.setPointerCapture(event.pointerId);
+});
+
+handle.addEventListener("pointermove", (event) => {
+  if (!handle.hasPointerCapture(event.pointerId)) return;
+
+  offsetX += event.clientX - startX;
+  offsetY += event.clientY - startY;
+  startX = event.clientX;
+  startY = event.clientY;
+
+  windowEl.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+});
 
 var menu = document.getElementById("virtualgear");
 menu.addEventListener("change", generateData);
