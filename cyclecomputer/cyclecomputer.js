@@ -353,6 +353,18 @@ document.addEventListener('keydown', function(event) {
         }
              console.log("syncSeconds "+syncSeconds);
     }
+         
+    else if(event.keyCode == 34) { // PGDN 
+        videoSeconds2add--;
+        document.getElementById("secs2add").value=videoSeconds2add;
+          console.log("videoSeconds2add "+videoSeconds2add);
+    }
+    else if(event.keyCode == 33) { // PGUP 
+        videoSeconds2add++;
+        document.getElementById("secs2add").value=videoSeconds2add;
+            console.log("videoSeconds2add "+videoSeconds2add);
+    }
+    
     else if(event.keyCode == 75) { // letter k
      skipWorkoutInterval();  //skip the workout interal
     }
@@ -397,7 +409,7 @@ document.addEventListener('keydown', function(event) {
     }
     else {
         
-       // alert("key "+event.keyCode);
+      // alert("key "+event.keyCode);
         }
    
 });
