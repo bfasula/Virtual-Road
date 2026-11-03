@@ -1980,9 +1980,9 @@ export async function processPower(power) {
             initialDistance = 0;
             if (!loopRoute) {
                 if (confirm("Route Ended, Save Ride?") == true) {
-                    saveGPS();
-                    gpsIndex = 0;
+                    //saveGPS();
                     saveData();
+                    gpsIndex = 0;
                 } else {
                 }
                 //alert("Route Ended");
