@@ -73,6 +73,11 @@
                     <td>           <input type="text" class="coefficientWR" placeholder="Enter coefficientWR here"/>
   <button style="background-color: blue; color: white;" class="savecoefficientWRBtn">Save coefficientWR</button></td>
 </tr-->
+                                      <tr>
+                                           <td> <h2 class="userDebugLevel">coefficientWR:</h2></td>
+                    <td>           <input type="text" class="debugLevel" placeholder="Enter Debug Level here"/>
+  <button style="background-color: blue; color: white;" class="saveDebugLevelBtn">Save Debug Level</button></td>
+</tr>
 
                                      <tr>
          <td> <h2 class="userMaxRpm">AutoShift Max RPM:</h2></td>
@@ -128,6 +133,7 @@ const userSyncSecondsText = document.querySelector('.usersyncSeconds');
           const userEmailAddressText = document.querySelector('.userEmailAddress');
           const userCoefficientRRText = document.querySelector('.userCoefficientRR');
            const userCoefficientWRText = document.querySelector('.userCoefficientWR');
+           const userDebugLevelText = document.querySelector('.userDebugLevel');
            const userMaxRPMText = document.querySelector('.userMaxRPM');
            const userMinRPMText = document.querySelector('.userMinRPM');
             const userMaxGradeText = document.querySelector('.userMaxGrade');
@@ -144,6 +150,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
            const saveEmailAddressButton = document.querySelector('.saveEmailAddressBtn');
            const saveCoefficientRRButton = document.querySelector('.saveCoefficientRRBtn');
           const saveCoefficientWRButton = document.querySelector('.saveCoefficientWRBtn');
+           const saveDebugLevelButton = document.querySelector('.saveDebugLevelBtn');
            const saveMaxRPMButton = document.querySelector('.saveMaxRPMBtn');
           const saveMinRPMButton = document.querySelector('.saveMinRPMBtn');
              const saveMaxGradeButton = document.querySelector('.saveMaxGradeBtn');
@@ -215,6 +222,12 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   localStorage.setItem('.coefficientWR', coefficientWR);
 });
           */
+
+                     saveDebugLevelButton.addEventListener('click', () => {
+  const debugLevel = document.querySelector('.debugLevel').value;
+  userDebugLevelText.textContent = "DebugLevel: "+debugLevel;
+  localStorage.setItem('.debugLevel', debugLevel);
+});
           
     saveMaxRPMButton.addEventListener('click', () => {
   const maxRPM = document.querySelector('.maxRPM').value;
@@ -350,6 +363,16 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   }
 }
           */
+
+          function displayDebugLevel() {
+  const debugLevelFromLocalStorage = localStorage.getItem('.debugLevel');
+
+  if (debugLevelFromLocalStorage) {
+    userDebugLevelText.textContent = "Debug Level: "+debugLevelFromLocalStorage;
+  } else {
+    userDebugLevelText.textContent = 'No Debug Level data in local storage';
+  }
+}
           
     function displayMaxRPM() {
   const maxRPMFromLocalStorage = localStorage.getItem('.maxRPM');
@@ -401,6 +424,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
           displayEmailAddress();
           //displayCoefficientRR();
          //  displayCoefficientWR();
+          displayDebugLevel();
           displayMaxRPM();
           displayMinRPM();
           displayMaxGrade();

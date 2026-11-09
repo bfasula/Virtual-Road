@@ -5,7 +5,8 @@ import {
 	maximumIncline,
 	minimumIncline,
 	setWindResistance,
-	setRollingResistance
+	setRollingResistance,
+	logger
 } from './cyclecomputer.js';
 import {
 	updateMapOL
@@ -55,22 +56,22 @@ export async function fetchGPXFromServer(url, description) {
 		initializeRoute();
 
 
-		console.log("Fetch " + url);
+		logger(5,"Fetch " + url);
 		let fname = url.replace("gpxfiles/", "");
 		//fname=fname.replace(".gpx", "");
 		fname = "  " + fname;
 		// Read the response body as text
 		const fileContent = await gpxText.text();
 
-		//console.log(fileContent);
+		//logger(5,fileContent);
 		gpxFilename = {
 			name: fname
 		};
-		console.log("gpxFilename " + gpxFilename);
+		logger(5,"gpxFilename " + gpxFilename);
 		if (gpxFilename.name.indexOf("Loop") >= 0) {
 			////////  if (filename.indexOf("Loop")  >= 0) {
 			loopRoute = true;
-			console.log("Loop Route ");
+			logger(5,"Loop Route ");
 		}
         /*
         // Example: parse GPX first (using toGeoJSON)
@@ -85,7 +86,7 @@ const points = geojson.features[0].geometry.coordinates.map(coord => ({
 }));
 
 //const result = classifyRouteFromGPXPoints(points);
-//console.log(result);
+//logger(5,result);
 // → { category: "rolling hills", details: { ... } }
 */
         
@@ -123,20 +124,20 @@ file.size // the size in bytes
 file.type // file type ex. 'application/pdf'
 */
 		let file = e.target.files[0];
-		console.log("File selected " + file);
+		logger(5,"File selected " + file);
 		//document.getElementById('myVid').innerHTML = file.name;
 		//document.getElementById("myVid").src=videoDirectory+file.name;
 
 		//myVideo = file.name;
 		//myVideo = document.getElementById("myVid");
-		console.log("filename " + file.name);
+		logger(5,"filename " + file.name);
 		//logger("new file " + myVideo.innerHTML)
 		let gpxfile = (file.name);
-		console.log("gpx file " + gpxfile);
+		logger(5,"gpx file " + gpxfile);
 
 		////////////parseXML(videoDirectory+gpxfile);
 		parseXML(file);
-		console.log("gpxArray " + gpxArray);
+		logger(5,"gpxArray " + gpxArray);
 		//openFullScreen();
 
 	}
@@ -164,7 +165,7 @@ export class GPXPoint {
 }
 
 export function printGPX(i) {
-	console.log("i " + i +
+	logger(5,"i " + i +
 		" lat " + gpxArray[i].lat +
 		" lon " + gpxArray[i].lon +
 		" ele " + gpxArray[i].ele +
@@ -187,7 +188,7 @@ export function getGPS() {
 	if (runPod) {
 		activity = "Run";
 	}
-	console.log("Gpx length " + gpxIndex);
+	logger(5,"Gpx length " + gpxIndex);
 	/*
 	<?xml version="1.0" encoding="UTF-8"?><gpx version="1.0"><name>Bike Ride</name><trk><name>Bike Ride</name><type>Ride</type><trkseg>
 	 <trkpt lat="41.2709750" lon="-72.7752570">
@@ -227,27 +228,27 @@ function timeToSeconds(datetime) {
 	const mins = Number(tArray[1]);
 	const secs = Number(tArray[2].replace("Z", ""));
 	const tsecs = hrs * 3600 + mins * 60 + secs;
-	//console.log(hrs + " " + mins + " " + secs + " "+tsecs);
+	//logger(5,hrs + " " + mins + " " + secs + " "+tsecs);
 	return tsecs;
 }
 
 
 export async function parseXML(filename) {
 	// XML String:
-	console.log("parseXML " + filename);
+	logger(3,"parseXML " + filename);
 	gpxFilename = filename;
 	initializeRoute();
 
 	if (filename.name.indexOf("Loop") >= 0) {
 		////////  if (filename.indexOf("Loop")  >= 0) {
 		loopRoute = true;
-		console.log("Loop Route ");
+		logger(5,"Loop Route ");
 	}
 	// parse an XML string and get the value of a specific attribute
 	//var s1 = "<trkseg><trkpt lat=\"41.71877\" lon=\"12.67855\"><ele>429.4</ele><time>1970-01-01T00:00:00.000Z</time></trkpt>\n";
 	//var s2 = "<trkpt lat=\"42.71877\" lon=\"12.67855\"><ele>529.4</ele><time>1970-01-01T00:00:01.000Z</time></trkpt>\n</trkseg>";
 	////////var xmlString;
-	console.log(filename);
+	logger(3,filename);
 	//var response;
 	gpxIndex = 0;
 	try {
@@ -259,8 +260,8 @@ export async function parseXML(filename) {
 		let fr = new FileReader();
 		fr.onload = function() {
 			gpxText = fr.result;
-			//        console.log("response ");
-			//console.log(response);
+			//        logger(5,"response ");
+			//logger(5,response);
 			processXML(gpxText, filename, filename.name);
 		}
 		await fr.readAsText(filename);
@@ -288,9 +289,9 @@ function processXML(response, file, description) {
     
     const points = calculateClimbingFromGPX2(response);
     classifyResult = classifyRouteFromGPXPoints(points);
-    console.log(classifyResult);
+    logger(3,classifyResult);
   
-    console.log(Text);
+    logger(3,Text);
      hoverText= "Distance "+classifyResult.details.totalDistance + ","+
         "ascent "+classifyResult.details.ascent+ ","+
       "descent "+classifyResult.details.descent+ ","+
@@ -299,11 +300,11 @@ function processXML(response, file, description) {
       "downhillPercent "+classifyResult.details.downhillPercent+ ","+
       "flatPercent "+classifyResult.details.flatPercent+ ","+
       "reversalCount "+classifyResult.details.reversalCount;
-    console.log(hoverText);
+    logger(3,hoverText);
     /*
 	const result = calculateClimbingFromGPX(response);
-	console.log(`Elevation gain: ${result.totalClimb} m`);
-	console.log(`Elevation loss: ${result.totalDescent} m`);
+	logger(5,`Elevation gain: ${result.totalClimb} m`);
+	logger(5,`Elevation loss: ${result.totalDescent} m`);
     */
     
 	let filename = file.name;
@@ -312,34 +313,34 @@ function processXML(response, file, description) {
 	let str1 = s1.indexOf("<name>");
 	let end1 = s1.indexOf("</name>");
 	var nameString = s1.slice(str1 + "<name>".length, end1);
-	///////console.log("Xml name=" + nameString);
+	///////logger(5,"Xml name=" + nameString);
 	const nArray = nameString.split(":");
     gpxTitle=nArray[0];
 	var length = nArray.length;
-	console.log(length);
+	logger(3,length);
 	let videoSyncSeconds = 0;
 	if (length > 1) {
 		videoSyncSeconds = nArray[1];
-		console.log("video sync seconds " + videoSyncSeconds);
+		logger(3,"video sync seconds " + videoSyncSeconds);
 		document.getElementById('secs2add').value = videoSyncSeconds;
 	}
 	if (length > 2) {
 
 		youtubeVideoId = nArray[2];
 		onYouTubeIframeAPIReady2(youtubeVideoId);
-		console.log("youtube videoid " + youtubeVideoId);
+		logger(3,"youtube videoid " + youtubeVideoId);
 		//youtubeSetVideoId(youtubeVideoId);
 	}
 	if (length > 3) {
 
 		setRollingResistance(nArray[3]);
-		console.log("rolling resistance " + nArray[3]);
+		logger(3,"rolling resistance " + nArray[3]);
 
 	}
 	if (length > 4) {
 
 		setWindResistance(nArray[4]);
-		console.log("wind resistance " + nArray[4]);
+		logger(3,"wind resistance " + nArray[4]);
 
 	}
 
@@ -349,10 +350,10 @@ function processXML(response, file, description) {
 	var xmlString = s1.slice(start, end + "<trkseg>".length);
 	let maxInclination = Number(maximumIncline) / 100.0;
 	let minInclination = Number(minimumIncline) / 100.0;
-	console.log("max grade " + maximumIncline + " min grade " + minimumIncline);
-	console.log("max grade " + maxInclination + " min grade " + minInclination);
+	logger(3,"max grade " + maximumIncline + " min grade " + minimumIncline);
+	logger(3,"max grade " + maxInclination + " min grade " + minInclination);
 
-	//console.log(s2);
+	//logger(5,s2);
 	var doc = new DOMParser().parseFromString(xmlString, "text/xml");
 
 	var rootElement = doc.documentElement;
@@ -381,11 +382,11 @@ function processXML(response, file, description) {
 			var lon = child.getAttribute("lon");
 			var eleElement = child.getElementsByTagName("ele")[0];
 			var timeElement = child.getElementsByTagName("time")[0];
-			//console.log("ele size " + ele.length)
+			//logger(5,"ele size " + ele.length)
 			//ele=child.getElementsByTagName("ele").item(0).getTextContent();
 
-			//console.log(eleElement)
-			//  console.log(timeElement)
+			//logger(5,eleElement)
+			//  logger(5,timeElement)
 
 			var ele = eleElement.textContent; // meters above sea level
 
@@ -395,7 +396,7 @@ function processXML(response, file, description) {
 			} else {
 				var mytime = timeElement.textContent;
 				secs = timeToSeconds(mytime);
-               // console.log("Time "+mytime+" secs "+secs);
+               // logger(5,"Time "+mytime+" secs "+secs);
 			}
 
 			let distancem = 0
@@ -440,10 +441,10 @@ function processXML(response, file, description) {
 					smoothGrade = minInclination;
 				}
                
-				// console.log("meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
+				// logger(5,"meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
 				mps = distancem / (secs - lastsecs);
 				///////////////////////////////mps=smoothMps(mps,i); 12/25/25
-				//console.log("mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
+				//logger(5,"mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
 				//constructor(lat, lon, ele,seconds, grade, distance, mps) {
 
 
@@ -456,9 +457,9 @@ function processXML(response, file, description) {
             
 			let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps, "");
 			gpxArray[gpxIndex++] = p1;
-            console.log(i+ " time " +mytime + " ele " + ele + " smoothEle "+smoothEle.toFixed(1) + " grade " + grade + " smoothGrade " + smoothGrade.toFixed(3));
+            logger(5,i+ " time " +mytime + " ele " + ele + " smoothEle "+smoothEle.toFixed(1) + " grade " + grade + " smoothGrade " + smoothGrade.toFixed(3));
 			/*
-			 console.log(i+ " time " +mytime + " secs "+secs
+			 logger(5,i+ " time " +mytime + " secs "+secs
 			 +",mps "+mps.toFixed(2)  + ",mph " +( mps  * mps2mph).toFixed(2)
 			 +",meters "+distancem.toFixed(2)
 			   +",totalm "+totaldistancem.toFixed(2)     
@@ -479,13 +480,13 @@ function processXML(response, file, description) {
 		}
 
 	} // end loop
-	console.log("total meters " + totaldistancem.toFixed(2));
-	console.log("total miles " + (totaldistancem / 1000 * .62).toFixed(2));
-	console.log("total points " + gpxIndex);
-	console.log("gpxArray size " + gpxArray.length);
+	logger(3,"total meters " + totaldistancem.toFixed(2));
+	logger(3,"total miles " + (totaldistancem / 1000 * .62).toFixed(2));
+	logger(3,"total points " + gpxIndex);
+	logger(3,"gpxArray size " + gpxArray.length);
     /*
 classifyResult = classifyRouteFromGPXPoints(gpxPoints);
-console.log(classifyResult);
+logger(5,classifyResult);
     hoverText= "Distance "+classifyResult.details.totalDistance + ","+
         "ascent "+classifyResult.details.ascent+ ","+
       "descent "+classifyResult.details.descent+ ","+
@@ -504,13 +505,13 @@ console.log(classifyResult);
 	} catch (error) {
 		console.error("Could not fetch the minimap:", error);
 	}
-	//console.log("i = "+findGPX(100.0));
+	//logger(5,"i = "+findGPX(100.0));
     let routeDesc=description.substring(10,description.length);
      let routeType="";
      if (bUsedRideList === false) {
          routeType = classifyResult.category;
          routeDesc=description;
-         console.log(routeDesc);
+         logger(3,routeDesc);
          }
 	if (bMetric === 'true') {
 		document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " " + routeType + " - "
@@ -519,7 +520,7 @@ console.log(classifyResult);
         document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " "   + routeType + " - "
             + (totaldistancem / 1609.344).toFixed(1) + " Miles " ;
 			
-		console.log(filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
+		logger(3,filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
 	}
 	try {
 		drawElevation(hoverText);
@@ -537,9 +538,9 @@ export function drawMap() {
 	}
 }
 export function findGPX(distance) {
-	//console.log("finding " + distance);
+	//logger(5,"finding " + distance);
 	for (var i = 0; i < gpxArray.length; i++) {
-		// console.log("i " + i+" lat "+gpxArray[i].lat+" lon "+gpxArray[i].lon+" ele "+gpxArray[i].ele
+		// logger(5,"i " + i+" lat "+gpxArray[i].lat+" lon "+gpxArray[i].lon+" ele "+gpxArray[i].ele
 		//+" seconds "+gpxArray[i].seconds+" grade "+gpxArray[i].grade+" distance "+gpxArray[i].distance+" mps "+gpxArray[i].mps);
 		//   
 		if (distance > gpxArray[i].distance) {
@@ -560,7 +561,7 @@ export function findGPX(distance) {
 Please note that this calculation assumes a perfect spherical Earth, which is a simplification. In practice, the Earth is an oblate spheroid, so for very long distances or high precision, more complex models may be necessary. Additionally, be aware that this calculation does not account for factors like altitude, which may affect the actual distance between two points.
     // Example usage
 const distance = calculateDistance(37.7749, -122.4194, 34.0522, -118.2437);
-console.log(distance.toFixed(2) + ' km'); // Output: 559.03 km
+logger(5,distance.toFixed(2) + ' km'); // Output: 559.03 km
     */
 function calculateDistance(lat1, lon1, lat2, lon2) {
 	const earthRadius = 6371; // Radius of the Earth in kilometers
@@ -593,10 +594,10 @@ function smoothMps(mps, i) {
 		let tMps = 0;
 		for (let j = 0; j < nMps; j++) {
 			tMps += lastMps[j];
-			//  console.log("last mps "+j+" " +lastMps[j]);
+			//  logger(5,"last mps "+j+" " +lastMps[j]);
 		}
 		smoothMps = tMps / nMps;
-		//console.log("tmps " + tMps + "  smooth " + smoothMps);
+		//logger(5,"tmps " + tMps + "  smooth " + smoothMps);
 	}
 	//for (let j=1; j<nElevations; j++) { // shift grades 1 to the right
 	//    lastElevations[j]= lastElevations[j-1];
@@ -605,7 +606,7 @@ function smoothMps(mps, i) {
 		lastMps[j] = lastMps[j - 1];
 	}
 	lastMps[0] = mps; // save current grade
-	// console.log("mps " + mps + "  smooth " + smoothMps);
+	// logger(5,"mps " + mps + "  smooth " + smoothMps);
 	//grade= smoothGradient;
 	return smoothMps;
 
@@ -618,7 +619,7 @@ function drawElevation(hoverText) {
 	let distance = 0;
 	for (var i = 0; i < gpxArray.length; i++) {
 		//printGPX(i);
-		//console.log("ele "+gpxArray[i].ele);
+		//logger(5,"ele "+gpxArray[i].ele);
 		distance = gpxArray[i].distance;
 		data[i] = {
 			x: distance / 1609.344,
@@ -629,7 +630,7 @@ function drawElevation(hoverText) {
 			max = gpxArray[i].ele;
 		}
 		//if (gpxArray[i].ele<min){min=gpxArray[i].ele;}
-		//console.log("ele "+gpxArray[i].ele+ " distance "+distance);
+		//logger(5,"ele "+gpxArray[i].ele+ " distance "+distance);
 	}
 	var chart = new CanvasJS.Chart("chartContainer", {
 		animationEnabled: true,
@@ -657,7 +658,7 @@ function drawElevation(hoverText) {
 			dataPoints: data
 		}]
 	});
-    console.log("hoverText "+hoverText);
+    logger(3,"hoverText "+hoverText);
     chart.options.data[0].toolTipContent = hoverText;  
 	chart.render();
 
@@ -671,10 +672,10 @@ function smoothElevation(ele, i) {
 		let tElevation = 0;
 		for (let j = 0; j < nElevations; j++) {
 			tElevation += lastElevations[j];
-			// console.log("last ele "+j+" " +lastElevations[j]);
+			// logger(5,"last ele "+j+" " +lastElevations[j]);
 		}
 		smoothEle = tElevation / nElevations;
-		// console.log("tele " + tElevation + "  smooth " + smoothEle);
+		// logger(5,"tele " + tElevation + "  smooth " + smoothEle);
 	}
 	//for (let j=1; j<nElevations; j++) { // shift grades 1 to the right
 	//    lastElevations[j]= lastElevations[j-1];
@@ -683,7 +684,7 @@ function smoothElevation(ele, i) {
 		lastElevations[j] = lastElevations[j - 1];
 	}
 	lastElevations[0] = ele; // save current elevation
-	//console.log("ele " + ele + "  smooth " + smoothEle);
+	//logger(5,"ele " + ele + "  smooth " + smoothEle);
 	//grade= smoothGradient;
 
 	return smoothEle;
@@ -698,10 +699,10 @@ function smoothGradient(grade, i) {
 		let tGrade = 0;
 		for (let j = 0; j < nGrades; j++) {
 			tGrade += lastGrades[j];
-			// console.log("last ele "+j+" " +lastElevations[j]);
+			// logger(5,"last ele "+j+" " +lastElevations[j]);
 		}
 		smoothGrade = tGrade / nGrades;
-		// console.log("tele " + tElevation + "  smooth " + smoothEle);
+		// logger(5,"tele " + tElevation + "  smooth " + smoothEle);
 	}
 	//for (let j=1; j<nElevations; j++) { // shift grades 1 to the right
 	//    lastElevations[j]= lastElevations[j-1];
@@ -710,7 +711,7 @@ function smoothGradient(grade, i) {
 		lastGrades[j] = lastGrades[j - 1];
 	}
 	lastGrades[0] = grade; // save current elevation
-	//console.log("ele " + ele + "  smooth " + smoothEle);
+	//logger(5,"ele " + ele + "  smooth " + smoothEle);
 	//grade= smoothGradient;
 
 	return smoothGrade;
@@ -950,7 +951,7 @@ function calculateRealisticClimbingFromGPX(gpxString, minClimbThreshold = 1.5) {
 	} else if (lastDiff < -minClimbThreshold) {
 		descent -= lastDiff;
 	}
-	console.log("totalClimb " + climb);
+	logger(5,"totalClimb " + climb);
 	return {
 
 		totalClimb: Math.round(climb * 10) / 10,
@@ -969,8 +970,8 @@ async function example() {
     const gpxText = await response.text();
 
     const result = calculateRealisticClimbingFromGPX(gpxText);
-    console.log(`Elevation gain: ${result.totalClimb} m`);
-    console.log(`Elevation loss: ${result.totalDescent} m`);
+    logger(5,`Elevation gain: ${result.totalClimb} m`);
+    logger(5,`Elevation loss: ${result.totalDescent} m`);
 }
 */
 // Helper: approximate horizontal distance (meters) between two lat/lon points

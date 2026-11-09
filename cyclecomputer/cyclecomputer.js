@@ -19,8 +19,13 @@ import {BlePowerMeterProcessor} from './BlePowerMeterProcessor.js';
 
 export function modifyTrainerConnected( value ) { trainerConnected = value; }
 export function modifyCadenceConnected( value ) { cadenceConnected = value; }
-
-
+var debugLevel=1
+export function logger(level, text) {
+   
+    if (debugLevel >= level) {
+    console.log(text);
+        }
+    }
 window.onload = function(){
    hideWorkoutCells();
       
@@ -61,7 +66,7 @@ async function loadGPXList() {
 }
 export async function fetchGPX(url, desc) {
 	try {
-       // console.log("Fetch " + url);
+        logger(3,"Fetch " + url);
 		const gpxText = await fetch(url);
        
    
@@ -77,7 +82,7 @@ export async function fetchGPX(url, desc) {
 
          const points = calculateClimbingFromGPX2(fileContent);
     let classifyResult = classifyRouteFromGPXPoints(points);
-    console.log("Category " +desc+ "," +classifyResult.category );
+    logger(3,"Category " +desc+ "," +classifyResult.category );
         /*
     let Text= classifyResult.category + " distance "+classifyResult.details.totalDistance + ","+
         "ascent "+classifyResult.details.ascent+ ","+
@@ -87,7 +92,7 @@ export async function fetchGPX(url, desc) {
       "downhillPercent "+classifyResult.details.downhillPercent+ ","+
       "flatPercent "+classifyResult.details.flatPercent+ ","+
       "reversalCount "+classifyResult.details.reversalCount;
-    console.log(Text);
+    logger(5,Text);
     */
         
         } catch (error) {
@@ -96,7 +101,7 @@ export async function fetchGPX(url, desc) {
     }
 function renderGPXList(files, dist) {
     //format gpxfname,description,distance,climbingft,country
-    console.log("Filter distance " + dist);
+    logger(3,"Filter distance " + dist);
     select.innerHTML = "";
     files.sort((a, b) => {
         const getDistance = (str) => {
@@ -113,7 +118,7 @@ function renderGPXList(files, dist) {
     });
 
     files.forEach((file) => {
-        //console.log("file "+file);
+        //logger(5,"file "+file);
         
         const myArray = file.split(",");
         const opt = document.createElement("option");
@@ -150,11 +155,11 @@ function renderGPXList(files, dist) {
 
 filterInput.addEventListener("input", () => {
     const term = filterInput.value.toLowerCase();
-    console.log("filterInput " + term + " " + term.substring(0, 1));
+    logger(3,"filterInput " + term + " " + term.substring(0, 1));
     if (term.substring(0, 1) === ">" || term.substring(0, 1) === "<") {
         if (term.length >= 2) {
             let distance = term.substring(1, term.length);
-            console.log("Distance " + distance);
+            logger(5,"Distance " + distance);
             if (term.substring(0, 1) === "<") {
                 renderGPXList(allFiles, -distance);
             } else {
@@ -169,11 +174,11 @@ filterInput.addEventListener("input", () => {
 
 select.addEventListener("change", (e) => {
     const url = e.target.value;
-    console.log("Url "+url);
+    logger(3,"Url "+url);
     const description = select.selectedOptions[0]?.textContent?.trim() ?? "";
     if (!url) return;
 
-    console.log("Selected:", url);
+    logger(3,"Selected:", url);
     modal.style.display = "none";
     bUseShortcut = true;
     if (url == "gpxfiles/Select From Folder") {
@@ -209,7 +214,7 @@ async function loadWOList() {
 }
 
 function renderWOList(files) {
-     console.log("renderWOLIst ");
+     logger(3,"renderWOLIst ");
  selectwo.innerHTML = "";
     files.sort((a, b) => {
         const getDesc = (str) => {
@@ -223,7 +228,7 @@ function renderWOList(files) {
     });
 
     files.forEach((file) => {
-        //  console.log(file);
+        //  logger(5,file);
         const myArray = file.split(",");
         const opt = document.createElement("option");
         if (myArray.length > 1) {
@@ -244,13 +249,13 @@ function renderWOList(files) {
 filterInputwo.addEventListener("input", () => {
     const term = filterInputwo.value.toLowerCase();
         
-    console.log("filterInput " + term + " " + term.substring(0, 1));
+    logger(3,"filterInput " + term + " " + term.substring(0, 1));
     /*
 
     if (term.substring(0, 1) === ">" || term.substring(0, 1) === "<") {
         if (term.length >= 2) {
             let distance = term.substring(1, term.length);
-            console.log("Distance " + distance);
+            logger(5,"Distance " + distance);
             if (term.substring(0, 1) === "<") {
                 renderGPXList(allFiles, -distance);
             } else {
@@ -267,10 +272,10 @@ filterInputwo.addEventListener("input", () => {
 
 selectwo.addEventListener("change", (e) => {
     const url = e.target.value;
-    console.log(url);
+    logger(3,url);
     if (!url) return;
 
-    console.log("Selected:", url);
+    logger(3,"Selected:", url);
     modalwo.style.display = "none";
     bUseShortcut = true;
     if (url == "workouts/Select From Folder") {
@@ -300,9 +305,9 @@ if (!sessionId) {
 }
 */
 export var powerFTP = Number(localStorage.getItem(".powerFTP"));
-console.log("Power FTP "+powerFTP);
+logger(3,"Power FTP "+powerFTP);
 export var apikey = localStorage.getItem(".apikey");
-console.log("apikey "+apikey);
+logger(3,"apikey "+apikey);
 let tpower=Number(powerFTP*0.65); // zone2
 document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
 document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
@@ -331,7 +336,7 @@ document.addEventListener('keydown', function(event) {
       } else {
          bUseTrainerPhysics=true;
       }
-           console.log("use trainer physics " +  bUseTrainerPhysics);
+           logger(3,"use trainer physics " +  bUseTrainerPhysics);
     }
     else if(event.keyCode == 71) { // letter g
       saveGPS();
@@ -351,18 +356,18 @@ document.addEventListener('keydown', function(event) {
         } else {
            syncSeconds++;
         }
-             console.log("syncSeconds "+syncSeconds);
+             logger(3,"syncSeconds "+syncSeconds);
     }
          
     else if(event.keyCode == 34) { // PGDN 
         videoSeconds2add--;
         document.getElementById("secs2add").value=videoSeconds2add;
-          console.log("videoSeconds2add "+videoSeconds2add);
+          logger(5,"videoSeconds2add "+videoSeconds2add);
     }
     else if(event.keyCode == 33) { // PGUP 
         videoSeconds2add++;
         document.getElementById("secs2add").value=videoSeconds2add;
-            console.log("videoSeconds2add "+videoSeconds2add);
+            logger(3,"videoSeconds2add "+videoSeconds2add);
     }
     
     else if(event.keyCode == 75) { // letter k
@@ -419,7 +424,7 @@ export function upArrow() {
     if (ERGMode) {
         if (bWorkout) {
             powerFTP = Number(powerFTP) + 10;
-            console.log("New ftp " + powerFTP);
+            logger(3,"New ftp " + powerFTP);
             //alert("Temporary ftp "+powerFTP);
             tpower = Number(zwoArray[workoutIndex].power) * powerFTP;
             document.getElementById("twatts").innerHTML = tpower.toFixed(0);
@@ -445,7 +450,7 @@ export function downArrow() {
     if (ERGMode) {
         if (bWorkout) {
             powerFTP = Number(powerFTP) - 10;
-            console.log("New ftp " + powerFTP);
+            logger(5,"New ftp " + powerFTP);
             //alert("Temporary ftp "+powerFTP);
             tpower = Number(zwoArray[workoutIndex].power) * powerFTP;
             document.getElementById("twatts").innerHTML = tpower.toFixed(0);
@@ -524,7 +529,7 @@ function toggleMapsize() {
 
         bUseLargeMap = true;
         incMapZoom();
-        console.log("toggleMapsize enlarge");
+        logger(3,"toggleMapsize enlarge");
         //document.getElementById('map').setAttribute("style","width:100%");
         //  document.getElementById('map').setAttribute("style","hieight:80%");
     } else {
@@ -533,7 +538,7 @@ function toggleMapsize() {
         // x.style.height=250;
         bUseLargeMap = false;
         decMapZoom();
-        console.log("toggleMapsize shrink");
+        logger(3,"toggleMapsize shrink");
     }
    updateMapSize();
     updateMarkerOL(gpxArray[gradeIndex].lat, gpxArray[gradeIndex].lon);
@@ -589,10 +594,10 @@ function showWorkoutCells() {
 function toggleCalibration() {
     if (bUseCalibration) {
         bUseCalibration = false;
-        console.log("Calibration off");
+        logger(3,"Calibration off");
     } else {
         bUseCalibration = true;
-        console.log("Calibration on");
+        logger(3,"Calibration on");
     }
 }
 function toggleAutoShift() {
@@ -827,7 +832,7 @@ async function connectDevice() {
 }
 
 async function connectGATT(device) {
-    console.log("Connecting: " + device.name);
+    logger(3,"Connecting: " + device.name);
     const server = await device.gatt.connect();
     const services = await server.getPrimaryServices();
 
@@ -838,7 +843,7 @@ async function connectGATT(device) {
             //    await trainerCommands.requestControl();
             await trainerControl.connectDevice(device);
             await trainerCommands.requestControl();
-            console.log("Device name " + trainerControl.device.name);
+            logger(3,"Device name " + trainerControl.device.name);
             trainerConnected = true;
             smartTrainerConnected = true;
             bUseVirtualWatts = false;
@@ -875,8 +880,8 @@ async function connectGATT(device) {
 
 async function autoReconnect(device) {
     alert("Disconnected: " + device.name + " reconnecting...");
-    console.log("Disconnected: " + device.name + " reconnecting...");
-    setTimeout(() => connectGATT(device).catch((e) => console.log("Reconnect failed")), 2000);
+    logger(3,"Disconnected: " + device.name + " reconnecting...");
+    setTimeout(() => connectGATT(device).catch((e) => logger(3,"Reconnect failed")), 2000);
 }
 
 /* ---------------- HR ---------------- */
@@ -984,7 +989,7 @@ export async function sWorkout(value) {
     bWorkout = true;
     workoutIndex = 0;
     totalWorkoutTime = 0;
-    console.log("workout index " + workoutIndex);
+    logger(3,"workout index " + workoutIndex);
     document.getElementById("table1").rows[0].cells[4].style.display = "table-cell";
     document.getElementById("table1").rows[1].cells[4].style.display = "table-cell";
     document.getElementById("table1").rows[0].cells[5].style.display = "table-cell";
@@ -993,7 +998,7 @@ export async function sWorkout(value) {
     document.getElementById("table1").rows[1].cells[6].style.display = "table-cell";
     if (bWorkout) {
         hideShowERG();
-        console.log("zwoArray len " + zwoArray.length);
+        logger(3,"zwoArray len " + zwoArray.length);
         //document.getElementById('timeleft').innerHTML = zwoArray[0].duration;
         document.getElementById("tleftl").innerHTML = "<b>Time Left(" + 0 + ")</b>";
         workoutTime = Number(zwoArray[0].duration * 1000);
@@ -1003,14 +1008,14 @@ export async function sWorkout(value) {
         document.getElementById("twatts").style.backgroundColor = powerColor(tpower);
         //document.getElementById('twatts').style.opacity=0.5;
 
-        console.log("Workout time " + workoutTime + " twatts " + document.getElementById("twatts").textContent);
+        logger(3,"Workout time " + workoutTime + " twatts " + document.getElementById("twatts").textContent);
     }
     // workoutIndex=-1;
 }
 
 /* no default
 if (!emailAddress) {
-     console.log("Default email");
+     logger(5,"Default email");
     emailAddress="";
       localStorage.setItem('.emailAddress', emailAddress);
 }
@@ -1024,18 +1029,18 @@ export let powerFTP=180;
 
 let calibrationPct = localStorage.getItem(".calibrationPct");
 let bUseMetric = localStorage.getItem("checkboxState");
-console.log("Use Metric " + bUseMetric);
+logger(3,"Use Metric " + bUseMetric);
 let bUseSmoothGrade = localStorage.getItem("checkboxSmoothGrade");
-console.log("Use Smooth Grade " + bUseSmoothGrade);
+logger(3,"Use Smooth Grade " + bUseSmoothGrade);
 let bUseZeroRPMWatts = localStorage.getItem("checkboxZeroRPMWatts");
-console.log("Use RPM 0 Watts 0 " + bUseZeroRPMWatts);
+logger(3,"Use RPM 0 Watts 0 " + bUseZeroRPMWatts);
 
 if (bUseMetric === "false") {
-    console.log("bUseMetric1=false"); //correct
+    logger(3,"bUseMetric1=false"); //correct
     bMetric = false;
 }
 if (bUseMetric === "true") {
-    console.log("bUseMetric2=true");
+    logger(3,"bUseMetric2=true");
     bMetric = true;
 }
 
@@ -1057,87 +1062,94 @@ emailAddress = localStorage.getItem(".emailAddress");
 windSpeed = Number(localStorage.getItem(".windSpeed"));
 //coefficientRR =  Number(localStorage.getItem(".coefficientRR"));
 //coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
+debugLevel =  Number(localStorage.getItem(".debugLevel"));
 minrpm = Number(localStorage.getItem(".minRPM"));
 maxrpm = Number(localStorage.getItem(".maxRPM"));
 minimumIncline = Number(localStorage.getItem(".minGrade"));
 maximumIncline = Number(localStorage.getItem(".maxGrade"));
 
 if (!riderAge) {
-    console.log("Default age");
+    logger(3,"Default age");
     riderAge = 25.0;
     localStorage.setItem(".age", riderAge);
 }
 if (!trainerDifficulty) {
-    console.log("Default trainer difficulty");
+    logger(3,"Default trainer difficulty");
     trainerDifficulty = 50.0;
     localStorage.setItem(".trainerDifficulty", trainerDifficulty);
 }
 if (!riderWeight) {
-    console.log("Default weight");
+    logger(3,"Default weight");
     riderWeight = 150.0;
 
     localStorage.setItem(".weight", riderWeight);
 }
 if (!syncSeconds) {
-    console.log("Default sync Seconds");
+    logger(3,"Default sync Seconds");
     syncSeconds = 10;
     localStorage.setItem(".syncSeconds", syncSeconds);
 }
 if (!pauseSpeed) {
-    console.log("Default pause speed");
+    logger(3,"Default pause speed");
     pauseSpeed = 1.0;
     localStorage.setItem(".pauseSpeed", pauseSpeed);
 }
 if (!powerFTP) {
-    console.log("Default ftp");
+    logger(3,"Default ftp");
     powerFTP = 200.0;
     localStorage.setItem(".powerFTP", powerFTP);
 }
 if (!maxHR) {
-    console.log("Default max hr");
+    logger(3,"Default max hr");
     maxHR = 200.0;
     localStorage.setItem(".maxHR", maxHR);
 }
 if (!minHR) {
-    console.log("Default min hr");
+    logger(3,"Default min hr");
     minHR = 60.0;
     localStorage.setItem(".minHR", minHR);
 }
 if (!windSpeed) {
-    console.log("Default windSpeed");
+    logger(3,"Default windSpeed");
     windSpeed = 0;
     localStorage.setItem(".windSpeed", windSpeed);
 }
 /*
 if (!coefficientRR) {
-     console.log("Default coefficientRR");
+     logger(5,"Default coefficientRR");
     coefficientRR=.006;
       localStorage.setItem('.coefficientRR', coefficientRR);
 }
 if (!coefficientWR) {
-     console.log("Default coefficientWR");
+     logger(5,"Default coefficientWR");
     coefficientWR=.50;
       localStorage.setItem('.coefficientWR', coefficientWR);
 }
+    */
+if (!debugLevel) {
+     logger(3,"Default debug level");
+    debugLevel=3;
+      localStorage.setItem('.debugLevel', debugLevel);
+}
  
- */
+ 
 if (!minrpm) {
-    console.log("Default minrpm");
+    logger(3,"Default minrpm");
     minrpm = 80;
     localStorage.setItem(".minRPM", minrpm);
 }
 if (!maxrpm) {
-    console.log("Default maxrpm");
+    logger(3,"Default maxrpm");
     maxrpm = 90;
     localStorage.setItem(".maxRPM", maxrpm);
 }
 if (!minimumIncline) {
-    console.log("Default minimumIncline");
+    logger(3,"Default minimumIncline");
     minimumIncline = -10;
     localStorage.setItem(".minGrade", minimumIncline);
 }
 if (!maximumIncline) {
-    console.log("Default maximumIncline");
+    logger(3,"Default maximumIncline");
     maximumIncline = 10;
     localStorage.setItem(".maxGrade", maximumIncline);
 }
@@ -1145,20 +1157,21 @@ if (!maximumIncline) {
 document.getElementById('trdiff').innerHTML = trainerDifficulty;
 document.getElementById('vgear').innerHTML = vgear;
 
-console.log("age " + riderAge);
-console.log("weight " + riderWeight);
-console.log("trainer difficulty " + trainerDifficulty);
-console.log("syncSeconds " + syncSeconds);
-console.log("pauseSpeed " + pauseSpeed);
-console.log("maxHR " + maxHR);
-console.log("minHR " + minHR);
-console.log("powerFTP " + powerFTP);
-console.log("emailAddress " + emailAddress);
-console.log("windSpeed " + windSpeed);
-console.log("coefficientRR " + coefficientRR);
-console.log("coefficientWR " + coefficientWR);
-console.log("AutoShift maxRPM " + maxrpm);
-console.log("AutoShift minRPM " + minrpm);
+logger(3,"age " + riderAge);
+logger(3,"weight " + riderWeight);
+logger(3,"trainer difficulty " + trainerDifficulty);
+logger(3,"syncSeconds " + syncSeconds);
+logger(3,"pauseSpeed " + pauseSpeed);
+logger(3,"maxHR " + maxHR);
+logger(3,"minHR " + minHR);
+logger(3,"powerFTP " + powerFTP);
+logger(3,"emailAddress " + emailAddress);
+logger(3,"windSpeed " + windSpeed);
+logger(3,"coefficientRR " + coefficientRR);
+logger(3,"coefficientWR " + coefficientWR);
+logger(3,"debug level " + debugLevel);
+logger(3,"AutoShift maxRPM " + maxrpm);
+logger(3,"AutoShift minRPM " + minrpm);
 
 
     let grade = 0.0
@@ -1343,7 +1356,7 @@ async function connectFTMS() {
     await trainerControl.connect();
     await trainerCommands.requestControl();
 
-    console.log("Device name " + trainerControl.device.name);
+    logger(3,"Device name " + trainerControl.device.name);
     trainerConnected = true
     	smartTrainerConnected = true
      bUseVirtualWatts=false;
@@ -1357,7 +1370,7 @@ async function connectFTMS() {
 
 function onConnected(event) {
     const device = event.target;
-    console.log(`Device ${device.name} is Connected.`);
+    logger(3,`Device ${device.name} is Connected.`);
 }
 
 
@@ -1372,11 +1385,11 @@ async function getFeatures() {
     //const service = await server.getPrimaryService('fitness_machine')
     const charact = await ftmsService.getCharacteristic('fitness_machine_feature')
     const data = await charact.readValue() // Returns a DataView object
-    console.log("Feature bytes " + data.byteLength)
+    logger(3,"Feature bytes " + data.byteLength)
 
     for (let j = 0; j < data.byteLength; j++) {
         const bits = data.getUint8(j, true)
-        console.log("byte " + j + " = " + bits + " " + dec2bin(bits))
+        logger(5,"byte " + j + " = " + bits + " " + dec2bin(bits))
     }
 
     const flags = data.getUint16(0, true)
@@ -1537,7 +1550,7 @@ async function connectHRM1(props) {
     })
     device .addEventListener('gattserverdisconnected', HRMonDisconnected);
   
-    console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
+    logger(3,`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     const service = await server.getPrimaryService('heart_rate')
     const char = await service.getCharacteristic('heart_rate_measurement')
@@ -1549,8 +1562,8 @@ async function connectHRM1(props) {
 }
  async function HRMonDisconnected() {
      const device = event.target;
-    console.log(`Device ${device.name} is Connected.`);
-        console.log('>HRM Bluetooth Device disconnected');
+    logger(3,`Device ${device.name} is Connected.`);
+        logger(3,'>HRM Bluetooth Device disconnected');
          alert('> HRM Bluetooth Device disconnected');
      }
  
@@ -1568,7 +1581,7 @@ async function connectRPM1(props) {
     document.getElementById("table1").rows[1].cells[14].style.display = "table-cell";
     */
     device .addEventListener('gattserverdisconnected', RPMonDisconnected);
-    console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
+    logger(3,`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     const service = await server.getPrimaryService('cycling_speed_and_cadence')
     const char = await service.getCharacteristic('csc_measurement')
@@ -1580,8 +1593,8 @@ async function connectRPM1(props) {
 }
  async function  RPMonDisconnected() {
       const device = event.target;
-    console.log(`Device ${device.name} is disonnected.`);
-        console.log('>RPM Bluetooth Device disconnected');
+    logger(3,`Device ${device.name} is disonnected.`);
+        logger(3,'>RPM Bluetooth Device disconnected');
          alert('> RPM Bluetooth Device disconnected');
      }
 
@@ -1593,7 +1606,7 @@ async function connectRSC1(props) {
         acceptAllDevices: false,
     })
      device .addEventListener('gattserverdisconnected', RSConDisconnected);
-    console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
+    logger(3,`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     const service = await server.getPrimaryService('running_speed_and_cadence')
     const char = await service.getCharacteristic('rsc_measurement')
@@ -1608,7 +1621,7 @@ async function connectRSC1(props) {
     return char
 }
  async  function RSConDisconnected() {
-        console.log('>RSC Bluetooth Device disconnected');
+        logger(3,'>RSC Bluetooth Device disconnected');
          alert('> RSC Bluetooth Device disconnected');
      }
 async function connectPM1(props) {
@@ -1620,7 +1633,7 @@ async function connectPM1(props) {
     })
      device .addEventListener('gattserverdisconnected', PMonDisconnected);
      
-    console.log(`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
+    logger(3,`%c\n👩🏼‍⚕️`, 'font-size: 82px;', 'Starting ...\n\n')
     const server = await device.gatt.connect()
     //const service = await server.getPrimaryService('heart_rate')
     //const char = await service.getCharacteristic('heart_rate_measurement')
@@ -1634,7 +1647,7 @@ async function connectPM1(props) {
     return char
 }
  async function  PMonDisconnected() {
-        console.log('>PM Bluetooth Device disconnected');
+        logger(3,'>PM Bluetooth Device disconnected');
          alert('> PM Bluetooth Device disconnected');
      }
 
@@ -1697,9 +1710,9 @@ function printPM(event) {
   let apwr =  blePowerMeterProcessor.getAveragePower();
   let rpm = blePowerMeterProcessor.getCadence();
   let NP = blePowerMeterProcessor.getNormalizedPower();
-  //console.log("Power: %.0fW | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n");
-  //console.log('Power: ${pwr} | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n');
-  console.log(`Power: ${pwr} W, Cadence: ${rpm ?? 'N/A'} RPM APower ${apwr} NP ${NP}`);
+  //logger(5,"Power: %.0fW | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n");
+  //logger(5,'Power: ${pwr} | Cadence: %.0f RPM | Avg: %.0fW | NP: %.0fW | L/R: %.0f / %.0f%n');
+  logger(3,`Power: ${pwr} W, Cadence: ${rpm ?? 'N/A'} RPM APower ${apwr} NP ${NP}`);
     /*
     processor.getInstantPower(),
     processor.getCadence(),
@@ -1740,7 +1753,7 @@ function printPM(event) {
         }
   }
 
-  console.log(`Power: ${power} W, Cadence: ${cadence ?? 'N/A'} RPM`);
+  logger(3,`Power: ${power} W, Cadence: ${cadence ?? 'N/A'} RPM`);
 }
 
 // Store previous values to compute cadence
@@ -1839,7 +1852,7 @@ function hrColor(heartRate) {
 export function initializeRoute() {
     /*
       let p1 = new GPXPoint(100.0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0);
-        console.log("new route");         
+        logger(3,"new route");         
     gpsArray[gpsIndex++] = p1;
     */
     if (gpsIndex > 0) {
@@ -1866,7 +1879,7 @@ export async function processRPM(rpm) {
 
         let averpm = totalRPM / totalRPMPts;
         document.getElementById("averpm").innerHTML = averpm.toFixed(0);
-        //console.log("ave rpm "+arpm + " " + appStart);
+        //logger(5,"ave rpm "+arpm + " " + appStart);
     }
 }
 
@@ -1876,7 +1889,7 @@ export async function processPower(power) {
     //let workoutIndex=0;
     // gpsTimeArray = Array(gpxArray.length);
     if (gpsArray === undefined) {
-        console.log("gpsArray undefined");
+        logger(5,"gpsArray undefined");
         //gpsIndex=0;
         gpsArray = Array(gpxArray.length * 10); // for upto 10 laps
 
@@ -1892,7 +1905,7 @@ export async function processPower(power) {
         /*
         if (bWorkout) {
             hideShowERG();
-            console.log("zwoArray len "+zwoArray.length);
+            logger(5,"zwoArray len "+zwoArray.length);
          //document.getElementById('timeleft').innerHTML = zwoArray[workoutIndex].duration;
               document.getElementById('tleftl').innerHTML="<b>Time Left("+(workoutIndex)+")</b>";
         workoutTime=Number(zwoArray[0].duration*1000);
@@ -1900,7 +1913,7 @@ export async function processPower(power) {
              let tpower=Number(zwoArray[workoutIndex].power)*powerFTP;
         document.getElementById('twatts').innerHTML = (tpower).toFixed(0);
              document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
-            console.log("Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
+            logger(5,"Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
             }
             */
     }
@@ -1913,7 +1926,7 @@ export async function processPower(power) {
     document.getElementById("watts").style.backgroundColor = powerColor(power);
     //document.getElementById('twatts').style.opacity=0.5;
     document.getElementById("vgear").innerHTML = vgear;
-    // console.log(power);
+    // logger(5,power);
 
     if (appStart) {
         normalizedPower.addPower(power);
@@ -1925,7 +1938,7 @@ export async function processPower(power) {
         document.getElementById("pcal").innerHTML = pcalories.toFixed(0);
 
         videoSeconds2add = Number(document.getElementById("secs2add").value);
-        //console.log("seconds2add " + seconds2add);
+        //logger(5,"seconds2add " + seconds2add);
 
         let distancem = 0;
         if (bMetric) {
@@ -1935,7 +1948,7 @@ export async function processPower(power) {
         }
 
         gradeIndex = findGPX(distancem);
-        console.log("distancem " + distancem + " index " + gradeIndex);
+        logger(5,"distancem " + distancem + " index " + gradeIndex);
 
         updateProgress(distancem, gpxArray[gpxArray.length - 1].distance);
 
@@ -1965,14 +1978,14 @@ export async function processPower(power) {
         } else {
             lapCounter++;
             // window.alert("lap ended");
-            console.log("lap " + lapCounter);
+            logger(3,"lap " + lapCounter);
 
             seekVideo(0, syncSeconds); // total length);
             gradeIndex = 0;
 
             let p1 = new GPXPoint(100.0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0);
-            console.log("route ended");
-            console.log(gpsIndex + " Lat " + p1.lat);
+            logger(3,"route ended");
+            logger(3,gpsIndex + " Lat " + p1.lat);
             gpsArray[gpsIndex++] = p1;
             startTimer(); //????????????????
             lastRouteSeconds = totalSeconds;
@@ -2003,7 +2016,7 @@ export async function processPower(power) {
             return;
         }
         if (gradeIndex < gpxArray.length - 1 && gradeIndex >= 0) {
-            /////////////console.log("i="+i);
+            /////////////logger(5,"i="+i);
             elevation = gpxArray[gradeIndex].ele;
             if (bMetric) {
                 mph = gpxArray[gradeIndex].mps * mps2kph;
@@ -2070,7 +2083,7 @@ export async function processPower(power) {
         let deltatime = (totalMSeconds - lastMilliSeconds) / 1000.0;
         speed = trainerPhysics.updateSpeed(speed, power, deltatime, p); // mps
         velocity = speed;
-        console.log("velocity " + velocity + " dt " + deltatime + " power " + power);
+        logger(5,"velocity " + velocity + " dt " + deltatime + " power " + power);
         lastMilliSeconds =  totalMSeconds ;
     } else {
         velocity = speedFromPower(power, grade * 100.0, elevation, weight, coefficientRR); // mps
@@ -2110,7 +2123,7 @@ export async function processPower(power) {
         if (appPaused == 1) {
             appPaused = 0;
             startTimer();
-            console.log("Starting");
+            logger(3,"Starting");
         }
     } else {
         //< pause speed
@@ -2118,7 +2131,7 @@ export async function processPower(power) {
         } else {
             appPaused = 1;
             startTimer();
-            console.log("Pausing");
+            logger(3,"Pausing");
         }
     }
 
@@ -2134,7 +2147,7 @@ export async function processPower(power) {
         totalDistance = (totalSpeed / totalSpeedPts) * (totalSeconds / 3600);
         document.getElementById("distance").innerHTML = totalDistance.toFixed(2);
 
-        console.log("videoSeconds2add " + videoSeconds2add);
+        logger(5,"videoSeconds2add " + videoSeconds2add);
 
         let gpxSeconds = gpxArray[gradeIndex].seconds - gpxArray[0].seconds + videoSeconds2add;
         seekVideo(gpxSeconds, syncSeconds);
@@ -2148,7 +2161,7 @@ export async function processPower(power) {
                 totalVelocityPts = 0;
                 totalMph = 0;
                 totalMphPts = 0;
-                console.log("ratio " + ratio.toFixed(1) + " aVelo " + aVelo.toFixed(1) + " aMph " + aMph.toFixed(1));
+                logger(5,"ratio " + ratio.toFixed(1) + " aVelo " + aVelo.toFixed(1) + " aMph " + aMph.toFixed(1));
             }
             if (totalVelocityPts == 0) {
                 changeVideoSpeed(ratio, gpxSeconds, totalSeconds);
@@ -2158,7 +2171,7 @@ export async function processPower(power) {
                 ratio = velocity / mph;
             }
 
-            console.log(
+            logger(5,
                 "ratio " + ratio.toFixed(1) + "orig mph " + mph.toFixed(1) + " calc mph " + velocity.toFixed(1)
             );
             changeVideoSpeed(ratio, gpxSeconds, totalSeconds);
@@ -2170,7 +2183,7 @@ export async function processPower(power) {
 
             let effectiveGrade = (grade * 100.0) * (trainerDifficulty / 100.0) + vgear;
             //document.getElementById('gradel').innerHTML = effectiveGrade.toFixed(1);
-            console.log(
+            logger(5,
                 "effect grade " +
                     effectiveGrade +
                     " grade " +
@@ -2210,9 +2223,9 @@ function gradeAutoShift(nextGrade) {
         let currentGrade = grade * 100.0;
         nextGrade = nextGrade * 100.0;
 
-        console.log("Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1));
+        logger(5,"Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1));
         vgear = -Math.round(nextGrade * (trainerDifficulty / 100.0)) + baseVgear;
-        console.log("***Shift  " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
+        logger(5,"***Shift  " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
         if (vgear < minimumIncline + baseVgear) {
             vgear = minimumIncline + baseVgear;
         }
@@ -2220,7 +2233,7 @@ function gradeAutoShift(nextGrade) {
         if (vgear > maximumIncline + baseVgear) {
             vgear = maximumIncline + baseVgear;
         }
-        console.log("***Shift  " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
+        logger(5,"***Shift  " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
     }
 }
 function gradeAutoShift2(nextGrade) {
@@ -2228,32 +2241,32 @@ function gradeAutoShift2(nextGrade) {
         let currentGrade = grade * 100.0;
         nextGrade = nextGrade * 100.0;
         let diff = (nextGrade - currentGrade) * (trainerDifficulty / 100.0);
-        console.log("Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1) + " diff " + diff);
+        logger(5,"Grade " + currentGrade.toFixed(1) + " nextGrade" + nextGrade.toFixed(1) + " diff " + diff);
         if (nextGrade > currentGrade && diff > 1.0) {
             // uphill
-            console.log("***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
+            logger(5,"***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
             vgear -= Math.round(nextGrade - currentGrade);
-            console.log("***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
+            logger(5,"***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
             if (vgear < minimumIncline) {
                 vgear = minimumIncline;
             }
-            console.log("***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
+            logger(5,"***Shift down " + Math.round(nextGrade - currentGrade) + " vgear " + vgear);
         } else if (currentGrade > nextGrade && diff < -1.0) {
             // downhill
-            console.log("***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
+            logger(5,"***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
             vgear += Math.round(currentGrade - nextGrade);
-            console.log("***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
+            logger(5,"***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
             if (vgear > maximumIncline) {
                 vgear = maximumIncline;
             }
-            console.log("***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
+            logger(5,"***Shift up " + Math.round(currentGrade - nextGrade) + " vgear " + vgear);
         }
     }
 }
 function initStartLoc() {
     initialDistance = Number(document.getElementById("initialdistance").value);
-    console.log("initialDistance " + document.getElementById("initialdistance").value);
-    console.log(
+    logger(5,"initialDistance " + document.getElementById("initialdistance").value);
+    logger(5,
         "totalDistance " +
             totalDistance +
             " laps " +
@@ -2269,10 +2282,10 @@ function initStartLoc() {
             i = findGPX(initialDistance * miles2meters);
         }
         let gpxSeconds = gpxArray[i].seconds - gpxArray[0].seconds + videoSeconds2add;
-        console.log("initLoc gpxSeconds " + gpxSeconds);
+        logger(5,"initLoc gpxSeconds " + gpxSeconds);
         seekVideo(gpxSeconds, syncSeconds);
     } else {
-        console.log("Invalid initLoc");
+        logger(5,"Invalid initLoc");
     }
 }
 
@@ -2286,19 +2299,19 @@ export function addGPSPoint(len, lat, lon, ele, secs, grade, distance, mps, gpsT
     const currentDate = new Date();
     const gpsTime = currentDate.toISOString(); //"2011-10-05T14:48:00.000Z"
     let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, distance, mps, gpsTime, heartRate, power);
-    console.log(gpsIndex + " Lat " + p1.lat);
+    logger(5,gpsIndex + " Lat " + p1.lat);
     gpsArray[gpsIndex++] = p1;
 }
 export function updateProgress(distance, totalDistance) {
     let currentProgress = (distance * 100) / totalDistance;
-    //console.log("**********Dist "+ distance + " total "+totalDistance);
+    //logger(5,"**********Dist "+ distance + " total "+totalDistance);
     const progressBar = document.getElementById("progress");
     progressBar.style.width = currentProgress + "%";
 }
 
 export function startTimer() {
     //try {
-    console.log("start timer..." + appStart);
+    logger(5,"start timer..." + appStart);
 
     if (!trainerConnected && heartRate == 0) {
         alert("Connect a trainer, power meter, heart rate monitor or check VP (Virtual Power)");
@@ -2310,7 +2323,7 @@ export function startTimer() {
     }
     if (!appStart) {
         beginTime = Date.now();
-        console.log("starting timer..." + beginTime);
+        logger(5,"starting timer..." + beginTime);
         appStart = true;
         playVideo();
         startTime();
@@ -2318,7 +2331,7 @@ export function startTimer() {
         document.getElementById("startbutton").className = "fa fa-stop";
         document.getElementById("buttons").style.display = "none";
     } else {
-        console.log("stoping timer...");
+        logger(5,"stoping timer...");
         appStart = false;
         stopTime();
         pauseVideo();
@@ -2350,7 +2363,7 @@ async function printTime() {
     processVirtualWatts();
 
     try {
-        //   console.log('print time ' + millis);
+        //   logger(5,'print time ' + millis);
         beginTime = Date.now();
         //let seconds=Math.round(millis / 1000)
         totalMSeconds = totalMSeconds + millis;
@@ -2358,7 +2371,7 @@ async function printTime() {
         const date = new Date(null);
         date.setSeconds(totalSeconds); // specify value for SECONDS here
         const result = date.toISOString().slice(11, 19);
-        //console.log("time: "+result)
+        //logger(5,"time: "+result)
         document.getElementById("timelbl").innerHTML = result;
     } catch (err) {
         console.error("error occured: ", err.message);
@@ -2377,7 +2390,7 @@ function processWorkout(millis) {
             document.getElementById("iwatts").innerHTML = (iw / ic).toFixed(0);
             setTimeLeft();
         }
-        ///////////// console.log("Workout time "+workoutTime+" twatts ##########"+document.getElementById('twatts').textContent+"#"
+        ///////////// logger(5,"Workout time "+workoutTime+" twatts ##########"+document.getElementById('twatts').textContent+"#"
         ///////////            +"#"+document.getElementById('timeleft').textContent+"###############");
     }
 }
@@ -2395,7 +2408,7 @@ function skipWorkoutInterval() {
         setTimeout(function () {
             document.getElementById("alrt").innerHTML = "";
         }, 5000);
-        console.log("Workout finished");
+        logger(5,"Workout finished");
         document.getElementById("timeleft").innerHTML = "";
         document.getElementById("twatts").innerHTML = "";
         document.getElementById("iwatts").innerHTML = "";
@@ -2422,7 +2435,7 @@ function skipWorkoutInterval() {
         document.getElementById("twatts").innerHTML = tpower.toFixed(0);
         document.getElementById("twatts").style.backgroundColor = powerColor(tpower);
         //document.getElementById('twatts').style.opacity=0.5;
-        console.log("Workout time " + workoutTime + " twatts " + document.getElementById("twatts").textContent);
+        logger(5,"Workout time " + workoutTime + " twatts " + document.getElementById("twatts").textContent);
         document.getElementById("alrt").innerHTML =
             "<b>Decrease Power to </b>" +
             document.getElementById("twatts").textContent +
@@ -2510,9 +2523,9 @@ function saveData() {
     try {
     //const data = new Blob(['Hello, world!'], { type: 'text/plain' });
     let newftp=normalizedPower.calcFTP().toFixed(0);
-     console.log("New ftp " + newftp);
+     logger(5,"New ftp " + newftp);
     if (newftp > powerFTP) {
-        console.log("New ftp " + newftp);
+        logger(5,"New ftp " + newftp);
          //alert("New ftp " + newftp);
         if (confirm("New FTP " + powerFTP + "=>" + newftp + ", update now?")) {
              localStorage.setItem('.powerFTP', newftp);
@@ -2665,10 +2678,10 @@ function getGPS() {
         activity +
         "</type>\n<trkseg>\n";
     let footer = "</trkseg>" + "</trk>" + "</gpx>";
-    console.log("gpsArray size " + gpsIndex);
+    logger(5,"gpsArray size " + gpsIndex);
 
     for (let j = 0; j < gpsIndex - 1; j++) {
-        //    console.log("j "+j);
+        //    logger(5,"j "+j);
         if (gpsArray[j].lat > 99.0) {
             //text += "</trkseg>\n "+"<trk>" +"<name>" +"Virtual " + activity +"</name><type>" + activity + "</type><trkseg>\n";  // start a new trk
             text += "</trkseg><trkseg>\n"; // start a new segment
