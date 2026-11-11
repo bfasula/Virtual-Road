@@ -366,6 +366,7 @@ function processXML(response, file, description) {
 	let lastlat = 0;
 	let lastlon = 0;
 	let totaldistancem = 0;
+    let totalSeconds= 0;
 	let lastsecs = 0;
 	let secs = 0;
 	gpxArray = Array(links.length);
@@ -396,13 +397,14 @@ function processXML(response, file, description) {
 			} else {
 				var mytime = timeElement.textContent;
 				secs = timeToSeconds(mytime);
-               // logger(5,"Time "+mytime+" secs "+secs);
+                logger(7,"Time "+mytime+" secs "+secs);
 			}
 
 			let distancem = 0
 			var grade = 0
 			var smoothGrade = 0
 			var mps = 0;
+           
 
 
 		    //let smoothEle=smoothElevation(Number(ele), i);
@@ -443,6 +445,7 @@ function processXML(response, file, description) {
                
 				// logger(5,"meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
 				mps = distancem / (secs - lastsecs);
+                totalSeconds += secs-lastsecs;
 				///////////////////////////////mps=smoothMps(mps,i); 12/25/25
 				//logger(5,"mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
 				//constructor(lat, lon, ele,seconds, grade, distance, mps) {
@@ -471,7 +474,7 @@ function processXML(response, file, description) {
 			      +",smgrade " + (smoothGrade*100.0).toFixed(2)
 			            +",grade " + (grade*100.0).toFixed(2));
 			*/
-
+           
 			lastSmoothEle = smoothEle;
 			lastele = ele;
 			lastlon = lon;
@@ -482,6 +485,7 @@ function processXML(response, file, description) {
 	} // end loop
 	logger(3,"total meters " + totaldistancem.toFixed(2));
 	logger(3,"total miles " + (totaldistancem / 1000 * .62).toFixed(2));
+    logger(3,"total seconds " + totalSeconds);
 	logger(3,"total points " + gpxIndex);
 	logger(3,"gpxArray size " + gpxArray.length);
     /*
@@ -513,14 +517,22 @@ logger(5,classifyResult);
          routeDesc=description;
          logger(3,routeDesc);
          }
+    let hours = totalSeconds / 3600.0;
 	if (bMetric === 'true') {
+        let kilometers= totaldistancem / 1000;
+        let kph = kilometers / hours;
 		document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " " + routeType + " - "
-            + (totaldistancem / 1000).toFixed(1) + " KM " ;
+            + (kilometers).toFixed(1) + " KM " + kph.toFixed(0) + " KPH";
+        logger(3,filename + " " + (kilometers).toFixed(1) + " KM ");
+        logger(3,filename + " " + (kph).toFixed(1) + " KPH ");
 	} else {
+        let miles = totaldistancem / 1609.344;
+        let mph = miles / hours;
         document.getElementById('pctlbl').innerHTML = "."+ routeDesc + " "   + routeType + " - "
-            + (totaldistancem / 1609.344).toFixed(1) + " Miles " ;
+            + (miles).toFixed(1) + " Miles " +mph.toFixed(0)+ " MPH";
 			
-		logger(3,filename + " " + (totaldistancem / 1609.344).toFixed(1) + " Miles ");
+		logger(3,filename + " " + (miles).toFixed(1) + " Miles ");
+        logger(3,filename + " " + (mph).toFixed(1) + " MPH ");
 	}
 	try {
 		drawElevation(hoverText);
