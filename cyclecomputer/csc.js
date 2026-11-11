@@ -9,7 +9,27 @@ let lastWheelRevolutions = 0;
 let wheelSize = 2096.0;
 let lWheelTime = 0;
 let lastDistance = 0;
+
+let lastCrankAtMs = null;
+let lastCrankIntervalMs = 0;
+
  let i=0;
+/*
+To detect stopping later, increase the 2.5 multiplier. For example, change it to 3.5:
+That waits longer after the last crank event before setting rpm to zero. The 2500 is a minimum timeout; raise that too if you want a longer delay even at faster cadences.
+*/
+setInterval(() => {
+  if (lastCrankAtMs === null) return;
+
+  const timeoutMs = Math.max(2500, lastCrankIntervalMs * 2.5);
+
+  if (Date.now() - lastCrankAtMs > timeoutMs) {
+    rpm = 0;
+    console.log("rpm 0");
+      processRPM(rpm);
+  }
+}, 250);
+
 export function printCSC(event) {
    
        i=0;
@@ -36,9 +56,15 @@ export function printCSC(event) {
 
             let revs = crankRevolutions - lastCrankRevolutions;
             let duration = (crankTime - lastCrankTime) / 1024;
-            
+            /*
             if(duration > 0) {
                 rpm = (revs / duration) * 60;
+            }
+            */
+           if (revs > 0 && duration > 0) {
+            rpm = (revs / duration) * 60;
+            lastCrankIntervalMs = (duration / revs) * 1000;
+            lastCrankAtMs = Date.now();
             }
 
             lastCrankRevolutions = crankRevolutions;
@@ -51,25 +77,18 @@ export function printCSC(event) {
 function wheelData(hasWheelData) {
         if (hasWheelData) {
           modifyTrainerConnected(true);
-           // console.log("\nhasWheelData");
-                //long newTotalWheelRevolutions =0;
-            
-                //long wheelTime = 0;
-
-                //format = BluetoothGattCharacteristic.FORMAT_UINT32;
-                //newTotalWheelRevolutions = characteristic.getIntValue(format, i);
+           
                 const wheelRevolutions = event.target.value.getUint32(i,true)
-            //console.log("wheelRevolutions "+wheelRevolutions);
+           
                 i+=4;
-                //format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                //wheelTime = characteristic.getIntValue(format, i);
+                
                 const wheelTime  = event.target.value.getUint16(i,true)
-             //console.log("wheelTime "+wheelTime + " lastWheelTime "+lastWheelTime);
+            
                 i+=2;
             // Circumference = 2 * pi * radius, or just pi * diameter
                 // However, our wheel diameter is in mm, whereas we want distance in m
                 if (lastWheelTime == wheelTime) {
-                   // console.log("Dup wheel record");
+                 
                     return;
                 }
             if(lastWheelTime > wheelTime) {
@@ -89,7 +108,7 @@ function wheelData(hasWheelData) {
                         } else {
                             netWheelTime = (64 - lastWheelTimeInSeconds) +  wheelTimeInSeconds;
                         }
-             //   console.log("netWheelTime "+netWheelTime);
+             
                         let netdistance =0.0; // miles
 
                         netdistance = ((wheelRevolutions - lastWheelRevolutions)
@@ -97,18 +116,11 @@ function wheelData(hasWheelData) {
                         // current speed mph
                         if (Math.abs(netWheelTime) > 0) {
                             let speed = netdistance / (Math.abs(netWheelTime)/3600.0);
-                            //txtSpeed.setText(String.format(Locale.US,"%.1f",cscdata.speed));
-                            //if (!MainActivity.powerConnected) {
-                               // console.log("speed mph "+speed);
+                            
                                 let watts = computeWatts(speed);
-                              //  console.log("watts "+watts);
+                              
                                 processPower(Number(watts));
-                                //powerZone = cscdata.computePowerZone(cscdata.watts);
-                                //npCalculator.addValue( cscdata.watts);
-                            //}
-                          //  console.log("speed " + speed + " watts " + watts);
-                            //txtWatts.setText(String.format("%.0f",cscdata.watts)+"/"+cscdata.powerZone);
-                          //  console.log("netdist " + netdistance + " netwheeltime " + netWheelTime);
+                                
                         }
                
             }
