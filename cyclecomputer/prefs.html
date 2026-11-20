@@ -64,7 +64,7 @@
                  <td>           <input type="text" class="emailAddress" placeholder="Enter Email Address here"/>
   <button style="background-color: blue; color: white;" class="saveEmailAddressBtn">Save Email Address</button></td>
                                     
-                                      <!--tr>
+                                      <tr>
                                            <td> <h2 class="userCoefficientRR">coefficientRR:</h2></td>
                   <td>           <input type="text" class="coefficientRR" placeholder="Enter coefficientRR here"/>
   <button style="background-color: blue; color: white;" class="savecoefficientRRBtn">Save coefficientRR</button></td>                                        
@@ -72,7 +72,7 @@
                                            <td> <h2 class="userCoefficientWR">coefficientWR:</h2></td>
                     <td>           <input type="text" class="coefficientWR" placeholder="Enter coefficientWR here"/>
   <button style="background-color: blue; color: white;" class="savecoefficientWRBtn">Save coefficientWR</button></td>
-</tr-->
+</tr>
                                       <tr>
                                            <td> <h2 class="userDebugLevel">coefficientWR:</h2></td>
                     <td>           <input type="text" class="debugLevel" placeholder="Enter Debug Level here"/>
@@ -210,7 +210,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   userEmailAddressText.textContent = "Email Address: "+emailAddress;
   localStorage.setItem('.emailAddress', emailAddress);
 });
-/*
+
                                  saveCoefficientRRButton.addEventListener('click', () => {
   const coefficientRR = document.querySelector('.coefficientRR').value;
   userCoefficientRRText.textContent = "coefficientRR: "+coefficientRR;
@@ -221,7 +221,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   userCoefficientWRText.textContent = "coefficientWR: "+coefficientWR;
   localStorage.setItem('.coefficientWR', coefficientWR);
 });
-          */
+          
 
                      saveDebugLevelButton.addEventListener('click', () => {
   const debugLevel = document.querySelector('.debugLevel').value;
@@ -343,7 +343,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
     userEmailAddressText.textContent = 'No email address data in local storage';
   }
 }
-/*
+
               function displayCoefficientRR() {
   const coefficientRRFromLocalStorage = localStorage.getItem('.coefficientRR');
 
@@ -362,7 +362,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
     userCoefficientWRText.textContent = 'No coefficientWR data in local storage';
   }
 }
-          */
+          
 
           function displayDebugLevel() {
   const debugLevelFromLocalStorage = localStorage.getItem('.debugLevel');
@@ -422,8 +422,8 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
            displaymaxHR();
            displaypowerFTP();
           displayEmailAddress();
-          //displayCoefficientRR();
-         //  displayCoefficientWR();
+          displayCoefficientRR();
+           displayCoefficientWR();
           displayDebugLevel();
           displayMaxRPM();
           displayMinRPM();

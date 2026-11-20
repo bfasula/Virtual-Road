@@ -1,23 +1,27 @@
-export function speedFromWatts(watts, grade) {
+export function speedFromWatts(watts, grade, riderkg, bikekg, crr, cda) {
         //Frontal area A(ft2)  5.4788
 let G=grade;
 
 let rho=1.226; // air density
 
-let cda = .50;  // coefficeint of drag
+//let cda = .50;  // coefficeint of drag
 let g=9.8067; //The gravitational force constant g is 9.8067 (m/s2).
 let a = 0.5 * cda * rho;
 let vhw = 0.0; // headwind
 let b = vhw * cda * rho;
-let bike=20.0/2.204623;
-let rider=150.0/2.204623;
+//let bike=20.0/2.204623;
+//let rider=150.0/2.204623;
+let bike=bikekg;
+let rider=riderkg;
+
 
 let W=bike+rider; // combined weight of you (the cyclist) and your bike is W (kg)
 
 //double crr=0.005; // coefficient of rolling resistance
-let crr=0.006; // coefficient of rolling resistance
+//let crr=0.006; // coefficient of rolling resistance
 let c=0.0;
-let dtl=2.0; // drive train loss percent
+//let dtl=2.0; // drive train loss percent
+let dtl=4.0; // drive train loss percent
 
 let d=0.0;
 let Q=0.0;
@@ -44,7 +48,7 @@ R=(9.0*a*b*c-27.0*a*a*d-2.0*b*b*b)/(54.0*a*a*a);
  }
         //System.out.println("a " + a + " b " + b + " c " + c + " d " + d);
         //System.out.println("c "+c +" d " +d + " Q " + Q + " R " + R + " s " + s+ " S "+S +" T " + T);
-        console.log("Watts " + watts + " speed " + Vgs*2.2369362920544);
+        //console.log("Watts " + watts + " mph" + (Vgs*2.2369362920544).toFixed(2));
     return Vgs;
     }  
 

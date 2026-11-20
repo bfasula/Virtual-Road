@@ -1060,8 +1060,8 @@ minHR = Number(localStorage.getItem(".minHR"));
 powerFTP = Number(localStorage.getItem(".powerFTP"));
 emailAddress = localStorage.getItem(".emailAddress");
 windSpeed = Number(localStorage.getItem(".windSpeed"));
-//coefficientRR =  Number(localStorage.getItem(".coefficientRR"));
-//coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
+coefficientRR =  Number(localStorage.getItem(".coefficientRR"));
+coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
 debugLevel =  Number(localStorage.getItem(".debugLevel"));
 minrpm = Number(localStorage.getItem(".minRPM"));
 maxrpm = Number(localStorage.getItem(".maxRPM"));
@@ -1114,18 +1114,18 @@ if (!windSpeed) {
     windSpeed = 0;
     localStorage.setItem(".windSpeed", windSpeed);
 }
-/*
+
 if (!coefficientRR) {
-     logger(5,"Default coefficientRR");
+     logger(3,"Default coefficientRR");
     coefficientRR=.006;
       localStorage.setItem('.coefficientRR', coefficientRR);
 }
 if (!coefficientWR) {
-     logger(5,"Default coefficientWR");
+     logger(3,"Default coefficientWR");
     coefficientWR=.50;
       localStorage.setItem('.coefficientWR', coefficientWR);
 }
-    */
+    
 if (!debugLevel) {
      logger(3,"Default debug level");
     debugLevel=3;
@@ -1945,10 +1945,12 @@ export async function processPower(power) {
             distancem = (totalDistance + initialDistance - lastRouteDistance) * 1000; // km2meters
         } else {
             distancem = (totalDistance + initialDistance - lastRouteDistance) * miles2meters;
+            logger(5,"totalDistance " + totalDistance.toFixed(2) + " initialDistance "+initialDistance.toFixed(2)
+                   + " lastRouteDistance "+ lastRouteDistance.toFixed(2));
         }
 
         gradeIndex = findGPX(distancem);
-        logger(5,"distancem " + distancem + " index " + gradeIndex);
+        logger(5,"miles"+ (distancem/miles2meters).toFixed(2) + " distancem " + distancem.toFixed(1) + " index " + gradeIndex);
 
         updateProgress(distancem, gpxArray[gpxArray.length - 1].distance);
 
@@ -2064,7 +2066,7 @@ export async function processPower(power) {
     }
 
   
-    
+   
     if ((powerMeterConnected || bUseTrainerPhysics)  // use calculation that includes inertia if only power meter
       // && totalPMWattsPts > 10
        ) { // seed new trainer physics model
@@ -2086,7 +2088,10 @@ export async function processPower(power) {
         logger(5,"velocity " + velocity + " dt " + deltatime + " power " + power);
         lastMilliSeconds =  totalMSeconds ;
     } else {
-        velocity = speedFromPower(power, grade * 100.0, elevation, weight, coefficientRR); // mps
+         // velocity = speedFromPower(power, grade * 100.0, elevation, weight, coefficientRR); // mps
+        var bikelbs=22.0;
+        var velocity = speedFromWatts(power, grade*100.0, weight, bikelbs/lbs2kg, coefficientRR, coefficientWR) ;      
+        logger(7,"watts " + power + " grade "+ (grade*100.0).toFixed(1) + " v2 " + (velocity*2.2369362920544).toFixed(2));
         speed = velocity;
     }
     
