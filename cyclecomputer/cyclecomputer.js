@@ -2145,7 +2145,7 @@ export async function processPower(power) {
        ) { // seed new trainer physics model
   
     const p = {
-        massKg:  weight,          // rider + bike
+        massKg:   weight+(bikelbs/lbs2kg),          // rider + bike
         //cda: 0.32,
         //crr: 0.004,
         cda:  coefficientWR,
