@@ -1,7 +1,7 @@
 import {printCSC} from './csc.js';
 import {printRSC} from './rsc.js';
 import {printWatts} from './ftms.js';
-import {dec2bin,getGradeColor} from './util.js';
+import {dec2bin,getGradeColor,calcWind,headwindComponent, bicycleSpeed, sampleWindSpeed, simulateWindDirection, randomNormal} from './util.js';
 import {CalculateVelocity} from './power_v_speed.js';
 import {speedFromPower} from './power_v_speed.js';
 import {playVideo,pauseVideo,changeVideoSpeed,seekVideo,syncsGreater, syncsLess,openFullscreen} from './playvideo.js';
@@ -42,6 +42,9 @@ let lastMilliSeconds = 0;
 let velocity = 0.0; // mph
 let speed = 0.0; // mps
 
+let bUseWind = true;
+//var windvelocity = 10.0; //mph
+var windDirection = 0.0; // from North
 let bUseShortcut = true;
 
 const modal = document.getElementById("modal");
@@ -393,7 +396,12 @@ document.addEventListener('keydown', function(event) {
         hideHud();
     }
     else if(event.keyCode == 87) { // letter w      
+         if (event.shiftKey) {
+             toggleWind();
+             } else {
         hideWorkout();
+              }
+       
     }
     else if(event.keyCode == 77) { // letter m
          if (event.shiftKey) {
@@ -600,6 +608,15 @@ function toggleCalibration() {
         logger(3,"Calibration on");
     }
 }
+function toggleWind() {
+    if (bUseWind) {
+        bUseWind = false;
+        logger(3,"bUseWind off");
+    } else {
+        bUseWind = true;
+        logger(3,"bUseWind on");
+    }
+}
 function toggleAutoShift() {
     if (!bUseAutoShift) {
         bUseAutoShift = true;
@@ -635,7 +652,7 @@ function hideShowERG() {
                 let grade = document.getElementById("grade").textContent;
                 trainerCommands.sendSimulation(
                     grade * 100.0 * (trainerDifficulty / 100.0) + vgear,
-                    windSpeed,
+                    headWindMPH/mps2mph,
                     coefficientRR,
                     coefficientWR
                 );
@@ -705,7 +722,8 @@ var maxHR;
 var minHR;
 
 let emailAddress="";
-var windSpeed;
+var windSpeed=0;
+var headWindMPH=0;
 //export var coefficientRR=0.005 // rolling resistance
 //export var coefficientWR=0.50;  // wind resistance
 export var coefficientRR=0.005 // rolling resistance
@@ -1059,7 +1077,7 @@ maxHR = Number(localStorage.getItem(".maxHR"));
 minHR = Number(localStorage.getItem(".minHR"));
 powerFTP = Number(localStorage.getItem(".powerFTP"));
 emailAddress = localStorage.getItem(".emailAddress");
-windSpeed = Number(localStorage.getItem(".windSpeed"));
+windSpeed = Number(localStorage.getItem(".windSpeed")); // mph
 coefficientRR =  Number(localStorage.getItem(".coefficientRR"));
 coefficientWR =  Number(localStorage.getItem(".coefficientWR"));
 debugLevel =  Number(localStorage.getItem(".debugLevel"));
@@ -1172,7 +1190,48 @@ logger(3,"coefficientWR " + coefficientWR);
 logger(3,"debug level " + debugLevel);
 logger(3,"AutoShift maxRPM " + maxrpm);
 logger(3,"AutoShift minRPM " + minrpm);
+/*
+var windvelocity=10.0;
+var winddirection=0.0;
+var bearing =270.0
+ var hdwmph = headwindComponent(bearing, windvelocity, winddirection) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
+bearing =0
+ hdwmph = headwindComponent(bearing, windvelocity, 0) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
 
+bearing =180
+ hdwmph = headwindComponent(bearing, windvelocity, 0) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
+
+bearing =90
+ hdwmph = headwindComponent(bearing, windvelocity, 0) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
+
+bearing =45
+ hdwmph = headwindComponent(bearing, windvelocity, 0) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
+
+bearing =315
+ hdwmph = headwindComponent(bearing, windvelocity, 0) ;
+            logger(5,"head wind " + hdwmph + " direction " + winddirection + " bearing " +bearing);
+
+              console.log(bicycleSpeed({
+  watts: 200,
+  grade: .01,
+  headwind: hdwmph/2.237, // mps
+  mass: 80,
+  crr:coefficientRR,
+  cda: coefficientWR
+}));
+      
+        var v2 = speedFromWatts(200, 1, 60, 20, coefficientRR, coefficientWR, hdwmph) ;     //mps  
+       
+        logger(7,"watts 200"  + " grade "+ (    1*100.0).toFixed(1) + " v2 " + (v2*2.2369362920544).toFixed(2));
+*/
+
+console.log("Wind bearing 0 Speed 10 WindDirecton 0 =" +headwindComponent(0, 10, 0) );
+console.log("Wind bearing 0 Speed 10 WindDirecton 180 =" +headwindComponent(0, 10, 180) );
 
     let grade = 0.0
     let elevation = 0.0
@@ -1194,6 +1253,10 @@ let totalDistance = 0
 let lastRouteDistance = 0;
 let lastRouteSeconds = 0;
 let totalMSeconds = 0;
+let totalWindPts = 0;
+var newWindSpeed = 0;
+var newWindDirection = 0;
+        
 var cpCharacteristic;
 var ftmsService;
 var ftmsDevice;
@@ -1915,7 +1978,15 @@ export async function processPower(power) {
              document.getElementById('twatts').style.backgroundColor=powerColor(tpower);
             logger(5,"Workout time "+workoutTime+" twatts "+document.getElementById('twatts').textContent);
             }
+            console.log(bicycleSpeed({
+  watts: 200,
+  grade: 0,
+  headwind: 5,
+  mass: 80,
+  cda: 0.32
+}));
             */
+   
     }
 
     if (bUseZeroRPMWatts && totalRPMPts > 0 && currentRpm == 0) {
@@ -2027,7 +2098,7 @@ export async function processPower(power) {
             }
             const currentDate = new Date();
             const gpsTime = currentDate.toISOString().slice(0, 19); //"2011-10-05T14:48:00.000Z"
-
+//constructor(lat, lon, ele, smoothEle, seconds, grade, smoothGrade, distance, mps, gpsTime, hr, power,rpm, bearing) {
             if (gpsTime !== lastGPSTime) {
                 let p1 = new GPXPoint(
                     gpxArray[gradeIndex].lat,
@@ -2041,7 +2112,9 @@ export async function processPower(power) {
                     gpxArray[gradeIndex].mps,
                     gpsTime,
                     heartRate,
-                    power
+                    power,
+                    0,
+                     gpxArray[gradeIndex].bearing
                 );
                 if (gradeIndex % markerFrequency == 0) {
                     try {
@@ -2090,8 +2163,32 @@ export async function processPower(power) {
     } else {
          // velocity = speedFromPower(power, grade * 100.0, elevation, weight, coefficientRR); // mps
         var bikelbs=22.0;
-        var velocity = speedFromWatts(power, grade*100.0, weight, bikelbs/lbs2kg, coefficientRR, coefficientWR) ;      
-        logger(7,"watts " + power + " grade "+ (grade*100.0).toFixed(1) + " v2 " + (velocity*2.2369362920544).toFixed(2));
+        //var hdwmph = 0.0; 
+       
+        if (bUseWind) {
+           
+            if (totalWindPts++ % 10 == 0) { // recalculation wind every 10 seconds
+                newWindSpeed=randomNormal(windSpeed, windSpeed/2); // mean 2, standard deviation 5
+                newWindDirection = simulateWindDirection(windDirection, 25);
+            }
+            //hdwmph = calcWind(0.0, gpxArray[gradeIndex].bearing, windvelocity, winddirection) ;
+            headWindMPH = headwindComponent(gpxArray[gradeIndex].bearing, newWindSpeed, newWindDirection) ;
+            logger(5,"head wind " + headWindMPH + " bearing " +gpxArray[gradeIndex].bearing);
+            
+            /*
+            console.log(bicycleSpeed({
+  watts: power,
+  grade: grade,
+  headwind: hdwmph/mps2mph, // mps
+  mass: weight+(bikelbs/lbs2kg),
+  crr:coefficientRR,
+  cda: coefficientWR
+}));
+*/
+        }
+        var velocity = speedFromWatts(power, grade*100.0, weight, bikelbs/lbs2kg, coefficientRR, coefficientWR,headWindMPH ) ;     //mps  
+       
+        logger(7,"watts " + power + " grade "+ (grade*100.0).toFixed(1) + " v2 " + (velocity*mps2mph).toFixed(2));
         speed = velocity;
     }
     
@@ -2199,7 +2296,7 @@ export async function processPower(power) {
                     vgear
             );
             if (Math.abs(effectiveGrade - lastEffectiveGrade) > 0.1) {
-                trainerCommands.sendSimulation(effectiveGrade, windSpeed, coefficientRR, coefficientWR);
+                trainerCommands.sendSimulation(effectiveGrade, headWindMPH/mps2mph, coefficientRR, coefficientWR);
             }
             lastEffectiveGrade = effectiveGrade;
         } // if smarttrainerconnected

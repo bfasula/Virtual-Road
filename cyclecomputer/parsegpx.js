@@ -16,7 +16,13 @@ import {
 	youtubeSetVideoId,
 	onYouTubeIframeAPIReady2
 } from './playvideo.js';
+import {
+    calcBearing
+} from './util.js';
+
 window.selectGPX = selectGPX
+
+let bRemoveStoppedLocation=false;
 let nElevations = 7;
 var lastElevations = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 let nGrades = 7;
@@ -147,7 +153,7 @@ file.type // file type ex. 'application/pdf'
 
 
 export class GPXPoint {
-	constructor(lat, lon, ele, smoothEle, seconds, grade, smoothGrade, distance, mps, gpsTime, hr, power) {
+	constructor(lat, lon, ele, smoothEle, seconds, grade, smoothGrade, distance, mps, gpsTime, hr, power,rpm, bearing) {
 		this.lat = lat;
 		this.lon = lon;
 		this.ele = ele;
@@ -161,10 +167,12 @@ export class GPXPoint {
 		this.hr = hr;
 		this.power = power;
 		this.rpm = rpm;
+        this.bearing = bearing;
 	}
 }
 
 export function printGPX(i) {
+    if (i < 0) {return;}
 	logger(5,"i " + i +
 		" lat " + gpxArray[i].lat +
 		" lon " + gpxArray[i].lon +
@@ -177,10 +185,34 @@ export function printGPX(i) {
 		" miles " + (gpxArray[i].distance / 1609.344).toFixed(2) +
 		" mps " + gpxArray[i].mps.toFixed(2) +
 		" mph " + (gpxArray[i].mps * 2.236936).toFixed(2) +
-		" time " + gpxArray[i].gpsTime);
+		" time " + gpxArray[i].gpsTime +
+    " hr " + gpxArray[i].hr +
+    " power " + gpxArray[i].power +
+    " rpm " + gpxArray[i].rpm +
+    " bearing " + gpxArray[i].bearing.toFixed(2));
+}
+export function printGPX2(i) {
+    if (i < 0) {return;}
+	logger(5,"i " + i +
+		" lat " + gpxArray2[i].lat +
+		" lon " + gpxArray2[i].lon +
+		" ele " + gpxArray2[i].ele +
+		" smoothEle " + (gpxArray2[i].smoothEle).toFixed(2) +
+		" seconds " + gpxArray2[i].seconds +
+		" grade " + (gpxArray2[i].grade * 100.0).toFixed(2) +
+		" smooth grade " + (gpxArray2[i].smoothGrade * 100.0).toFixed(2) +
+		" meters " + gpxArray2[i].distance.toFixed(2) +
+		" miles " + (gpxArray2[i].distance / 1609.344).toFixed(2) +
+		" mps " + gpxArray2[i].mps.toFixed(2) +
+		" mph " + (gpxArray2[i].mps * 2.236936).toFixed(2) +
+		" time " + gpxArray2[i].gpsTime +
+    " hr " + gpxArray2[i].hr +
+    " power " + gpxArray2[i].power +
+    " rpm " + gpxArray2[i].rpm +
+    " bearing " + gpxArray2[i].bearing.toFixed(2));
 }
 export function updateGPXArray(i, time) {
-	let p1 = new GPXPoint(gpxArray[i].lat, gpxArray[i].lon, gpxArray[i].ele, gpxArray[i].smoothEle, gpxArray[i].secs, gpxArray[i].grade, gpxArray[i].smoothGrade, gpxArray[i].totaldistancem, gpxArray[i].mps, time, 0, 0);
+	let p1 = new GPXPoint(gpxArray[i].lat, gpxArray[i].lon, gpxArray[i].ele, gpxArray[i].smoothEle, gpxArray[i].secs, gpxArray[i].grade, gpxArray[i].smoothGrade, gpxArray[i].totaldistancem, gpxArray[i].mps, gpxArray[i].gpsTime, gpxArray[i].power, gpxArray[i].hr, gpxArray[i].rpm, gpxArray[i].bearing);
 	gpxArray[i] = p1;
 }
 export function getGPS() {
@@ -219,6 +251,7 @@ export function getGPS() {
 	return text;
 }
 export var gpxArray;
+var gpxArray2;
 //export var gpsArray ;
 function timeToSeconds(datetime) {
 	//1970-01-01T00:00:00.000Z
@@ -231,7 +264,17 @@ function timeToSeconds(datetime) {
 	//logger(5,hrs + " " + mins + " " + secs + " "+tsecs);
 	return tsecs;
 }
+function secondsToTime(secs) {
+    let dateObj = new Date(secs * 1000);
 
+    let hours = dateObj.getUTCHours();
+    let minutes = dateObj.getUTCMinutes();
+    let seconds = dateObj.getUTCSeconds();
+
+return hours.toString().padStart(2, '0') + ':' +
+    minutes.toString().padStart(2, '0') + ':' +
+    seconds.toString().padStart(2, '0');
+    }
 
 export async function parseXML(filename) {
 	// XML String:
@@ -369,7 +412,11 @@ function processXML(response, file, description) {
     let totalSeconds= 0;
 	let lastsecs = 0;
 	let secs = 0;
-	gpxArray = Array(links.length);
+    let newsecs= 0;
+    let lastnewsecs = 0;
+    let starttime = 0;
+    let bearing = 0;
+	gpxArray2 = Array(links.length);
 
 
 
@@ -398,6 +445,7 @@ function processXML(response, file, description) {
 				var mytime = timeElement.textContent;
 				secs = timeToSeconds(mytime);
                 logger(7,"Time "+mytime+" secs "+secs);
+                if (i == 0) {starttime = secs;}
 			}
 
 			let distancem = 0
@@ -412,6 +460,8 @@ function processXML(response, file, description) {
 
 			if (lastele != 0) {
 				distancem = calculateDistance(lat, lon, lastlat, lastlon) * 1000;
+                bearing = calcBearing(lat, lon, lastlat, lastlon) ;
+               //if (bRemoveStoppedLocation && distancem > 1.0)  {continue;} // remove locations when stopped
 				totaldistancem = totaldistancem + distancem
 				if (distancem > 0.01) {
 					grade = (ele - lastele) / distancem;
@@ -445,49 +495,80 @@ function processXML(response, file, description) {
                
 				// logger(5,"meters " + distancem + " grade " + grade + " smooth " + smoothGrade);
 				mps = distancem / (secs - lastsecs);
+                if (lastsecs > 0) {
                 totalSeconds += secs-lastsecs;
+                    }
 				///////////////////////////////mps=smoothMps(mps,i); 12/25/25
-				//logger(5,"mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
+				logger(5,"mps "+mps + " netdist " + distancem + " secs " + (secs-lastsecs));
 				//constructor(lat, lon, ele,seconds, grade, distance, mps) {
 
 
 			}
+            
+            if (bRemoveStoppedLocation ) {
+                if (distancem > 1.0) {
+                newsecs = lastnewsecs + 1;
+                secs = lastsecs + 1;
+                    //constructor(lat, lon, ele, smoothEle, seconds, grade, smoothGrade, distance, mps, gpsTime, hr, power,bearing) {
+                let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps,"","","",bearing);
+			    gpxArray2[gpxIndex++] = p1;
+                    // printGPX2(gpxIndex-1);
+                    }
+                
+                } else {
+                
+                 newsecs = lastnewsecs + 1;
+                //secs = lastsecs + 1;
+               let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps, "","","","",bearing);
+			    gpxArray2[gpxIndex++] = p1;
+               //  printGPX2(gpxIndex-1);
+                }
              let point = { lat: lat, lon: lon, ele: ele };
             //let coord = [lat, lon, ele]; // Example coordinates (longitude, latitude)
             //let point = [Number(lat), Number(lon), Number(ele) ]; // 
             gpxPoints.push(point);
             
             
-			let p1 = new GPXPoint(lat, lon, ele, smoothEle, secs, grade, smoothGrade, totaldistancem, mps, "");
-			gpxArray[gpxIndex++] = p1;
-            logger(5,i+ " time " +mytime + " ele " + ele + " smoothEle "+smoothEle.toFixed(1) + " grade " + grade + " smoothGrade " + smoothGrade.toFixed(3));
-			/*
-			 logger(5,i+ " time " +mytime + " secs "+secs
+			
+			
+			 logger(5,i+ " time " +mytime + ",secs "+secs + ",etime "+ secondsToTime(secs-starttime) + ",newetime "+ secondsToTime(newsecs)
 			 +",mps "+mps.toFixed(2)  + ",mph " +( mps  * mps2mph).toFixed(2)
 			 +",meters "+distancem.toFixed(2)
 			   +",totalm "+totaldistancem.toFixed(2)     
-			          
+			      +",miles "+(totaldistancem/1609.44).toFixed(2)         
 			+",lat "+lat
 			+",lon "+lon
-			
+			+ ",smoothEle "+smoothEle.toFixed(1) 
 			+",elevation " +ele
-			      +",smgrade " + (smoothGrade*100.0).toFixed(2)
-			            +",grade " + (grade*100.0).toFixed(2));
-			*/
+			      +",smoothGrade " + (smoothGrade*100.0).toFixed(2)
+			            +",grade " + (grade*100.0).toFixed(2)
+              +",bearing " + bearing.toFixed(2));
+          
+			
            
 			lastSmoothEle = smoothEle;
 			lastele = ele;
 			lastlon = lon;
 			lastlat = lat;
 			lastsecs = secs;
+            lastnewsecs = newsecs;
 		}
 
 	} // end loop
+    if (bRemoveStoppedLocation)  {
+         totalSeconds=newsecs
+        } else {
+        totalSeconds=secs-starttime;
+    }
 	logger(3,"total meters " + totaldistancem.toFixed(2));
 	logger(3,"total miles " + (totaldistancem / 1000 * .62).toFixed(2));
     logger(3,"total seconds " + totalSeconds);
 	logger(3,"total points " + gpxIndex);
-	logger(3,"gpxArray size " + gpxArray.length);
+	logger(3,"gpxArray size " + gpxArray2.length);
+     gpxArray = Array(gpxIndex);
+    for (var i = 0; i < gpxIndex; i++) {
+        gpxArray[i]=gpxArray2[i];
+        }
     /*
 classifyResult = classifyRouteFromGPXPoints(gpxPoints);
 logger(5,classifyResult);
@@ -534,11 +615,13 @@ logger(5,classifyResult);
 		logger(3,filename + " " + (miles).toFixed(1) + " Miles ");
         logger(3,filename + " " + (mph).toFixed(1) + " MPH ");
 	}
+   
 	try {
 		drawElevation(hoverText);
 	} catch (error) {
 		console.error("Could not draw elevation:", error);
 	}
+    
 	return gpxArray;
 }
 

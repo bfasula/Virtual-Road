@@ -60,9 +60,9 @@
   <button style="background-color: blue; color: white;" class="savePowerFTPBtn">Save Power FTP</button></td>
                                 
                                 <tr>
-    <td> <h2 class="userEmailAddress">emailAddress:</h2></td>
-                 <td>           <input type="text" class="emailAddress" placeholder="Enter Email Address here"/>
-  <button style="background-color: blue; color: white;" class="saveEmailAddressBtn">Save Email Address</button></td>
+    <td> <h2 class="userWindSpeed">windSpeed:</h2></td>
+                 <td>           <input type="text" class="windSpeed" placeholder="Enter Wind Speed(mph) here"/>
+  <button style="background-color: blue; color: white;" class="saveWindSpeedBtn">Save Wind Speed</button></td>
                                     
                                       <tr>
                                            <td> <h2 class="userCoefficientRR">coefficientRR:</h2></td>
@@ -130,7 +130,7 @@ const userSyncSecondsText = document.querySelector('.usersyncSeconds');
           const userMaxHRText = document.querySelector('.usermaxHR');
           const userMinHRText = document.querySelector('.userminHR');
           const userPowerFTPText = document.querySelector('.userpowerFTP');
-          const userEmailAddressText = document.querySelector('.userEmailAddress');
+          const userWindSpeedText = document.querySelector('.userWindSpeed');
           const userCoefficientRRText = document.querySelector('.userCoefficientRR');
            const userCoefficientWRText = document.querySelector('.userCoefficientWR');
            const userDebugLevelText = document.querySelector('.userDebugLevel');
@@ -147,7 +147,7 @@ const savePSButton = document.querySelector('.savePSBtn');
            const saveMaxHRButton = document.querySelector('.saveMaxHRBtn');
 const saveMinHRButton = document.querySelector('.saveMinHRBtn');
            const savePowerFTPButton = document.querySelector('.savePowerFTPBtn');
-           const saveEmailAddressButton = document.querySelector('.saveEmailAddressBtn');
+           const saveWindSpeedButton = document.querySelector('.saveWindSpeedBtn');
            const saveCoefficientRRButton = document.querySelector('.saveCoefficientRRBtn');
           const saveCoefficientWRButton = document.querySelector('.saveCoefficientWRBtn');
            const saveDebugLevelButton = document.querySelector('.saveDebugLevelBtn');
@@ -205,10 +205,10 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
   localStorage.setItem('.powerFTP', powerFTP);
 });
           
-                          saveEmailAddressButton.addEventListener('click', () => {
-  const emailAddress = document.querySelector('.emailAddress').value;
-  userEmailAddressText.textContent = "Email Address: "+emailAddress;
-  localStorage.setItem('.emailAddress', emailAddress);
+                          saveWindSpeedButton.addEventListener('click', () => {
+  const windSpeed = document.querySelector('.windSpeed').value;
+  userWindSpeedText.textContent = "Wind Speed: "+windSpeed;
+  localStorage.setItem('.windSpeed', windSpeed);
 });
 
                                  saveCoefficientRRButton.addEventListener('click', () => {
@@ -334,13 +334,13 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
     userPowerFTPText.textContent = 'No Power FTP  data in local storage';
   }
 }
-          function displayEmailAddress() {
-  const emailAddressFromLocalStorage = localStorage.getItem('.emailAddress');
+          function displayWindSpeed() {
+  const windSpeedFromLocalStorage = localStorage.getItem('.windSpeed');
 
-  if (emailAddressFromLocalStorage) {
-    userEmailAddressText.textContent = "Email Address: "+emailAddressFromLocalStorage;
+  if (windSpeedFromLocalStorage) {
+    userWindSpeedText.textContent = "Wind Speed: "+windSpeedFromLocalStorage;
   } else {
-    userEmailAddressText.textContent = 'No email address data in local storage';
+    userWindSpeedText.textContent = 'No wind speed data in local storage';
   }
 }
 
@@ -421,7 +421,7 @@ const saveMinHRButton = document.querySelector('.saveMinHRBtn');
            displayminHR();
            displaymaxHR();
            displaypowerFTP();
-          displayEmailAddress();
+          displayWindSpeed();
           displayCoefficientRR();
            displayCoefficientWR();
           displayDebugLevel();
