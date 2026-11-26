@@ -348,7 +348,12 @@ document.addEventListener('keydown', function(event) {
       connectFTMS();
     }
     else if(event.keyCode == 80) { // letter p
-      connectPM();
+         if (event.shiftKey) {
+             toggleZeroRPMZeroPower();
+             } else {
+       connectPM();
+              }
+     
     }
     else if(event.keyCode == 72) { // letter h
       connectHRM();
@@ -608,6 +613,16 @@ function toggleCalibration() {
         logger(3,"Calibration on");
     }
 }
+
+function toggleZeroRPMZeroPower() {
+    if (bZeroRPMZeroPower) {
+        bZeroRPMZeroPower = false;
+        logger(3,"bZeroRPMZeroPower off");
+    } else {
+        bZeroRPMZeroPower = true;
+        logger(3,"bZeroRPMZeroPower on");
+    }
+}
 function toggleWind() {
     if (bUseWind) {
         bUseWind = false;
@@ -739,6 +754,7 @@ let bUseAutoShiftGrade=false;
 let bUseAveVelocity=false;
 let bUseLargeMap=false;
 let bUseTrainerPhysics=false;
+let bZeroRPMZeroPower=true;
 //let bUseSmoothGrade=false;
 let ftms=false;
 let lastGPSTime="";
@@ -1949,6 +1965,9 @@ export async function processRPM(rpm) {
 export async function processPower(power) {
     let distancem = 0;
     let nextGrade = 0.0;
+    if (bZeroRPMZeroPower && totalRPMPts > 0 && currentRPM == 0){ // if have cadence sensor and current rpm is zero
+        power=0;
+    }
     //let workoutIndex=0;
     // gpsTimeArray = Array(gpxArray.length);
     if (gpsArray === undefined) {
