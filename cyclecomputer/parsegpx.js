@@ -460,7 +460,7 @@ function processXML(response, file, description) {
 
 			if (lastele != 0) {
 				distancem = calculateDistance(lat, lon, lastlat, lastlon) * 1000;
-                bearing = calcBearing(lat, lon, lastlat, lastlon) ;
+                bearing = calcBearing( lastlat, lastlon, lat, lon) ;
                //if (bRemoveStoppedLocation && distancem > 1.0)  {continue;} // remove locations when stopped
 				totaldistancem = totaldistancem + distancem
 				if (distancem > 0.01) {
