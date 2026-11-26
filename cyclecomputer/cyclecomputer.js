@@ -626,6 +626,7 @@ function toggleZeroRPMZeroPower() {
 function toggleWind() {
     if (bUseWind) {
         bUseWind = false;
+        headWindMPH=0;
         logger(3,"bUseWind off");
     } else {
         bUseWind = true;
@@ -1245,9 +1246,29 @@ bearing =315
        
         logger(7,"watts 200"  + " grade "+ (    1*100.0).toFixed(1) + " v2 " + (v2*2.2369362920544).toFixed(2));
 */
+var newWs;
+var newWd;
+ for (var j = 0; j < 20; j++) {
+newWs=randomNormal(windSpeed, windSpeed/2); // mean 2, standard deviation 5
+newWd = simulateWindDirection(windDirection, 25);
+console.log("New Wind Speed "+newWs.toFixed(0) + " New Wind Direction "+ newWd.toFixed(0));
+     }
 
-console.log("Wind bearing 0 Speed 10 WindDirecton 0 =" +headwindComponent(0, 10, 0) );
-console.log("Wind bearing 0 Speed 10 WindDirecton 180 =" +headwindComponent(0, 10, 180) );
+
+var h=headwindComponent(0, 0, 0);
+console.log("Wind bearing 0 Speed 0 WindDirecton 0 =" +h );
+var velo = speedFromWatts(150, 0, 65, 8, coefficientRR, coefficientWR,h) ;     //mps  
+   console.log("watts 150 "+ " v2 " + (velo*2.36).toFixed(2));
+ h=headwindComponent(0, 10, 0);
+console.log("Wind bearing 0 Speed 10 WindDirecton 0 =" +h );
+var velo = speedFromWatts(150, 0, 65, 8, coefficientRR, coefficientWR,h) ;     //mps  
+   
+console.log("watts 150 "+ " v2 " + (velo*2.36).toFixed(2));
+    h=headwindComponent(0, 10, 180);
+console.log("Wind bearing 0 Speed 10 WindDirecton 180 =" + h);
+velo = speedFromWatts(150, 0 ,65, 8, coefficientRR, coefficientWR,h ) ;     //mps  
+   
+console.log("watts 150 " + " v2 " + (velo*2.36).toFixed(2));
 
     let grade = 0.0
     let elevation = 0.0
@@ -2185,13 +2206,16 @@ export async function processPower(power) {
         //var hdwmph = 0.0; 
        
         if (bUseWind) {
-           
+           /*
             if (totalWindPts++ % 10 == 0) { // recalculation wind every 10 seconds
                 newWindSpeed=randomNormal(windSpeed, windSpeed/2); // mean 2, standard deviation 5
                 newWindDirection = simulateWindDirection(windDirection, 25);
+                logger(5,"New Wind Speed "+newWindSpeed.toFixed(0) + " New Wind Direction "+ newWindDirection.toFixed(0));
             }
+            */
             //hdwmph = calcWind(0.0, gpxArray[gradeIndex].bearing, windvelocity, winddirection) ;
-            headWindMPH = headwindComponent(gpxArray[gradeIndex].bearing, newWindSpeed, newWindDirection) ;
+            /////////headWindMPH = headwindComponent(gpxArray[gradeIndex].bearing, newWindSpeed, newWindDirection) ;
+            headWindMPH = headwindComponent(gpxArray[gradeIndex].bearing, windSpeed, windDirection) ;
             logger(5,"head wind " + headWindMPH + " bearing " +gpxArray[gradeIndex].bearing);
             
             /*
@@ -2204,7 +2228,8 @@ export async function processPower(power) {
   cda: coefficientWR
 }));
 */
-        }
+        } else {headWindMPH=0;}
+        
         var velocity = speedFromWatts(power, grade*100.0, weight, bikelbs/lbs2kg, coefficientRR, coefficientWR,headWindMPH ) ;     //mps  
        
         logger(7,"watts " + power + " grade "+ (grade*100.0).toFixed(1) + " v2 " + (velocity*mps2mph).toFixed(2));
